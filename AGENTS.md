@@ -5,19 +5,24 @@ Este archivo es el **orquestador** del proyecto. Cualquier agente (o persona) qu
 ## 1. Resumen del proyecto
 
 - **Stack**: ASP.NET Core MVC, .NET 10 (`net10.0`), C# con `Nullable` e `ImplicitUsings` habilitados.
-- **Solución**: `JuntalyColegios.slnx` → un único proyecto `JuntalyColegios/JuntalyColegios.csproj`.
+- **Arquitectura**: **Hexagonal (puertos y adaptadores)**, con 4 proyectos .NET separados que fuerzan la dirección de dependencia `Web → Infrastructure → Application → Domain`. Detalle completo en [`agente/arquitectura.md`](./agente/arquitectura.md).
+  - `JuntalyColegios.Domain/` — entidades, value objects, excepciones de dominio. Sin dependencias externas.
+  - `JuntalyColegios.Application/` — casos de uso y puertos (`Ports/In`, `Ports/Out`), DTOs. Depende solo de Domain.
+  - `JuntalyColegios.Infrastructure/` — adaptadores: `ApplicationDbContext`, migraciones EF Core, repositorios. Implementa los puertos de Application.
+  - `JuntalyColegios/` — Web (MVC): Controllers, Views, `Program.cs` (composition root de DI).
+- **Principios SOLID**: obligatorios en todo el código, en las 4 capas. Ver checklist en [`agente/arquitectura.md`](./agente/arquitectura.md#principios-solid-obligatorios-en-todo-el-código-todas-las-capas). Auditados en **cada** cambio por [`agente/auditoria.md`](./agente/auditoria.md), no solo en features grandes.
 - **Autenticación**: ASP.NET Core Identity (`AddDefaultIdentity<IdentityUser>`, `RequireConfirmedAccount = true`).
-- **Datos**: Entity Framework Core + SQL Server (`JuntalyColegios/Data/ApplicationDbContext.cs`, migraciones en `Data/Migrations/`).
+- **Datos**: Entity Framework Core + SQL Server (`JuntalyColegios.Infrastructure/Persistence/ApplicationDbContext.cs`, migraciones en `Persistence/Migrations/`).
 - **Vistas**: Razor Pages/MVC Views (`JuntalyColegios/Views/`, `JuntalyColegios/Areas/Identity/Pages/`).
 - **Estáticos**: `JuntalyColegios/wwwroot/` (Bootstrap 5, jQuery, jquery-validation vendorizados en `wwwroot/lib/`).
-- **Sin tests automatizados todavía.**
+- **Sin tests automatizados todavía** (ver [`agente/testing.md`](./agente/testing.md)).
 
 ### Comandos útiles
 ```bash
-dotnet build
+dotnet build JuntalyColegios.slnx
 dotnet run --project JuntalyColegios
-dotnet ef migrations add <Nombre> --project JuntalyColegios
-dotnet ef database update --project JuntalyColegios
+dotnet ef migrations add <Nombre> --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
+dotnet ef database update --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
 ```
 
 ## 2. Rol del orquestador
@@ -32,12 +37,12 @@ Ante cualquier tarea, el orquestador:
 
 | Subagente | Ubicación | Cuándo usarlo | Cubre |
 |---|---|---|---|
-| **Arquitectura** | [`agente/arquitectura.md`](./agente/arquitectura.md) | Antes de features nuevas o cambios de modelo de datos; decisiones de estructura/carpetas/dependencias | Estructura de capas, modelado de dominio, nuevas dependencias NuGet, configuración por entorno |
-| **Backend** | [`agente/backend.md`](./agente/backend.md) | Controladores, modelos, acceso a datos, migraciones, `Program.cs` | `Controllers/`, `Models/`, `Data/`, `Program.cs` |
+| **Arquitectura** | [`agente/arquitectura.md`](./agente/arquitectura.md) | Antes de features nuevas o cambios de modelo de datos; decisiones de capa hexagonal/puertos/dependencias | Regla de dependencia hexagonal (Domain/Application/Infrastructure/Web), modelado de dominio, puertos, principios SOLID, nuevas dependencias NuGet |
+| **Backend** | [`agente/backend.md`](./agente/backend.md) | Controladores, casos de uso, modelos, acceso a datos, migraciones, `Program.cs` | `JuntalyColegios/Controllers/`, `Application/UseCases/`, `Domain/Entities/`, `Infrastructure/Persistence/`, `Program.cs` |
 | **Frontend** | [`agente/frontend.md`](./agente/frontend.md) | Vistas Razor, layout, estilos, validación cliente | `Views/`, `Areas/Identity/Pages/` (presentación), `wwwroot/css`, `wwwroot/js` |
 | **Seguridad** | [`agente/seguridad.md`](./agente/seguridad.md) | Auth/Identity, autorización, secretos, vulnerabilidades (OWASP) | `Areas/Identity/` (lógica), manejo de secretos, revisión transversal de autorización/XSS/SQLi |
-| **Testing** | [`agente/testing.md`](./agente/testing.md) | Al agregar/modificar lógica en controladores, modelos o datos; al corregir bugs; cuando se pide cobertura | `JuntalyColegios.Tests/` (xUnit): tests unitarios de controladores/modelos y de integración con `WebApplicationFactory` |
-| **Auditoría** | [`agente/auditoria.md`](./agente/auditoria.md) | Al cerrar cualquier tarea, antes de dar por lista una feature o de hacer commit | Build, tests, consistencia, migraciones, cierre de hallazgos de los demás subagentes |
+| **Testing** | [`agente/testing.md`](./agente/testing.md) | Al agregar/modificar lógica en controladores, casos de uso o datos; al corregir bugs; cuando se pide cobertura | `JuntalyColegios.Tests/` (xUnit): tests unitarios por capa y de integración con `WebApplicationFactory` |
+| **Auditoría** | [`agente/auditoria.md`](./agente/auditoria.md) | **En cada cambio**, sin excepción, antes de darlo por cerrado o de hacer commit | Build, tests, cumplimiento de arquitectura hexagonal y SOLID, migraciones, cierre de hallazgos de los demás subagentes |
 
 ## 4. Reglas de enrutamiento
 
@@ -45,18 +50,19 @@ Palabras/señales en la tarea → subagente:
 
 - "vista", "layout", "botón", "estilo", "responsive", "formulario (maquetado)" → **Frontend**
 - "controlador", "modelo", "migración", "base de datos", "endpoint", "servicio" → **Backend**
-- "estructura", "cómo organizar", "nueva dependencia", "modelar entidad", "capas" → **Arquitectura**
+- "estructura", "cómo organizar", "nueva dependencia", "modelar entidad", "capas", "puerto", "adaptador", "SOLID" → **Arquitectura**
 - "login", "registro", "rol", "permiso", "autorización", "secreto", "contraseña", "vulnerabilidad" → **Seguridad**
 - "test", "tests", "cobertura", "unitario", "integración", "xUnit" → **Testing**
 - "revisar antes de commit", "¿está listo?", "chequeo final" → **Auditoría**
 
 ### Flujos combinados típicos
 
-- **Feature nueva** (ej. módulo de colegios): Arquitectura → Backend → Frontend → Seguridad → Testing → Auditoría.
-- **Cambio de modelo/BD**: Arquitectura → Backend (migración) → Testing → Auditoría.
-- **Bug**: Backend o Frontend según la capa afectada → Testing (test de regresión) → Auditoría.
+- **Feature nueva** (ej. módulo de colegios): Arquitectura → Backend → Frontend → Seguridad → Testing → **Auditoría**.
+- **Cambio de modelo/BD**: Arquitectura → Backend (migración) → Testing → **Auditoría**.
+- **Bug**: Backend o Frontend según la capa afectada → Testing (test de regresión) → **Auditoría**.
 - **Cualquier cambio en autenticación, roles o secretos**: siempre pasa por Seguridad, sin excepción, antes de Auditoría.
 - Testing corre después de Backend/Frontend (necesita el código ya escrito para testearlo) y antes de Auditoría (que verifica que `dotnet test` pase en verde).
+- **Regla fija, sin excepción**: **todo flujo termina en Auditoría**, incluso cambios pequeños de un solo archivo — es quien verifica que se respetó la arquitectura hexagonal (regla de dependencia entre capas) y los principios SOLID en el código entregado.
 
 ## 5. Cómo invocar un subagente
 
@@ -67,11 +73,14 @@ Palabras/señales en la tarea → subagente:
 
 ## 6. Convenciones globales (aplican a todos los subagentes)
 
+- **Arquitectura hexagonal siempre**: ninguna pieza nueva se escribe sin decidir primero en qué capa vive (Domain/Application/Infrastructure/Web) y respetando la regla de dependencia `Web → Infrastructure → Application → Domain`.
+- **Principios SOLID siempre**, en toda capa y todo lenguaje del proyecto (C#, no solo backend). Ver detalle en [`agente/arquitectura.md`](./agente/arquitectura.md#principios-solid-obligatorios-en-todo-el-código-todas-las-capas).
+- **Auditoría en cada cambio**: ningún cambio se considera terminado sin pasar por [`agente/auditoria.md`](./agente/auditoria.md), que verifica build, tests y cumplimiento de arquitectura/SOLID.
 - Idioma español en UI, mensajes de commit y comentarios orientados al usuario.
 - `Nullable` habilitado: no introducir warnings de nulabilidad ni suprimirlos sin justificar.
-- No commitear secretos ni cadenas de conexión reales; usar User Secrets (`UserSecretsId` ya está configurado en `JuntalyColegios.csproj`) o variables de entorno.
+- No commitear secretos ni cadenas de conexión reales; usar User Secrets (`UserSecretsId` ya está configurado en `JuntalyColegios/JuntalyColegios.csproj`) o variables de entorno.
 - No modificar a mano archivos dentro de `wwwroot/lib/` (librerías vendorizadas).
-- Reutilizar patrones existentes (Identity, `ApplicationDbContext`, Tag Helpers) antes de introducir uno nuevo.
+- Reutilizar patrones existentes (Identity, puertos ya definidos en `Application/Ports`, Tag Helpers) antes de introducir uno nuevo.
 
 ## 7. Formato de entrega esperado de cada subagente
 
