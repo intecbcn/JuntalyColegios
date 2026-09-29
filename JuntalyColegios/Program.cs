@@ -1,4 +1,4 @@
-using JuntalyColegios.Data;
+using JuntalyColegios.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="JuntalyColegios.Application/JuntalyColegios.Application.csproj" />
+  <Project Path="JuntalyColegios.Domain/JuntalyColegios.Domain.csproj" />
+  <Project Path="JuntalyColegios.Infrastructure/JuntalyColegios.Infrastructure.csproj" />
   <Project Path="JuntalyColegios/JuntalyColegios.csproj" />
 </Solution>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace JuntalyColegios.Data.Migrations
+namespace JuntalyColegios.Infrastructure.Persistence.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
