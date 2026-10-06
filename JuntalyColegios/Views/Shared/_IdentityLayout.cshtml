@@ -1,0 +1,45 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Juntaly Colegios</title>
+    <link rel="icon" href="~/images/logo-juntaly.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/identity.css" asp-append-version="true" />
+</head>
+<body class="jc-body jc-identity-body">
+
+<header class="jc-identity-header">
+    <a href="/" class="jc-identity-brand">
+        <img src="~/images/logo-juntaly.png" alt="Juntaly" />
+        <div class="jc-identity-brand-text">
+            <span class="jc-identity-brand-name">Juntaly</span>
+            <span class="jc-identity-brand-badge">Colegios</span>
+        </div>
+    </a>
+    <a href="/" class="jc-identity-back">← Volver al inicio</a>
+</header>
+
+<main class="jc-identity-main">
+    <div class="jc-identity-card">
+        @RenderBody()
+    </div>
+</main>
+
+<footer class="jc-identity-footer">
+    <span>© @DateTime.Now.Year Juntaly Colegios · by Intec</span>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

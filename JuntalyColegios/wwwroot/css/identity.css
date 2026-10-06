@@ -1,0 +1,144 @@
+/* Páginas de Identity (Login, Register, ForgotPassword, Manage/*, 2FA, ...): vienen precompiladas
+   en el paquete Microsoft.AspNetCore.Identity.UI (plantilla estándar Bootstrap 5), no están en el
+   repo, así que no se puede tocar su marcado. Este archivo sobrescribe las clases Bootstrap que
+   esas páginas ya traen para que se vean con la identidad de Juntaly Colegios (paleta y tipografías
+   definidas en landing.css, que este archivo asume ya cargado). */
+
+.jc-identity-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(22,61,90,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(22,61,90,0.06) 1px,transparent 1px);
+    background-size: 44px 44px;
+}
+
+/* ── Header y footer del layout de Identity ────────────────────────────── */
+.jc-identity-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    max-width: 640px; margin: 0 auto; width: 100%;
+    padding: 24px 24px 0;
+}
+.jc-identity-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--jc-navy); }
+.jc-identity-brand img { width: 34px; height: 34px; object-fit: contain; }
+.jc-identity-brand-text { display: flex; flex-direction: column; line-height: 1; }
+.jc-identity-brand-name { font-weight: 900; font-size: 19px; letter-spacing: -0.02em; }
+.jc-identity-brand-badge {
+    align-self: flex-start; margin-top: 3px; transform: rotate(-6deg);
+    background: var(--jc-yellow); border: 2px solid var(--jc-navy); border-radius: 3px;
+    padding: 0 5px 1px; font-weight: 900; font-size: 10px;
+}
+.jc-identity-back { font-weight: 800; font-size: 14px; color: var(--jc-navy); text-decoration: none; }
+.jc-identity-back:hover { color: var(--jc-blue); }
+
+.jc-identity-footer {
+    text-align: center; padding: 24px; margin-top: auto;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; color: var(--jc-blue);
+}
+
+/* ── Tarjeta central que envuelve el contenido de cada página ──────────── */
+.jc-identity-main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px 48px; }
+.jc-identity-card {
+    width: 100%; max-width: 520px;
+    background: #fff; border: 3px solid var(--jc-navy); border-radius: 20px;
+    box-shadow: 8px 8px 0 var(--jc-navy);
+    padding: 32px clamp(20px, 5vw, 40px);
+}
+/* Páginas con dos columnas (Login: formulario + logins externos) no deben quedar apretadas en la
+   tarjeta de 520px; se ensancha para ese caso concreto. */
+.jc-identity-card:has(.row > [class*="col-"]:nth-child(2)) { max-width: 760px; }
+
+/* Las páginas de Identity scaffoldean sus formularios dentro de columnas Bootstrap angostas
+   (col-md-4, col-md-6...) pensadas para un layout de ancho completo de página, no para esta tarjeta
+   compacta: eso hacía que los campos se vieran apretados en una fracción del ancho disponible.
+   Se las deja crecer al ancho de la tarjeta (o de su mitad, si hay dos columnas una junto a otra). */
+.jc-identity-card .row { row-gap: 24px; }
+.jc-identity-card .row > [class*="col-"] {
+    flex: 1 1 280px;
+    width: auto;
+    max-width: 100%;
+}
+
+/* ── Tipografía general ─────────────────────────────────────────────────── */
+.jc-identity-card, .jc-identity-card * { font-family: 'Nunito', sans-serif; }
+.jc-identity-card h1, .jc-identity-card h2, .jc-identity-card h3, .jc-identity-card .display-4 {
+    font-weight: 900; letter-spacing: -0.02em; color: var(--jc-navy);
+}
+.jc-identity-card h1 { font-size: clamp(26px, 4vw, 32px); }
+.jc-identity-card a { color: var(--jc-blue); font-weight: 700; }
+.jc-identity-card a:hover { color: var(--jc-navy); }
+.jc-identity-card hr { border-top: 2px solid var(--jc-navy); opacity: 1; }
+
+/* ── Formularios ────────────────────────────────────────────────────────── */
+/* Campos más grandes y con más aire que el tamaño compacto por defecto de Bootstrap;
+   se pisa tanto el .form-control suelto como el que vive dentro de .form-floating
+   (que trae su propio padding/altura con mayor especificidad). */
+.jc-identity-card .form-control, .jc-identity-card .form-select {
+    font-weight: 600; font-size: 16px; border: 3px solid var(--jc-navy); border-radius: 10px;
+    background: var(--jc-bg); color: var(--jc-navy);
+    padding: 0.9rem 1rem; min-height: 54px;
+}
+.jc-identity-card .form-control:focus, .jc-identity-card .form-select:focus {
+    border-color: var(--jc-navy); background: #fff;
+    box-shadow: 4px 4px 0 var(--jc-blue);
+}
+.jc-identity-card .form-floating { margin-bottom: 18px; }
+.jc-identity-card .form-floating > .form-control,
+.jc-identity-card .form-floating > .form-select {
+    height: calc(3.75rem + 2px); min-height: 60px;
+    padding: 1.4rem 1rem 0.4rem;
+}
+.jc-identity-card .form-floating > label {
+    color: var(--jc-blue); font-weight: 700; font-size: 15px;
+    padding: 1rem;
+}
+.jc-identity-card .form-check { margin-bottom: 14px; padding-left: 1.8em; }
+.jc-identity-card .form-check-input { width: 1.3em; height: 1.3em; margin-left: -1.8em; border: 2px solid var(--jc-navy); }
+.jc-identity-card .form-check-input:checked { background-color: var(--jc-blue); border-color: var(--jc-navy); }
+.jc-identity-card .form-check-label { font-weight: 700; font-size: 15px; }
+.jc-identity-card .text-danger { font-weight: 700; font-size: 14px; }
+.jc-identity-card label:not(.form-check-label) { font-weight: 800; font-size: 15px; margin-bottom: 6px; display: inline-block; }
+
+/* ── Botones ────────────────────────────────────────────────────────────── */
+.jc-identity-card .btn { font-weight: 900; font-size: 16px; padding: 14px 22px; border-radius: 12px; border: 3px solid var(--jc-navy); transition: transform .15s, box-shadow .15s; }
+.jc-identity-card .btn-primary {
+    background: var(--jc-blue); border-color: var(--jc-navy); color: #fff;
+    box-shadow: 5px 5px 0 var(--jc-navy);
+}
+.jc-identity-card .btn-primary:hover, .jc-identity-card .btn-primary:focus {
+    background: var(--jc-blue); border-color: var(--jc-navy); color: #fff;
+    transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--jc-navy);
+}
+.jc-identity-card .btn-secondary, .jc-identity-card .btn-outline-primary, .jc-identity-card .btn-outline-secondary {
+    background: #fff; border-color: var(--jc-navy); color: var(--jc-navy);
+    box-shadow: 4px 4px 0 var(--jc-navy);
+}
+.jc-identity-card .btn-secondary:hover, .jc-identity-card .btn-outline-primary:hover, .jc-identity-card .btn-outline-secondary:hover {
+    background: var(--jc-bg); color: var(--jc-navy);
+    transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--jc-navy);
+}
+.jc-identity-card .btn-link { color: var(--jc-blue); font-weight: 800; text-decoration: underline; }
+
+/* ── Alertas / mensajes de estado ───────────────────────────────────────── */
+.jc-identity-card .alert {
+    border: 3px solid var(--jc-navy); border-radius: 14px; font-weight: 700;
+    box-shadow: 4px 4px 0 var(--jc-navy);
+}
+.jc-identity-card .alert-success { background: var(--jc-mint); color: var(--jc-navy); }
+.jc-identity-card .alert-danger { background: #F7C6C0; color: var(--jc-navy); }
+.jc-identity-card .alert-warning { background: var(--jc-yellow); color: var(--jc-navy); }
+.jc-identity-card .alert-info { background: #fff; color: var(--jc-navy); }
+
+/* ── Manage/*: menú lateral (list-group / nav-pills) ────────────────────── */
+.jc-identity-card .list-group-item, .jc-identity-card .nav-pills .nav-link {
+    border: 2px solid var(--jc-navy) !important; border-radius: 10px !important; margin-bottom: 6px;
+    color: var(--jc-navy); font-weight: 800; background: #fff;
+}
+.jc-identity-card .list-group-item.active, .jc-identity-card .nav-pills .nav-link.active {
+    background: var(--jc-navy) !important; border-color: var(--jc-navy) !important; color: #fff;
+}
+.jc-identity-card .card { border: 3px solid var(--jc-navy); border-radius: 16px; box-shadow: 5px 5px 0 var(--jc-navy); }
+
+@media (max-width: 600px) {
+    .jc-identity-header { padding: 18px 16px 0; }
+    .jc-identity-back { display: none; }
+}
