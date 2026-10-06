@@ -26,13 +26,13 @@ Diseña y escribe la suite de tests automatizados del proyecto: tests unitarios 
 ## Stack recomendado (estándar en proyectos MVC .NET)
 - **xUnit** como framework de test (`Microsoft.NET.Test.Sdk`, `xunit`, `xunit.runner.visualstudio`).
 - **Moq** (o `NSubstitute`) para mockear dependencias (`UserManager`, `SignInManager`, servicios propios).
-- **Microsoft.EntityFrameworkCore.InMemory** o SQLite in-memory para tests que necesitan un `ApplicationDbContext` real sin SQL Server.
+- **Microsoft.EntityFrameworkCore.InMemory** o SQLite in-memory para tests que necesitan un `ApplicationDbContext` real sin PostgreSQL.
 - **Microsoft.AspNetCore.Mvc.Testing** (`WebApplicationFactory<Program>`) para tests de integración end-to-end del pipeline HTTP.
 - **FluentAssertions** (opcional) para asserts más legibles, si el equipo lo prefiere.
 
 ## Responsabilidades
 - Si no existe el proyecto de test correspondiente a la capa tocada, crearlo (`dotnet new xunit -o JuntalyColegios.<Capa>.Tests`), agregarlo a `JuntalyColegios.slnx` y referenciar el proyecto que testea.
-- Aprovechar el aislamiento de la arquitectura hexagonal: los tests de Domain y Application **no necesitan EF Core, SQL Server ni ASP.NET Core** — solo mockean los puertos (`Ports/Out`).
+- Aprovechar el aislamiento de la arquitectura hexagonal: los tests de Domain y Application **no necesitan EF Core, PostgreSQL ni ASP.NET Core** — solo mockean los puertos (`Ports/Out`).
 - Escribir tests unitarios de cada acción de controlador relevante: casos felices, validación fallida (`ModelState` inválido), casos de autorización (401/403 cuando falta `[Authorize]`), mockeando el caso de uso que invoca.
 - Escribir tests de integración para flujos críticos (registro/login de Identity, rutas principales) usando `WebApplicationFactory<Program>`.
 - Nombrar tests con el patrón `MetodoTesteado_Escenario_ResultadoEsperado` (convención estándar xUnit/.NET).
@@ -42,7 +42,7 @@ Diseña y escribe la suite de tests automatizados del proyecto: tests unitarios 
 ## Checklist
 - [ ] ¿Los tests de Domain/Application evitan dependencias de EF Core/ASP.NET Core, aprovechando el aislamiento hexagonal?
 - [ ] ¿Cada acción de controlador nueva/modificada tiene al menos un test de caso feliz y uno de caso de error?
-- [ ] ¿Los tests usan mocks/in-memory DB en vez de tocar SQL Server real?
+- [ ] ¿Los tests usan mocks/in-memory DB en vez de tocar PostgreSQL real?
 - [ ] ¿Los tests de integración cubren rutas de Identity si se tocó autenticación?
 - [ ] ¿`dotnet test` pasa en verde sin tests ignorados (`[Fact(Skip=...)]`) sin justificar?
 - [ ] ¿El nombre de los tests explica el escenario sin necesidad de leer el cuerpo?

@@ -1,6 +1,6 @@
 # JuntalyColegios.Infrastructure
 
-Capa de adaptadores. Implementa los puertos de salida definidos en [`JuntalyColegios.Application/Ports/Out`](../JuntalyColegios.Application/Ports/Out/) usando tecnología concreta (EF Core, SQL Server, Identity).
+Capa de adaptadores. Implementa los puertos de salida definidos en [`JuntalyColegios.Application/Ports/Out`](../JuntalyColegios.Application/Ports/Out/) usando tecnología concreta (EF Core, PostgreSQL, Identity).
 
 - `Persistence/` — `ApplicationDbContext` (Identity + EF Core), `Persistence/Migrations/` (migraciones EF Core).
 - `Persistence/Repositories/` — implementaciones concretas de los repositorios declarados como puertos en `Application/Ports/Out`.
@@ -13,4 +13,4 @@ dotnet ef migrations add <Nombre> --project JuntalyColegios.Infrastructure --sta
 dotnet ef database update --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
 ```
 
-Ver [`agente/arquitectura.md`](../agente/arquitectura.md) para las reglas de dependencia entre capas.
+Ver [`.agents/arquitectura.md`](../.agents/arquitectura.md) para las reglas de dependencia entre capas.

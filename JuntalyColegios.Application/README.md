@@ -7,4 +7,4 @@ Capa de casos de uso. Orquesta el dominio ([`JuntalyColegios.Domain`](../Juntaly
 - `UseCases/` — implementación de los casos de uso (servicios de aplicación) que implementan `Ports/In` y consumen `Ports/Out`.
 - `DTOs/` — objetos de transferencia de datos entre la presentación y los casos de uso (nunca se exponen entidades de dominio directamente a la vista).
 
-Ver [`agente/arquitectura.md`](../agente/arquitectura.md) para las reglas de dependencia entre capas.
+Ver [`.agents/arquitectura.md`](../.agents/arquitectura.md) para las reglas de dependencia entre capas.

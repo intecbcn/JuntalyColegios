@@ -6,4 +6,4 @@ Núcleo de la arquitectura hexagonal. Contiene el modelo de dominio puro: **no d
 - `ValueObjects/` — objetos de valor inmutables (sin identidad propia).
 - `Exceptions/` — excepciones de dominio (reglas de negocio violadas).
 
-Ver [`agente/arquitectura.md`](../agente/arquitectura.md) para las reglas de dependencia entre capas.
+Ver [`.agents/arquitectura.md`](../.agents/arquitectura.md) para las reglas de dependencia entre capas.

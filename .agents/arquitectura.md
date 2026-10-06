@@ -46,7 +46,7 @@ JuntalyColegios/                   ← Web (MVC), adaptador de entrada / composi
 
 - `Domain` **nunca** referencia a `Application`, `Infrastructure` ni `JuntalyColegios` (Web), ni paquetes de EF Core/ASP.NET Core.
 - `Application` **nunca** referencia a `Infrastructure` ni a `JuntalyColegios` (Web). Define interfaces (`Ports/Out`) que `Infrastructure` implementa — inversión de dependencias (la "D" de SOLID).
-- `Infrastructure` implementa los puertos de `Application` (EF Core, SQL Server, Identity) pero no conoce `Controllers`/`Views`.
+- `Infrastructure` implementa los puertos de `Application` (EF Core, PostgreSQL, Identity) pero no conoce `Controllers`/`Views`.
 - `JuntalyColegios` (Web) es el "composition root": en `Program.cs` se registran en el contenedor DI las implementaciones concretas de `Infrastructure` contra las interfaces de `Application`. Los controladores dependen de `Ports/In` (o de los casos de uso), nunca de `Infrastructure` directamente.
 
 **Comandos de migración EF Core** (el DbContext vive en Infrastructure, el proyecto de arranque es Web):
