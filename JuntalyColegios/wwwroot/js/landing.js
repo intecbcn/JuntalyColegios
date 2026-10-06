@@ -172,8 +172,8 @@
             fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin' })
                 .then(function (r) { return r.json(); })
                 .then(function () {
-                    document.getElementById('jcFormWrap').style.display = 'none';
-                    document.getElementById('jcFormSent').style.display = '';
+                    form.style.display = 'none';
+                    document.getElementById('jcFormSent').style.display = 'flex';
                 })
                 .catch(function () {
                     if (boton) boton.disabled = false;
