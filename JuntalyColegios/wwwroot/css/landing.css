@@ -1,0 +1,183 @@
+/* Landing pública "Juntaly Colegios" — paleta e identidad propias de esta página, independientes
+   del layout interno de la app (Bootstrap 5 vendorizado en wwwroot/lib). No se comparte con
+   _Layout.cshtml: la landing es una página completa aparte (Layout = null). */
+
+:root {
+    --jc-bg: #F6F7D5;
+    --jc-navy: #163D5A;
+    --jc-blue: #205780;
+    --jc-mint: #98D3C1;
+    --jc-teal: #4F959D;
+    --jc-yellow: #F9E1A6;
+}
+
+* { box-sizing: border-box; }
+
+/* overflow-x:hidden en solo <body> no basta: Chrome puede seguir mostrando el scrollbar horizontal
+   del viewport si algún hijo (p. ej. una cinta "full-bleed" con margin negativo) mide más que la
+   ventana. Se pone también en <html> como cierre defensivo. */
+html { overflow-x: hidden; scroll-behavior: smooth; }
+
+body.jc-body {
+    margin: 0;
+    background: var(--jc-bg);
+    color: var(--jc-navy);
+    font-family: 'Nunito', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* :not(.jc-btn) para que esta regla genérica de enlaces no le gane en especificidad al color
+   propio de los botones .jc-btn-* (ej. "Solicitar demo" quedaba en azul sobre fondo azul). */
+.jc-body a:not(.jc-btn) { color: var(--jc-blue); }
+.jc-body a:not(.jc-btn):hover { color: var(--jc-navy); }
+.jc-body input[type=range] { accent-color: var(--jc-blue); }
+
+@keyframes jcMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes jcPop { 0% { opacity: 0; transform: translateY(40px) scale(.96); } 100% { opacity: 1; transform: none; } }
+@keyframes jcSpin { to { transform: rotate(360deg); } }
+@keyframes jcBob { 0%, 100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-14px) rotate(3deg); } }
+@keyframes jcBlink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes jcPulse { 0%, 100% { transform: scale(.92); opacity: .7; } 50% { transform: scale(1.04); opacity: 1; } }
+@keyframes jcDrive {
+    0% { left: 28.2%; background: #fff; }
+    25% { left: 43%; background: var(--jc-yellow); }
+    40% { left: 43%; background: var(--jc-yellow); }
+    85% { left: 87%; background: var(--jc-mint); }
+    100% { left: 87%; background: var(--jc-mint); }
+}
+@media (prefers-reduced-motion: reduce) { .jc-body * { animation: none !important; transition: none !important; } }
+
+.jc-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Nav links del header */
+.jc-navlink { font-weight: 800; font-size: 15px; color: var(--jc-navy); text-decoration: none; padding: 8px 12px; border-radius: 999px; border: 2px solid transparent; }
+.jc-navlink:hover { border-color: var(--jc-navy); background: var(--jc-bg); }
+
+/* Botones "duros" (borde grueso + sombra sólida) en dos tamaños */
+.jc-btn { font: inherit; font-weight: 900; text-decoration: none; cursor: pointer; border: 3px solid var(--jc-navy); transition: transform .15s, box-shadow .15s; display: inline-block; }
+.jc-btn-cta { color: #fff; background: var(--jc-blue); border-radius: 12px; padding: 10px 16px; font-size: 15px; box-shadow: 3px 3px 0 var(--jc-navy); }
+.jc-btn-cta:hover { color: #fff; transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--jc-navy); }
+.jc-btn-lg-primary { color: #fff; background: var(--jc-blue); border-radius: 12px; padding: 16px 24px; font-size: 17px; box-shadow: 6px 6px 0 var(--jc-navy); }
+.jc-btn-lg-primary:hover { color: #fff; transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--jc-navy); }
+.jc-btn-lg-secondary { color: var(--jc-navy); background: #fff; border-radius: 12px; padding: 16px 24px; font-size: 17px; box-shadow: 6px 6px 0 var(--jc-navy); }
+.jc-btn-lg-secondary:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--jc-navy); }
+.jc-btn-price-cta { text-align: center; color: var(--jc-navy); background: var(--jc-yellow); border-radius: 12px; padding: 14px; font-size: 17px; box-shadow: 5px 5px 0 var(--jc-navy); }
+.jc-btn-price-cta:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--jc-navy); }
+
+.jc-btn-simulate { font: inherit; font-weight: 900; font-size: 18px; color: #fff; background: var(--jc-blue); border: 3px solid var(--jc-navy); border-radius: 12px; padding: 16px 24px; box-shadow: 6px 6px 0 var(--jc-navy); cursor: pointer; transition: transform .12s, box-shadow .12s; }
+.jc-btn-simulate:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--jc-navy); }
+.jc-btn-simulate:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 var(--jc-navy); }
+
+.jc-btn-submit { font: inherit; font-weight: 900; font-size: 18px; color: var(--jc-navy); background: var(--jc-yellow); border: 3px solid var(--jc-navy); border-radius: 12px; padding: 16px; box-shadow: 5px 5px 0 var(--jc-navy); cursor: pointer; transition: transform .12s, box-shadow .12s; width: 100%; }
+.jc-btn-submit:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--jc-navy); }
+.jc-btn-submit:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--jc-navy); }
+
+.jc-btn-enviar { font: inherit; font-weight: 900; font-size: 14px; color: #fff; background: var(--jc-navy); border: 3px solid var(--jc-navy); border-radius: 10px; padding: 8px 14px; box-shadow: 3px 3px 0 var(--jc-blue); cursor: pointer; }
+
+/* Tarjetas con hover "levantado" */
+.jc-card-hover { transition: transform .2s, box-shadow .2s; }
+.jc-card-hover:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 var(--jc-navy); }
+.jc-card-hover-teal { transition: transform .2s, box-shadow .2s; }
+.jc-card-hover-teal:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0 var(--jc-teal); }
+
+/* Inputs del formulario de contacto */
+.jc-input { font: inherit; font-weight: 600; font-size: 17px; padding: 12px 14px; border: 3px solid var(--jc-navy); border-radius: 10px; background: var(--jc-bg); color: var(--jc-navy); outline: none; transition: box-shadow .15s; }
+.jc-input:focus { box-shadow: 4px 4px 0 var(--jc-blue); }
+
+/* Pestañas de la demo interactiva */
+.jc-tab { font: inherit; font-weight: 900; font-size: 15px; border: 3px solid var(--jc-navy); border-radius: 999px; padding: 9px 16px; cursor: pointer; background: #fff; color: var(--jc-navy); box-shadow: 3px 3px 0 var(--jc-navy); }
+.jc-tab.jc-tab-active { background: var(--jc-navy); color: #fff; box-shadow: 3px 3px 0 var(--jc-blue); }
+
+/* Honeypot anti-bots: oculto para personas, visible para bots que rellenan todos los campos */
+.jc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Reveal on scroll (deshabilitado si prefers-reduced-motion) */
+.jc-reveal { opacity: 0; transform: translateY(36px); }
+.jc-reveal.jc-revealed { opacity: 1; transform: none; transition: opacity .6s ease, transform .6s cubic-bezier(.2,.9,.3,1.2); }
+
+/* Cinta "full-bleed" (marquee invertido bajo el hero): ocupa todo el ancho del viewport sin usar
+   un margin negativo fijo que puede medir más que la ventana (esa era la causa del scroll
+   horizontal). Técnica estándar de "break out" del contenedor centrado. */
+.jc-full-bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+
+/* Decoraciones flotantes del hero (mockup de la app): tamaños fijos en escritorio, se reducen o
+   reposicionan en móvil para no salirse de la columna ni pisar el contenido. */
+.jc-hero-sticker { position: absolute; right: -6px; top: -18px; width: 120px; height: 120px; }
+.jc-hero-float-card { position: absolute; left: -20px; bottom: 0; width: min(320px, 80%); }
+.jc-phone-mock { width: min(300px, 100%); }
+.jc-contacto-titulo { -webkit-text-stroke: 8px var(--jc-navy); text-shadow: 6px 6px 0 var(--jc-navy); }
+
+/* Tarjetas "destacadas" (Hardware, Seguridad) del grid "Qué incluye": ocupan 2 columnas en
+   escritorio. */
+.jc-grid-span2 { grid-column: span 2; min-width: 0; }
+
+/* `repeat(auto-fit, minmax(min(100%,260px),1fr))` no colapsa de forma fiable a 1 columna en este
+   grid (Chrome sigue calculando 2 columnas de 260px/172px aunque el contenedor mida ~290px,
+   incluso quitando el span de las tarjetas destacadas) — el contenido queda cortado a la derecha.
+   Se fuerza 1 columna explícitamente bajo 740px en vez de confiar en auto-fit. */
+@media (max-width: 740px) {
+    .jc-incluye-grid { grid-template-columns: 1fr !important; }
+    .jc-grid-span2 { grid-column: span 1; }
+}
+
+@media (max-width: 720px) {
+    .jc-hero-badges { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+    .jc-hero-sticker { width: 84px; height: 84px; right: 4px; top: -10px; }
+    .jc-hero-sticker .jc-sticker-text { transform: scale(0.75); }
+    .jc-hero-float-card { left: -8px; }
+    .jc-contacto-titulo { -webkit-text-stroke-width: 4px; text-shadow: 3px 3px 0 var(--jc-navy); }
+}
+
+@media (max-width: 640px) {
+    .jc-navlink { padding: 10px 10px; font-size: 14px; }
+    .jc-tab { padding: 11px 14px; }
+    .jc-btn-cta { padding: 12px 14px; }
+}
+
+/* Menú del header: fila normal en escritorio; hamburguesa en tablet/móvil. */
+.jc-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.jc-nav-toggle {
+    display: none;
+    flex: none;
+    width: 42px; height: 42px;
+    border: 3px solid var(--jc-navy);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.jc-nav-toggle span { display: block; width: 20px; height: 3px; background: var(--jc-navy); border-radius: 2px; transition: transform .2s, opacity .2s; }
+.jc-nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.jc-nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.jc-nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 860px) {
+    .jc-nav-toggle { display: flex; }
+    .jc-nav {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        background: #fff;
+        border: 3px solid var(--jc-navy);
+        border-radius: 16px;
+        box-shadow: 5px 5px 0 var(--jc-navy);
+        padding: 12px;
+        z-index: 30;
+    }
+    .jc-nav.jc-nav-open { display: flex; }
+    .jc-nav .jc-navlink { text-align: center; padding: 12px 10px; }
+    .jc-nav-cta { margin: 6px 0 0; text-align: center; }
+}
