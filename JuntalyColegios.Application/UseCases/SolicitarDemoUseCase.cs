@@ -1,3 +1,5 @@
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using JuntalyColegios.Application.DTOs;
 using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
@@ -8,6 +10,9 @@ namespace JuntalyColegios.Application.UseCases;
 public sealed class SolicitarDemoUseCase : ISolicitarDemoUseCase
 {
     private const string EmailVentas = "info@serviciosintec.com";
+
+    // Escapa solo lo peligroso en HTML (<, >, &, comillas) y deja legibles tildes y eñes.
+    private static readonly HtmlEncoder Html = HtmlEncoder.Create(UnicodeRanges.All);
 
     private readonly IEmailSender _emailSender;
 
@@ -23,11 +28,13 @@ public sealed class SolicitarDemoUseCase : ISolicitarDemoUseCase
     /// </summary>
     public async Task<bool> EjecutarAsync(SolicitudDemoDto solicitud, CancellationToken cancellationToken)
     {
+        // Los datos los escribe el visitante y el cuerpo es HTML: se escapan para que no puedan
+        // inyectar marcado (enlaces, scripts) en el correo que recibe ventas.
         var cuerpo = $"""
             Nueva solicitud de demo — Juntaly Colegios<br><br>
-            Nombre: {solicitud.Nombre}<br>
-            Colegio: {solicitud.Colegio}<br>
-            Teléfono o email: {solicitud.Contacto}<br>
+            Nombre: {Html.Encode(solicitud.Nombre)}<br>
+            Colegio: {Html.Encode(solicitud.Colegio)}<br>
+            Teléfono o email: {Html.Encode(solicitud.Contacto)}<br>
             N.º de alumnos: {(solicitud.NumeroAlumnos.HasValue ? solicitud.NumeroAlumnos.Value.ToString() : "No indicado")}
             """;
 
