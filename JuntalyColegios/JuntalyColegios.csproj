@@ -11,14 +11,20 @@
     <!-- Paquetes propios de la capa de presentacion: pagina de excepciones de EF en Development
          y las paginas Razor de Identity UI. El resto de EF Core / Identity.EntityFrameworkCore
          llegan de forma transitiva a traves de JuntalyColegios.Infrastructure. -->
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.11" />
     <!-- Requerido en el proyecto de arranque para que "dotnet ef" funcione al generar
          migraciones en JuntalyColegios.Infrastructure. -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
