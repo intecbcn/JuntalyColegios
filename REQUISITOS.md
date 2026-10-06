@@ -69,7 +69,8 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 
 - [x] Arquitectura hexagonal en 4 proyectos (Domain / Application / Infrastructure / Web)
 - [x] Autenticación con ASP.NET Core Identity
-- [~] Landing page + solicitud de demo
+- [x] Landing page + solicitud de demo (con tests unitarios, de integración y E2E)
+- [x] Entorno de tests automatizados: xUnit + `WebApplicationFactory` + Playwright .NET, con TDD obligatorio en cada feature
 - [ ] _(añadir aquí las siguientes funcionalidades a medida que se definan)_
 
 ---
@@ -81,3 +82,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-06 | Creación del checklist de requisitos |
 | 2026-10-06 | Tabla del formulario de entrega alineada con el formulario real; nombre y apellidos completados |
 | 2026-10-06 | `README.md` creado (descripción, stack, instalación, estructura, funcionalidades); URL colegios.juntaly.com |
+| 2026-10-06 | Entorno de tests (24 tests: unitarios, integración y E2E) y regla TDD; corregidos 2 bugs detectados por los tests: inyección de HTML en el correo de demo y mensaje de error tras un envío correcto del formulario |

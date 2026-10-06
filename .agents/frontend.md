@@ -21,6 +21,7 @@ Implementa y mantiene la interfaz: vistas Razor, layout compartido, páginas de 
 - **No tocar a mano** `JuntalyColegios/wwwroot/lib/` (Bootstrap, jQuery, jquery-validation): son librerías vendorizadas; actualizarlas es una decisión de [arquitectura](./arquitectura.md).
 
 ## Responsabilidades
+- **TDD**: los cambios con comportamiento visible (formularios, JS interactivo en `wwwroot/js`) parten de un test E2E en rojo escrito por [testing](./testing.md) en `JuntalyColegios.Tests/E2E/`; se implementa hasta ponerlo en verde.
 - Usar Tag Helpers de ASP.NET Core (`asp-for`, `asp-action`, `asp-controller`) en vez de URLs hardcodeadas.
 - Mantener consistencia con Bootstrap 5 ya integrado (`wwwroot/lib/bootstrap`) y con el layout existente (`_Layout.cshtml`).
 - Usar CSS aislado por vista (`*.cshtml.css`) para estilos específicos de una página, siguiendo el patrón de `_Layout.cshtml.css`.

@@ -13,9 +13,10 @@
 3. [Instalación y ejecución](#3-instalación-y-ejecución)
 4. [Estructura del proyecto](#4-estructura-del-proyecto)
 5. [Funcionalidades principales](#5-funcionalidades-principales)
-6. [Usuario y contraseña de prueba](#6-usuario-y-contraseña-de-prueba)
-7. [Despliegue](#7-despliegue)
-8. [Presentación y vídeo](#8-presentación-y-vídeo)
+6. [Tests automatizados](#6-tests-automatizados)
+7. [Usuario y contraseña de prueba](#7-usuario-y-contraseña-de-prueba)
+8. [Despliegue](#8-despliegue)
+9. [Presentación y vídeo](#9-presentación-y-vídeo)
 
 ---
 
@@ -47,6 +48,7 @@ Esta aplicación web es la plataforma de Juntaly Colegios: landing comercial con
 | Email | SMTP (`System.Net.Mail`) detrás de un puerto `IEmailSender` |
 | Frontend | Razor Views, Bootstrap 5, jQuery, jQuery Validation, CSS/JS propios |
 | Configuración | `appsettings.json` + User Secrets / variables de entorno / `.env` (DotNetEnv) |
+| Tests | xUnit, NSubstitute, `WebApplicationFactory` (integración) y Playwright .NET (E2E en Chromium headless) |
 | Herramientas | `dotnet-ef` (tool local, ver `JuntalyColegios/dotnet-tools.json`) |
 
 ## 3. Instalación y ejecución
@@ -94,12 +96,13 @@ La aplicación queda disponible en la URL que indique la consola (ver `JuntalyCo
 
 ```bash
 dotnet build JuntalyColegios.slnx
+dotnet test JuntalyColegios.slnx
 dotnet ef migrations add <Nombre> --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
 ```
 
 ## 4. Estructura del proyecto
 
-La solución está dividida en **4 proyectos** que fuerzan la regla de dependencia de la arquitectura hexagonal: `Web → Infrastructure → Application → Domain`.
+La aplicación está dividida en **4 proyectos** que fuerzan la regla de dependencia de la arquitectura hexagonal: `Web → Infrastructure → Application → Domain`, más un proyecto de tests.
 
 ```
 JuntalyColegios.slnx
@@ -119,6 +122,7 @@ JuntalyColegios.slnx
 │   ├── Views/                         #   vistas Razor (landing, layouts)
 │   ├── Areas/Identity/Pages/          #   páginas de cuenta (login, registro, gestión) personalizadas
 │   └── wwwroot/                       #   CSS, JS, imágenes y librerías cliente
+├── JuntalyColegios.Tests/             # Tests (xUnit): Application/, Web/, Integration/, E2E/ (Playwright)
 ├── .agents/                           # Guías de trabajo por especialidad (arquitectura, backend, ...)
 ├── AGENTS.md                          # Guía general de desarrollo del proyecto
 └── REQUISITOS.md                      # Checklist de entrega y progreso
@@ -136,18 +140,39 @@ Cada capa tiene su propio README con más detalle: [Domain](JuntalyColegios.Doma
 | Gestión de cuenta (perfil, cambio de contraseña, 2FA, datos personales) | ✅ |
 | _Próximos módulos: gestión de alumnos, vehículos/tags RFID y pantalla de salida_ | 🚧 |
 
-## 6. Usuario y contraseña de prueba
+## 6. Tests automatizados
+
+El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan.
+
+Todos los tests viven en `JuntalyColegios.Tests/`:
+
+| Carpeta | Tipo | Herramientas | Qué verifica |
+|---|---|---|---|
+| `Application/` | Unitarios | xUnit + dobles de prueba | Casos de uso aislados de infraestructura (ej. contenido y escape HTML del correo de demo) |
+| `Web/` | Unitarios | xUnit + NSubstitute | Controladores: validación, honeypot anti-bots, manejo de errores |
+| `Integration/` | Integración | `WebApplicationFactory` | Pipeline HTTP real: rutas, vistas, antiforgery, páginas de Identity |
+| `E2E/` | Extremo a extremo | Playwright .NET (Chromium headless) | Recorridos en navegador: demo interactiva, calculadora de precio, envío del formulario, navegación al login |
+
+Los tests **no usan servicios reales**: el SMTP se sustituye por un doble en memoria y la base de datos no se toca. No necesitan `.env` ni configuración previa; la primera ejecución de los E2E descarga Chromium automáticamente.
+
+```bash
+dotnet test JuntalyColegios.slnx                            # toda la suite
+dotnet test JuntalyColegios.slnx --filter "Category!=E2E"   # solo unitarios + integración (rápida)
+dotnet test JuntalyColegios.slnx --filter "Category=E2E"    # solo E2E con navegador
+```
+
+## 7. Usuario y contraseña de prueba
 
 | Usuario | Contraseña |
 |---|---|
 | _pendiente_ | _pendiente_ |
 
-## 7. Despliegue
+## 8. Despliegue
 
 - **URL de producción**: [https://colegios.juntaly.com](https://colegios.juntaly.com)
 - _Detalles de la infraestructura de despliegue: pendiente._
 
-## 8. Presentación y vídeo
+## 9. Presentación y vídeo
 
 - **Slides**: _pendiente_
 - **Vídeo explicativo**: _pendiente_

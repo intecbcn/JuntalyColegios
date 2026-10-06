@@ -25,6 +25,7 @@ Implementa la lógica de servidor **en la capa hexagonal que le corresponda a ca
 - `JuntalyColegios/Areas/Identity/` (código servidor de Identity; las páginas `.cshtml` de Identity son frontera con [frontend](./frontend.md))
 
 ## Responsabilidades
+- **TDD**: no empezar a implementar sin los tests en rojo entregados por [testing](./testing.md); implementar lo mínimo para ponerlos en verde, sin modificar los tests, y correr `dotnet test` completo antes de pasar el trabajo.
 - Respetar la regla de dependencia hexagonal en todo momento: Domain no conoce a nadie, Application no conoce EF Core ni Infrastructure, Infrastructure implementa los puertos de Application, Web solo llama a Application (nunca a Infrastructure directamente desde un controlador).
 - Mantener `ApplicationDbContext : IdentityDbContext` (en `JuntalyColegios.Infrastructure/Persistence/`) como fuente única de acceso a datos; agregar `DbSet<T>` para entidades nuevas.
 - Generar migraciones con `dotnet ef migrations add <Nombre> --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios` y revisar el `Designer.cs`/snapshot antes de aplicar.
