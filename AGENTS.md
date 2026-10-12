@@ -88,7 +88,6 @@ Palabras/señales en la tarea → subagente:
 - No commitear secretos ni cadenas de conexión reales; usar User Secrets (`UserSecretsId` ya está configurado en `JuntalyColegios/JuntalyColegios.csproj`) o variables de entorno.
 - No modificar a mano archivos dentro de `wwwroot/lib/` (librerías vendorizadas).
 - Reutilizar patrones existentes (Identity, puertos ya definidos en `Application/Ports`, Tag Helpers) antes de introducir uno nuevo.
-- **Seguimiento de requisitos**: al completar (o avanzar) cualquier punto listado en [`REQUISITOS.md`](./REQUISITOS.md) —documentación, despliegue, slides, vídeo o funcionalidades—, marcarlo y añadir una línea al "Registro de cambios" de ese archivo.
 
 ## 7. Formato de entrega esperado de cada subagente
 

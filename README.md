@@ -162,8 +162,7 @@ JuntalyColegios.slnx
 │   └── wwwroot/                       #   CSS, JS (salida.js: refresco de la pantalla de salida) e imágenes
 ├── JuntalyColegios.Tests/             # Tests (xUnit): Domain/, Application/, Web/, Integration/, E2E/ (Playwright)
 ├── .agents/                           # Guías de trabajo por especialidad (arquitectura, backend, ...)
-├── AGENTS.md                          # Guía general de desarrollo del proyecto
-└── REQUISITOS.md                      # Checklist de entrega y progreso
+└── AGENTS.md                          # Guía general de desarrollo del proyecto
 ```
 
 Cada capa tiene su propio README con más detalle: [Domain](JuntalyColegios.Domain/README.md) · [Application](JuntalyColegios.Application/README.md) · [Infrastructure](JuntalyColegios.Infrastructure/README.md).
