@@ -1,11 +1,12 @@
 using JuntalyColegios.Domain.Entities;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JuntalyColegios.Infrastructure.Persistence
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options), IDataProtectionKeyContext
     {
         public DbSet<Colegio> Colegios => Set<Colegio>();
 
@@ -26,6 +27,9 @@ namespace JuntalyColegios.Infrastructure.Persistence
         public DbSet<Deteccion> Detecciones => Set<Deteccion>();
 
         public DbSet<Recogida> Recogidas => Set<Recogida>();
+
+        /// <summary>Claves de Data Protection (cookies, antiforgery, tokens de invitación): sobreviven a reinicios de IIS.</summary>
+        public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

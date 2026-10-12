@@ -4,6 +4,7 @@ using JuntalyColegios.Configuracion;
 using JuntalyColegios.Infrastructure.Demo;
 using JuntalyColegios.Infrastructure.Identity;
 using JuntalyColegios.Infrastructure.Persistence;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.WebEncoders;
@@ -32,6 +33,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+// Claves de Data Protection en la base de datos: las cookies de sesión, el antiforgery y los enlaces de
+// invitación siguen siendo válidos tras reiniciar o reciclar el app pool de IIS.
+builder.Services.AddDataProtection()
+    .SetApplicationName("JuntalyColegios")
+    .PersistKeysToDbContext<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 // Razor escapa por defecto todo lo que no es ASCII (á → &#xE1;). Se dejan legibles los caracteres
 // Unicode del español; lo peligroso en HTML (<, >, &, comillas) se sigue escapando siempre.
