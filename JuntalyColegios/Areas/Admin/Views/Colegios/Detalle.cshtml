@@ -28,6 +28,24 @@
     <dd class="col-sm-9">@(colegio.Activo ? "Activo" : "Desactivado")</dd>
 </dl>
 
+<h2 class="h4 mt-4">Antena RFID</h2>
+<p class="text-muted">
+    La antena envía cada lectura a <code>POST /api/antena/detecciones</code> con la cabecera <code>X-Antena-Clave</code>.
+    Estado: @(colegio.TieneClaveAntena ? "clave configurada." : "sin clave: la antena no puede enviar lecturas.")
+</p>
+@if (TempData["ClaveAntena"] is string claveNueva)
+{
+    <div class="alert alert-warning" role="alert">
+        Clave nueva de la antena (cópiala ahora, no se volverá a mostrar):<br />
+        <code id="clave-antena" class="fs-6 user-select-all">@claveNueva</code>
+    </div>
+}
+<form asp-action="GenerarClaveAntena" asp-route-id="@colegio.Id" method="post" class="mb-4">
+    <button type="submit" class="btn btn-outline-secondary">
+        @(colegio.TieneClaveAntena ? "Regenerar clave (la anterior dejará de funcionar)" : "Generar clave de antena")
+    </button>
+</form>
+
 <h2 class="h4 mt-4">Supervisores</h2>
 @if (Model.Detalle.Supervisores.Count == 0)
 {

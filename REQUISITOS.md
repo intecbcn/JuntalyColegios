@@ -77,7 +77,7 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 - [x] Padres, vínculo con alumnos y tags RFID (supervisor): alta con invitación, hijos, vehículos y tag único por colegio
 - [x] Panel de padres: hijos y su clase, vehículos (con estado del tag) y personas autorizadas
 - [x] Franjas horarias de retiro por día de la semana (colegio y por clase, hora local del colegio; sin franja no se llama a nadie)
-- [ ] Flujo RFID: detección, pantalla de salida y simulador
+- [x] Flujo RFID: API de la antena con clave por colegio, detecciones (en franja → llamada; fuera de franja, duplicada o tag desconocido → solo registro), pantalla de salida con actualización automática y simulador
 - [ ] Historial de recogidas, registro de detecciones y datos demo
 
 ---
@@ -99,3 +99,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Fase 4: alta de padres por el supervisor con invitación, vínculo con hijos, vehículos y tags RFID (únicos por colegio). TDD: 55 tests en rojo → verde. Migración `PadresYVehiculos` (pendiente de aplicar). Suite 211/211 |
 | 2026-10-12 | Fase 5: panel de padres (/Padres) con hijos, vehículos y personas autorizadas, limitado a la propia familia. TDD: 32 tests en rojo → verde; refactor de la regla de placa única compartida con el supervisor. Migración `PersonasAutorizadas` (pendiente de aplicar). Suite 243/243 |
 | 2026-10-12 | Fase 6: franjas horarias de retiro por día de la semana, por colegio y por clase (la de la clase prevalece ese día), en hora local del colegio y con reloj inyectable (TimeProvider). TDD: 40 tests en rojo → verde. Corregido un test inestable de la fase 4. Migración `FranjasRetiro` (pendiente de aplicar). Suite 283/283 |
+| 2026-10-12 | Fase 7: flujo RFID completo (API de antena con clave por colegio guardada como hash, detecciones, recogidas, anti-duplicado de 5 min, pantalla de salida con refresco automático, autorizados visibles y simulador). TDD: 49 tests en rojo → verde. Migración `DeteccionesYRecogidas` (pendiente de aplicar). Pendiente: limitar peticiones (rate limiting) en la API de la antena. Suite 333/333 |

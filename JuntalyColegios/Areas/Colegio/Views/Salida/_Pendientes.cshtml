@@ -1,0 +1,38 @@
+@model JuntalyColegios.Application.DTOs.PantallaSalidaDto
+
+@if (Model.Pendientes.Count == 0)
+{
+    <p class="text-muted fs-5 py-4 text-center">No hay alumnos por entregar. Hora del colegio: @Model.HoraLocal.ToString("HH:mm")</p>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var recogida in Model.Pendientes)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card recogida h-100 border-primary">
+                    <div class="card-body">
+                        <h2 class="h4 card-title mb-1">@recogida.Alumno</h2>
+                        <p class="mb-2"><span class="badge text-bg-primary fs-6">@recogida.Clase</span></p>
+                        <p class="mb-1"><span class="font-monospace fw-bold">@recogida.Placa</span> @recogida.Vehiculo</p>
+                        <p class="mb-1 small">Familia: @recogida.Representante</p>
+                        @if (recogida.Autorizados.Count > 0)
+                        {
+                            <p class="mb-1 small">
+                                También autorizados:
+                                @string.Join(", ", recogida.Autorizados.Select(a => $"{a.Nombre} ({a.Documento})"))
+                            </p>
+                        }
+                        <p class="text-muted small mb-0">Llegó a las @recogida.DetectadoEnLocal.ToString("HH:mm")</p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <form asp-controller="Salida" asp-action="Entregar" method="post">
+                            <input type="hidden" name="recogidaId" value="@recogida.Id" />
+                            <button type="submit" class="btn btn-success w-100">Entregado</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

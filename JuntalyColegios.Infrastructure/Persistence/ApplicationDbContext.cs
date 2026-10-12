@@ -22,6 +22,10 @@ namespace JuntalyColegios.Infrastructure.Persistence
 
         public DbSet<FranjaRetiro> FranjasRetiro => Set<FranjaRetiro>();
 
+        public DbSet<Deteccion> Detecciones => Set<Deteccion>();
+
+        public DbSet<Recogida> Recogidas => Set<Recogida>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

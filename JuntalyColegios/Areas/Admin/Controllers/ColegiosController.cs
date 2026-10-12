@@ -90,6 +90,21 @@ public class ColegiosController : Controller
         }
     }
 
+    /// <summary>Genera una clave de antena nueva y la muestra una única vez (solo se guarda su hash).</summary>
+    [HttpPost]
+    public async Task<IActionResult> GenerarClaveAntena(Guid id, [FromServices] IGenerarClaveAntenaUseCase generar, CancellationToken ct)
+    {
+        try
+        {
+            TempData["ClaveAntena"] = await generar.EjecutarAsync(id, ct);
+            return RedirectToAction(nameof(Detalle), new { id });
+        }
+        catch (NoEncontradoException)
+        {
+            return NotFound();
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CambiarEstado(Guid id, bool activo, [FromServices] ICambiarEstadoColegioUseCase cambiar, CancellationToken ct)
     {

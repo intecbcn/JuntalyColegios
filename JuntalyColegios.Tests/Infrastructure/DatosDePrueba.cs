@@ -1,7 +1,9 @@
 using JuntalyColegios.Application.Seguridad;
+using JuntalyColegios.Application.UseCases.Salida;
 using JuntalyColegios.Domain.Entities;
 using JuntalyColegios.Domain.ValueObjects;
 using JuntalyColegios.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JuntalyColegios.Tests.Infrastructure;
@@ -74,6 +76,30 @@ public static class DatosDePrueba
             return db.SaveChangesAsync();
         });
         return vehiculo;
+    }
+
+    public static async Task CrearFranjaAsync(
+        JuntalyWebApplicationFactory factory, Guid colegioId, DayOfWeek dia, string inicio, string fin, Guid? claseId = null)
+    {
+        var franja = FranjaRetiro.Crear(colegioId, claseId, dia, TimeOnly.Parse(inicio), TimeOnly.Parse(fin));
+        await EnBaseDeDatosAsync(factory, db =>
+        {
+            db.FranjasRetiro.Add(franja);
+            return db.SaveChangesAsync();
+        });
+    }
+
+    /// <summary>Genera la clave de antena del colegio (guardando solo su hash) y la devuelve.</summary>
+    public static async Task<string> EstablecerClaveAntenaAsync(JuntalyWebApplicationFactory factory, Guid colegioId)
+    {
+        var clave = ClaveDeAntena.Generar();
+        await EnBaseDeDatosAsync(factory, async db =>
+        {
+            var colegio = await db.Colegios.SingleAsync(c => c.Id == colegioId);
+            colegio.EstablecerHashClaveAntena(ClaveDeAntena.Hash(clave));
+            await db.SaveChangesAsync();
+        });
+        return clave;
     }
 
     public static async Task EnBaseDeDatosAsync(JuntalyWebApplicationFactory factory, Func<ApplicationDbContext, Task> accion)

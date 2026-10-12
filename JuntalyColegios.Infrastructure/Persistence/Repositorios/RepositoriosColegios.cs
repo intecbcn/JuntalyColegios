@@ -23,6 +23,9 @@ public sealed class RepositorioColegiosEf(ApplicationDbContext db) : IRepositori
         db.Colegios.Update(colegio);
         return db.SaveChangesAsync(cancellationToken);
     }
+
+    public Task<Colegio?> ObtenerPorHashClaveAntenaAsync(string hash, CancellationToken cancellationToken) =>
+        db.Colegios.AsNoTracking().SingleOrDefaultAsync(c => c.HashClaveAntena == hash, cancellationToken);
 }
 
 public sealed class RepositorioSupervisoresEf(ApplicationDbContext db) : IRepositorioSupervisores

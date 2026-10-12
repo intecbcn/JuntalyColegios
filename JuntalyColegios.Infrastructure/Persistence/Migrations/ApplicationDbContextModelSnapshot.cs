@@ -92,6 +92,10 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
 
+                    b.Property<string>("HashClaveAntena")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -104,7 +108,44 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HashClaveAntena")
+                        .IsUnique();
+
                     b.ToTable("Colegios", (string)null);
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Deteccion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("DetectadoEn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Resultado")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Simulada")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid?>("VehiculoId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColegioId", "DetectadoEn");
+
+                    b.HasIndex("VehiculoId", "DetectadoEn");
+
+                    b.ToTable("Detecciones", (string)null);
                 });
 
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.FranjaRetiro", b =>
@@ -169,6 +210,40 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("PersonasAutorizadas", (string)null);
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Recogida", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlumnoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DeteccionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("DetectadoEn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EntregadoEn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("VehiculoId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlumnoId");
+
+                    b.HasIndex("DeteccionId");
+
+                    b.HasIndex("ColegioId", "EntregadoEn");
+
+                    b.ToTable("Recogidas", (string)null);
                 });
 
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Representante", b =>
@@ -498,6 +573,20 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Deteccion", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Vehiculo", null)
+                        .WithMany()
+                        .HasForeignKey("VehiculoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.FranjaRetiro", b =>
                 {
                     b.HasOne("JuntalyColegios.Domain.Entities.Clase", null)
@@ -523,6 +612,27 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.HasOne("JuntalyColegios.Domain.Entities.Representante", null)
                         .WithMany()
                         .HasForeignKey("RepresentanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Recogida", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Alumno", null)
+                        .WithMany()
+                        .HasForeignKey("AlumnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Deteccion", null)
+                        .WithMany()
+                        .HasForeignKey("DeteccionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

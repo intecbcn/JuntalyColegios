@@ -27,6 +27,19 @@ public sealed class Colegio
 
     public bool Activo { get; private set; }
 
+    /// <summary>
+    /// Hash de la clave con la que se identifica la antena del colegio. La clave en claro no se guarda:
+    /// se muestra una sola vez al generarla.
+    /// </summary>
+    public string? HashClaveAntena { get; private set; }
+
+    public void EstablecerHashClaveAntena(string hash)
+    {
+        if (string.IsNullOrWhiteSpace(hash))
+            throw new DominioException("El hash de la clave de antena no puede estar vacío.");
+        HashClaveAntena = hash;
+    }
+
     public static Colegio Crear(string nombre, string? direccion, string? zonaHoraria)
     {
         var colegio = new Colegio { Id = Guid.NewGuid(), Activo = true };

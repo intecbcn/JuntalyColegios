@@ -14,7 +14,7 @@ namespace JuntalyColegios.Application.UseCases.Colegios;
 
 internal static class ColegiosMapeo
 {
-    public static ColegioDto ADto(this Colegio c) => new(c.Id, c.Nombre, c.Direccion, c.ZonaHoraria, c.Activo);
+    public static ColegioDto ADto(this Colegio c) => new(c.Id, c.Nombre, c.Direccion, c.ZonaHoraria, c.Activo, c.HashClaveAntena is not null);
 
     public static async Task<Colegio> ObtenerExistenteAsync(this IRepositorioColegios colegios, Guid id, CancellationToken ct) =>
         await colegios.ObtenerAsync(id, ct) ?? throw new NoEncontradoException("El colegio no existe.");

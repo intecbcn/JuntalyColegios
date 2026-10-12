@@ -15,6 +15,9 @@ public sealed class ColegioConfiguracion : IEntityTypeConfiguration<Colegio>
         builder.Property(c => c.Nombre).HasMaxLength(Colegio.LongitudMaximaNombre).IsRequired();
         builder.Property(c => c.Direccion).HasMaxLength(Colegio.LongitudMaximaDireccion);
         builder.Property(c => c.ZonaHoraria).HasMaxLength(Colegio.LongitudMaximaZonaHoraria).IsRequired();
+        // SHA-256 en hexadecimal; la antena se identifica buscando por él.
+        builder.Property(c => c.HashClaveAntena).HasMaxLength(64);
+        builder.HasIndex(c => c.HashClaveAntena).IsUnique();
     }
 }
 

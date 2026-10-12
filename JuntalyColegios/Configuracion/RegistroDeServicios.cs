@@ -4,6 +4,7 @@ using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.UseCases;
 using JuntalyColegios.Application.UseCases.Colegios;
 using JuntalyColegios.Application.UseCases.Padres;
+using JuntalyColegios.Application.UseCases.Salida;
 using JuntalyColegios.Application.UseCases.Supervision;
 using JuntalyColegios.Infrastructure.Email;
 using JuntalyColegios.Infrastructure.Identity;
@@ -31,6 +32,8 @@ public static class RegistroDeServicios
         services.AddScoped<IRepositorioVehiculos, RepositorioVehiculosEf>();
         services.AddScoped<IRepositorioAutorizados, RepositorioAutorizadosEf>();
         services.AddScoped<IRepositorioFranjas, RepositorioFranjasEf>();
+        services.AddScoped<IRepositorioDetecciones, RepositorioDeteccionesEf>();
+        services.AddScoped<IRepositorioRecogidas, RepositorioRecogidasEf>();
 
         // Reloj del sistema (en los tests se sustituye por uno controlado).
         services.TryAddSingleton(TimeProvider.System);
@@ -63,6 +66,14 @@ public static class RegistroDeServicios
         services.AddScoped<IDesvincularAlumnoUseCase, DesvincularAlumnoUseCase>();
         services.AddScoped<IAgregarVehiculoUseCase, AgregarVehiculoUseCase>();
         services.AddScoped<IAsignarTagUseCase, AsignarTagUseCase>();
+
+        // Flujo RFID: lectura de la antena (o simulada) → recogidas → pantalla de salida.
+        services.AddScoped<RegistroDeDetecciones>();
+        services.AddScoped<IRegistrarDeteccionAntenaUseCase, RegistrarDeteccionAntenaUseCase>();
+        services.AddScoped<ISimularLlegadaUseCase, SimularLlegadaUseCase>();
+        services.AddScoped<IObtenerPantallaSalidaUseCase, ObtenerPantallaSalidaUseCase>();
+        services.AddScoped<IMarcarEntregadaUseCase, MarcarEntregadaUseCase>();
+        services.AddScoped<IGenerarClaveAntenaUseCase, GenerarClaveAntenaUseCase>();
 
         services.AddScoped<IListarFranjasUseCase, ListarFranjasUseCase>();
         services.AddScoped<ICrearFranjasUseCase, CrearFranjasUseCase>();

@@ -27,6 +27,9 @@ public sealed class RepositorioColegiosEnMemoria : IRepositorioColegios
         Actualizaciones++;
         return Task.CompletedTask;
     }
+
+    public Task<Colegio?> ObtenerPorHashClaveAntenaAsync(string hash, CancellationToken cancellationToken) =>
+        Task.FromResult(Colegios.SingleOrDefault(c => c.HashClaveAntena == hash));
 }
 
 public sealed class RepositorioSupervisoresEnMemoria : IRepositorioSupervisores
@@ -172,6 +175,31 @@ public sealed class RepositorioFranjasEnMemoria : IRepositorioFranjas
         Franjas.Remove(franja);
         return Task.CompletedTask;
     }
+}
+
+public sealed class RepositorioDeteccionesEnMemoria : IRepositorioDetecciones, IRepositorioRecogidas
+{
+    public List<Deteccion> Detecciones { get; } = [];
+
+    public List<Recogida> Recogidas { get; } = [];
+
+    public Task GuardarAsync(Deteccion deteccion, IReadOnlyCollection<Recogida> recogidas, CancellationToken cancellationToken)
+    {
+        Detecciones.Add(deteccion);
+        Recogidas.AddRange(recogidas);
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<Deteccion>> ListarDeVehiculoDesdeAsync(Guid vehiculoId, DateTimeOffset desde, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Deteccion>>(Detecciones.Where(d => d.VehiculoId == vehiculoId && d.DetectadoEn >= desde).ToList());
+
+    public Task<Recogida?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Recogidas.SingleOrDefault(r => r.Id == id));
+
+    public Task<IReadOnlyList<Recogida>> ListarPendientesAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Recogida>>(Recogidas.Where(r => r.ColegioId == colegioId && r.Pendiente).ToList());
+
+    public Task ActualizarAsync(Recogida recogida, CancellationToken cancellationToken) => Task.CompletedTask;
 }
 
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
