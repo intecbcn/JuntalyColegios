@@ -30,6 +30,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
+# La regla anterior es para la carpeta de compilación «out/», no para los puertos de salida de Application.
+!**/Ports/Out/
 [Ll]og/
 [Ll]ogs/
 
