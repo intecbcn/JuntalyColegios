@@ -101,6 +101,7 @@ La aplicación queda disponible en la URL que indique la consola (ver `JuntalyCo
 | `Demo__Sembrar` | No | `true` crea el colegio de demostración con las cuentas de prueba |
 | `Demo__Contrasena` | Si `Demo__Sembrar` | Contraseña de las cuentas de prueba |
 | `Demo__ClaveAntena` | No | Clave de antena del colegio de demo, para probar la API de la antena |
+| `Antena__PeticionesPorMinuto` | No | Lecturas por minuto permitidas a cada antena (por defecto 120); al superarlas la API responde 429 |
 
 > **Secretos**: el archivo `.env` y los User Secrets **no** se suben al repositorio. En producción las variables se definen en el entorno del servidor (ver [Despliegue](#8-despliegue)).
 
@@ -169,13 +170,13 @@ La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay
 ### Seguridad
 
 - Cada supervisor solo accede a los datos de su colegio y cada padre a los de su familia (lo ajeno responde 404).
-- La clave de la antena se guarda solo como hash y se muestra una única vez al generarla.
+- La clave de la antena se guarda solo como hash y se muestra una única vez al generarla; cada antena tiene un límite de lecturas por minuto (429 con `Retry-After` al superarlo).
 - Antiforgery en todos los formularios, emails con contenido escapado y hosts permitidos restringidos para no envenenar los enlaces de recuperación.
 - En Supabase todas las tablas tienen RLS y sin permisos para los roles públicos de su API REST.
 
 ## 6. Tests automatizados
 
-El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan. La suite tiene **349 tests**.
+El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan. La suite tiene **358 tests**.
 
 Todos los tests viven en `JuntalyColegios.Tests/`:
 

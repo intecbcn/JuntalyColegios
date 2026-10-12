@@ -53,6 +53,7 @@ builder.Services.Configure<WebEncoderOptions>(options =>
 
 // Puertos de Application con sus adaptadores de Infrastructure y casos de uso (ver RegistroDeServicios).
 builder.Services.AddJuntalyColegios();
+builder.Services.AddLimiteAntena(builder.Configuration);
 
 var app = builder.Build();
 
@@ -81,6 +82,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

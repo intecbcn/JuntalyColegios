@@ -1,9 +1,11 @@
 using JuntalyColegios.Application.Excepciones;
 using JuntalyColegios.Application.Ports.In;
+using JuntalyColegios.Configuracion;
 using JuntalyColegios.Domain.Exceptions;
 using JuntalyColegios.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace JuntalyColegios.Controllers;
 
@@ -15,6 +17,7 @@ namespace JuntalyColegios.Controllers;
 [Route("api/antena")]
 [AllowAnonymous]
 [IgnoreAntiforgeryToken]
+[EnableRateLimiting(LimiteAntena.Politica)]
 public class AntenaController : ControllerBase
 {
     public const string CabeceraClave = "X-Antena-Clave";
