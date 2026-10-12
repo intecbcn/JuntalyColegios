@@ -18,7 +18,7 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 
 ## 2. Código fuente
 
-- [~] a. Repositorio **público** en GitHub — remoto actual: `https://github.com/intecbcn/JuntalyColegios.git` (verificar que sea público)
+- [x] a. Repositorio **público** en GitHub: https://github.com/intecbcn/JuntalyColegios
 - Nota: un repositorio privado solo se admite si está perfectamente justificado (habría que conceder acceso al revisor).
 
 ## 3. Despliegue / publicación
@@ -54,7 +54,7 @@ Mismos campos y orden que el formulario.
 | Nombre | Alejandro | [x] |
 | Apellidos | Contreras | [x] |
 | Email | _(el de inscripción; no se publica en el repo)_ | [ ] |
-| URL Repositorio de GitHub | https://github.com/intecbcn/JuntalyColegios _(confirmar que sea público)_ | [~] |
+| URL Repositorio de GitHub | https://github.com/intecbcn/JuntalyColegios | [x] |
 | URL Despliegue o Publicación | https://colegios.juntaly.com _(verificar que esté desplegado)_ | [~] |
 | URL Slides | | [ ] |
 | URL Vídeo | | [ ] |
@@ -83,3 +83,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-06 | Tabla del formulario de entrega alineada con el formulario real; nombre y apellidos completados |
 | 2026-10-06 | `README.md` creado (descripción, stack, instalación, estructura, funcionalidades); URL colegios.juntaly.com |
 | 2026-10-06 | Entorno de tests (24 tests: unitarios, integración y E2E) y regla TDD; corregidos 2 bugs detectados por los tests: inyección de HTML en el correo de demo y mensaje de error tras un envío correcto del formulario |
+| 2026-10-12 | Repositorio de GitHub pasado a público (revisado antes el historial: sin secretos) |
