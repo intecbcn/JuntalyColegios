@@ -10,6 +10,8 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Microsoft.Playwright" Version="1.63.0" />
     <PackageReference Include="NSubstitute" Version="6.2.0" />
@@ -24,6 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\JuntalyColegios\JuntalyColegios.csproj" />
     <ProjectReference Include="..\JuntalyColegios.Application\JuntalyColegios.Application.csproj" />
+    <ProjectReference Include="..\JuntalyColegios.Domain\JuntalyColegios.Domain.csproj" />
+    <ProjectReference Include="..\JuntalyColegios.Infrastructure\JuntalyColegios.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

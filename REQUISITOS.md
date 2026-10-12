@@ -84,3 +84,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-06 | `README.md` creado (descripción, stack, instalación, estructura, funcionalidades); URL colegios.juntaly.com |
 | 2026-10-06 | Entorno de tests (24 tests: unitarios, integración y E2E) y regla TDD; corregidos 2 bugs detectados por los tests: inyección de HTML en el correo de demo y mensaje de error tras un envío correcto del formulario |
 | 2026-10-12 | Repositorio de GitHub pasado a público (revisado antes el historial: sin secretos) |
+| 2026-10-12 | Fase 0 del módulo funcional: tests de integración sobre SQLite en memoria y utilidad de inicio de sesión (TDD: 2 tests en rojo → verde; suite 26/26) |
