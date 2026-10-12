@@ -23,7 +23,7 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 
 ## 3. Despliegue / publicación
 
-- [~] Aplicación desplegada y funcionando — dominio: https://colegios.juntaly.com
+- [x] Aplicación desplegada y funcionando — dominio: https://colegios.juntaly.com (IIS + Cloudflare + Supabase, verificado el 12/10/2026)
 - [x] URL de acceso añadida al `README.md`
 
 ## 4. Presentación (slides)
@@ -55,11 +55,11 @@ Mismos campos y orden que el formulario.
 | Apellidos | Contreras | [x] |
 | Email | _(el de inscripción; no se publica en el repo)_ | [ ] |
 | URL Repositorio de GitHub | https://github.com/intecbcn/JuntalyColegios | [x] |
-| URL Despliegue o Publicación | https://colegios.juntaly.com _(verificar que esté desplegado)_ | [~] |
+| URL Despliegue o Publicación | https://colegios.juntaly.com | [x] |
 | URL Slides | | [ ] |
 | URL Vídeo | | [ ] |
-| Usuario de prueba | supervisor@demo.juntaly.com (también padre@demo.juntaly.com) | [~] |
-| Contraseña del usuario de prueba | Demo123! | [~] |
+| Usuario de prueba | supervisor@demo.juntaly.com (también padre@demo.juntaly.com) | [x] |
+| Contraseña del usuario de prueba | Demo123! | [x] |
 
 ---
 
@@ -104,4 +104,5 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Migraciones aplicadas en Supabase (esquema anterior de Identity, vacío, recreado). Seguridad: corregido el aviso crítico de Supabase «rls_disabled_in_public» (las tablas, incluida AspNetUsers, eran legibles con la clave pública anon): RLS en todas las tablas y permisos retirados a anon/authenticated, también por defecto para tablas futuras. Verificado en la base: 19/19 tablas con RLS y sin acceso para anon |
 | 2026-10-12 | Despliegue preparado: claves de Data Protection en la base (sobreviven a reciclajes de IIS; TDD 1 test rojo → verde, migración `ClavesDataProtection` aplicada con RLS), README actualizado (configuración, estructura, funcionalidades, tests, usuarios de prueba y despliegue en IIS) y paquete de publicación. Pendiente: copiar al servidor IIS y verificar en producción. Suite 349/349 |
 | 2026-10-12 | Fix despliegue IIS: la app no arrancaba sin cadena de conexión (error críptico de Npgsql). Ahora falla con un mensaje que indica la variable a definir y carga el `.env` desde la carpeta del sitio (test de regresión rojo → verde). Suite 350/350 |
+| 2026-10-12 | Despliegue verificado en producción con las cuentas de prueba: login y redirección por rol, simulador (llama a Sofía, Diego fuera de su franja), entrega, panel del padre con historial, accesos denegados entre perfiles; Supabase con 20/20 tablas con RLS y claves de Data Protection persistidas. Demo: franja general de todo el día para que el revisor pueda probar a cualquier hora (en Caracas son 6 h menos que en España); aplicado también en producción. Suite 355/355 |
 | 2026-10-12 | Paneles de administración, supervisor y padres con la identidad visual de Juntaly (layout propio con menú plegable en móvil, `app.css`; se retira `site.css` de la plantilla) y diseño responsive: tablas con scroll dentro de su tarjeta, cabeceras y botones que se apilan en pantallas estrechas. TDD: 3 tests de integración + 2 E2E a 390 px en rojo → verde. Suite 355/355 |

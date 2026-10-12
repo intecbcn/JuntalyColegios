@@ -206,7 +206,7 @@ En https://colegios.juntaly.com hay un colegio de demostración («U. E. Colegio
 
 Recorrido sugerido:
 
-1. Entrar como **supervisor** → **Pantalla de salida** → en el simulador elegir `AB123CD · Andrea Martínez` → **Simular llegada**. Se llama a *Sofía Martínez* (franja general 06:00–22:00); su hermano *Diego* (5.º Año, franja propia de 13:00 a 14:00 entre semana) solo se llama dentro de su franja.
+1. Entrar como **supervisor** → **Pantalla de salida** → en el simulador elegir `AB123CD · Andrea Martínez` → **Simular llegada**. Se llama a *Sofía Martínez* (franja general de todo el día); su hermano *Diego* (5.º Año, franja propia de 13:00 a 14:00 entre semana) solo se llama dentro de su franja.
 2. Pulsar **Entregado**, y revisar **Franjas de retiro** y **Registro de detecciones**.
 3. Entrar como **padre** → ver a sus hijos, el vehículo con su tag, la persona autorizada y el historial de recogidas.
 

@@ -51,10 +51,11 @@ public static class SembradorDemo
         var quinto = Clase.Crear(colegio.Id, "5.º Año", "Bachillerato");
         db.Clases.AddRange(primero, tercero, quinto);
 
-        // Salida general amplia (para poder probar a cualquier hora) y una clase con horario propio,
+        // Salida general todo el día (el revisor puede probar a cualquier hora, también desde otra zona
+        // horaria) y una clase con horario propio,
         // para ver también una llegada fuera de franja.
         foreach (var dia in Enum.GetValues<DayOfWeek>())
-            db.FranjasRetiro.Add(FranjaRetiro.Crear(colegio.Id, null, dia, new TimeOnly(6, 0), new TimeOnly(22, 0)));
+            db.FranjasRetiro.Add(FranjaRetiro.Crear(colegio.Id, null, dia, new TimeOnly(0, 0), new TimeOnly(23, 59)));
         foreach (var dia in new[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday })
             db.FranjasRetiro.Add(FranjaRetiro.Crear(colegio.Id, quinto.Id, dia, new TimeOnly(13, 0), new TimeOnly(14, 0)));
 
@@ -79,6 +80,7 @@ public static class SembradorDemo
             (Email: "familia.fernandez@demo.juntaly.com", Nombre: "María Fernández", Hijo: ("Pablo", "Fernández", primero), Placa: "KL456MN", Vehiculo: "Ford Explorer negra", Tag: "E20000172211014418900003"),
             (Email: "familia.rojas@demo.juntaly.com", Nombre: "Andrés Rojas", Hijo: ("Daniela", "Rojas", quinto), Placa: "GH321JK", Vehiculo: "Hyundai Tucson blanca", Tag: "E20000172211014418900004")
         };
+        var vehiculosOtras = new Dictionary<string, Vehiculo>();
         foreach (var f in otras)
         {
             var hijo = Alumno.Crear(f.Hijo.Item3, f.Hijo.Item1, f.Hijo.Item2);
@@ -89,6 +91,7 @@ public static class SembradorDemo
             db.Alumnos.Add(hijo);
             db.Representantes.Add(familia);
             db.Vehiculos.Add(vehiculo);
+            vehiculosOtras[f.Placa] = vehiculo;
         }
 
         // Historial de los últimos días: recogidas entregadas de Sofía y lecturas que no llamaron a nadie.
@@ -102,8 +105,13 @@ public static class SembradorDemo
             db.Detecciones.Add(deteccion);
             db.Recogidas.Add(recogida);
         }
-        db.Detecciones.Add(Deteccion.Crear(colegio.Id, TagFamiliaDemo, carroDemo.Id,
-            InstanteLocal(hoy.AddDays(-1), new TimeOnly(22, 40)), ResultadoDeteccion.FueraDeFranja, simulada: false));
+        // La familia Rojas solo tiene una hija en 5.º Año (sale de 13:00 a 14:00 entre semana): a las 10:00 de
+        // un día laborable su coche se detecta fuera de franja.
+        var laborable = hoy.AddDays(-1);
+        while (laborable.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday) laborable = laborable.AddDays(-1);
+        var carroRojas = vehiculosOtras["GH321JK"];
+        db.Detecciones.Add(Deteccion.Crear(colegio.Id, carroRojas.Tag!, carroRojas.Id,
+            InstanteLocal(laborable, new TimeOnly(10, 0)), ResultadoDeteccion.FueraDeFranja, simulada: false));
         db.Detecciones.Add(Deteccion.Crear(colegio.Id, "E200FFFF00000000DEADBEEF", null,
             InstanteLocal(hoy.AddDays(-2), new TimeOnly(12, 30)), ResultadoDeteccion.TagDesconocido, simulada: false));
 

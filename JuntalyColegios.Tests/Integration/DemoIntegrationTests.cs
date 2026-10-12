@@ -46,7 +46,7 @@ public class DemoIntegrationTests : IClassFixture<JuntalyConDemoFactory>
 
         Assert.Contains(SembradorDemo.NombreColegio, inicio);
         Assert.Contains("5.º Año", inicio);
-        Assert.Contains("06:00 – 22:00", franjas);
+        Assert.Contains("00:00 – 23:59", franjas);
         Assert.Contains("13:00 – 14:00", franjas);
     }
 
