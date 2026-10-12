@@ -1,0 +1,19 @@
+@model JuntalyColegios.Areas.Admin.Models.ColegioFormulario
+@using JuntalyColegios.Areas.Admin.Models
+
+<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label"></label>
+    <input asp-for="Nombre" class="form-control" maxlength="150" autocomplete="off" />
+    <span asp-validation-for="Nombre" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Direccion" class="form-label"></label>
+    <input asp-for="Direccion" class="form-control" maxlength="250" autocomplete="off" />
+    <span asp-validation-for="Direccion" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="ZonaHoraria" class="form-label"></label>
+    <select asp-for="ZonaHoraria" asp-items="@(new SelectList(ColegioFormulario.ZonasHorarias))" class="form-select"></select>
+    <div class="form-text">Las franjas de retiro se evalúan en la hora local del colegio.</div>
+</div>

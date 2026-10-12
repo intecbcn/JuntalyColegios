@@ -27,6 +27,9 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
 
     public const string EmailAdminInicial = "admin@juntaly.test";
 
+    /// <summary>URL pública con la que la app construye los enlaces de los emails (p.ej. invitaciones).</summary>
+    public const string UrlBase = "https://colegios.test";
+
     public JuntalyWebApplicationFactory()
     {
         // El esquema se crea antes de arrancar la app, porque Program.cs inicializa roles y el
@@ -43,6 +46,7 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
         // llegarían vacíos: se habilitan para que la app de test sirva lo mismo que en local.
         builder.UseStaticWebAssets();
         builder.UseSetting("ConnectionStrings:DefaultConnection", ConexionFicticia);
+        builder.UseSetting("App:UrlBase", UrlBase);
         builder.UseSetting("AdminInicial:Email", EmailAdminInicial);
         builder.UseSetting("AdminInicial:Password", AutenticacionTests.ContrasenaPorDefecto);
 

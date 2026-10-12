@@ -1,0 +1,19 @@
+@model JuntalyColegios.Areas.Admin.Models.ColegioFormulario
+@{
+    ViewData["Title"] = "Nuevo colegio";
+}
+
+<h1>Nuevo colegio</h1>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Crear" method="post">
+            <partial name="_FormularioColegio" model="Model" />
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Index" class="btn btn-link">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

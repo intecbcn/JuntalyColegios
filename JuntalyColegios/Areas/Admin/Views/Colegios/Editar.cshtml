@@ -1,0 +1,20 @@
+@model JuntalyColegios.Areas.Admin.Models.ColegioFormulario
+@{
+    ViewData["Title"] = "Editar colegio";
+    var id = (Guid)ViewData["ColegioId"]!;
+}
+
+<h1>Editar colegio</h1>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Editar" asp-route-id="@id" method="post">
+            <partial name="_FormularioColegio" model="Model" />
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Detalle" asp-route-id="@id" class="btn btn-link">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

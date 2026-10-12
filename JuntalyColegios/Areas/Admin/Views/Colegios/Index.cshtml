@@ -1,0 +1,38 @@
+@model IReadOnlyList<JuntalyColegios.Application.DTOs.ColegioDto>
+@{
+    ViewData["Title"] = "Colegios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Colegios</h1>
+    <a asp-action="Crear" class="btn btn-primary">Nuevo colegio</a>
+</div>
+<partial name="_Avisos" />
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">Todavía no hay colegios. Crea el primero con «Nuevo colegio».</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr><th>Nombre</th><th>Dirección</th><th>Zona horaria</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var colegio in Model)
+            {
+                <tr>
+                    <td>@colegio.Nombre</td>
+                    <td>@colegio.Direccion</td>
+                    <td>@colegio.ZonaHoraria</td>
+                    <td>
+                        @if (colegio.Activo) { <span class="badge text-bg-success">Activo</span> }
+                        else { <span class="badge text-bg-secondary">Desactivado</span> }
+                    </td>
+                    <td class="text-end"><a asp-action="Detalle" asp-route-id="@colegio.Id" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

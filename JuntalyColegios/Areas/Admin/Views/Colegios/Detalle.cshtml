@@ -1,0 +1,72 @@
+@model JuntalyColegios.Areas.Admin.Models.DetalleColegioViewModel
+@{
+    var colegio = Model.Detalle.Colegio;
+    ViewData["Title"] = colegio.Nombre;
+}
+
+<a asp-action="Index" class="btn btn-link px-0">&larr; Colegios</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">@colegio.Nombre</h1>
+    <div class="d-flex gap-2">
+        <a asp-action="Editar" asp-route-id="@colegio.Id" class="btn btn-outline-primary">Editar</a>
+        <form asp-action="CambiarEstado" asp-route-id="@colegio.Id" method="post">
+            <input type="hidden" name="activo" value="@(colegio.Activo ? "false" : "true")" />
+            <button type="submit" class="btn @(colegio.Activo ? "btn-outline-danger" : "btn-outline-success")">
+                @(colegio.Activo ? "Desactivar" : "Activar")
+            </button>
+        </form>
+    </div>
+</div>
+<partial name="_Avisos" />
+
+<dl class="row">
+    <dt class="col-sm-3">Dirección</dt>
+    <dd class="col-sm-9">@(colegio.Direccion ?? "—")</dd>
+    <dt class="col-sm-3">Zona horaria</dt>
+    <dd class="col-sm-9">@colegio.ZonaHoraria</dd>
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">@(colegio.Activo ? "Activo" : "Desactivado")</dd>
+</dl>
+
+<h2 class="h4 mt-4">Supervisores</h2>
+@if (Model.Detalle.Supervisores.Count == 0)
+{
+    <p class="text-muted">Este colegio aún no tiene supervisores.</p>
+}
+else
+{
+    <table class="table">
+        <thead><tr><th>Nombre</th><th>Email</th></tr></thead>
+        <tbody>
+            @foreach (var supervisor in Model.Detalle.Supervisores)
+            {
+                <tr><td>@supervisor.Nombre</td><td>@supervisor.Email</td></tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (colegio.Activo)
+{
+    <h3 class="h5 mt-4">Dar de alta un supervisor</h3>
+    <p class="text-muted">Recibirá un email con un enlace para establecer su contraseña.</p>
+    <form asp-action="AltaSupervisor" asp-route-id="@colegio.Id" method="post" class="row g-3">
+        <div class="col-md-5">
+            <label asp-for="NuevoSupervisor.Nombre" class="form-label"></label>
+            <input asp-for="NuevoSupervisor.Nombre" class="form-control" maxlength="100" autocomplete="off" />
+            <span asp-validation-for="NuevoSupervisor.Nombre" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <label asp-for="NuevoSupervisor.Email" class="form-label"></label>
+            <input asp-for="NuevoSupervisor.Email" class="form-control" autocomplete="off" />
+            <span asp-validation-for="NuevoSupervisor.Email" class="text-danger"></span>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Dar de alta supervisor</button>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

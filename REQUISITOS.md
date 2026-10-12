@@ -72,7 +72,7 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 - [x] Landing page + solicitud de demo (con tests unitarios, de integración y E2E)
 - [x] Entorno de tests automatizados: xUnit + `WebApplicationFactory` + Playwright .NET, con TDD obligatorio en cada feature
 - [x] Roles (AdminApp, SupervisorColegio, Padre), administrador inicial por configuración, registro público cerrado (alta en cascada) y menú por rol
-- [ ] Gestión de colegios y supervisores (AdminApp)
+- [x] Gestión de colegios y supervisores (AdminApp): alta, edición, activar/desactivar y alta de supervisor con invitación por email
 - [ ] Clases y alumnos (supervisor)
 - [ ] Padres, vínculo con alumnos y tags RFID (supervisor)
 - [ ] Panel de padres: hijos, vehículos, personas autorizadas
@@ -93,3 +93,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Repositorio de GitHub pasado a público (revisado antes el historial: sin secretos) |
 | 2026-10-12 | Fase 0 del módulo funcional: tests de integración sobre SQLite en memoria y utilidad de inicio de sesión (TDD: 2 tests en rojo → verde; suite 26/26) |
 | 2026-10-12 | Fase 1: roles, administrador inicial, registro público cerrado y menú por rol (TDD: 13 tests en rojo → verde). Seguridad: cerrada también RegisterConfirmation, que entregaba enlaces de confirmación de cualquier cuenta y permitía enumerar emails (test de regresión). Suite 41/41 |
+| 2026-10-12 | Fase 2: gestión de colegios y alta de supervisores con invitación por email (TDD: 55 tests en rojo → verde; incluye compensación de cuentas huérfanas). Migración `ModuloColegios` (pendiente de aplicar en Supabase). Panel por rol tras el login (/Panel) y "Mi panel" en la landing. Suite 105/105 |

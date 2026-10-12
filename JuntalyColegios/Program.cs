@@ -1,11 +1,11 @@
-using JuntalyColegios.Application.Ports.In;
-using JuntalyColegios.Application.Ports.Out;
-using JuntalyColegios.Application.UseCases;
-using JuntalyColegios.Infrastructure.Email;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using JuntalyColegios.Configuracion;
 using JuntalyColegios.Infrastructure.Identity;
 using JuntalyColegios.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.WebEncoders;
 
 // Carga variables de entorno desde .env (credenciales de Supabase) antes de construir la configuración.
 // Busca .env subiendo desde el directorio actual hasta encontrarlo (p.ej. la raíz del repo),
@@ -32,10 +32,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+// Razor escapa por defecto todo lo que no es ASCII (á → &#xE1;). Se dejan legibles los caracteres
+// Unicode del español; lo peligroso en HTML (<, >, &, comillas) se sigue escapando siempre.
+builder.Services.Configure<WebEncoderOptions>(options =>
+    options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
-// Landing "Solicita una demo": puerto de salida (SMTP) y caso de uso que lo consume.
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
-builder.Services.AddScoped<ISolicitarDemoUseCase, SolicitarDemoUseCase>();
+// Puertos de Application con sus adaptadores de Infrastructure y casos de uso (ver RegistroDeServicios).
+builder.Services.AddJuntalyColegios();
 
 var app = builder.Build();
 
