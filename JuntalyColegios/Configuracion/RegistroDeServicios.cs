@@ -18,6 +18,7 @@ public static class RegistroDeServicios
     {
         // Adaptadores (puertos de salida).
         services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddScoped<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, EmailSenderIdentityUi>();
         services.AddScoped<IServicioUsuarios, ServicioUsuariosIdentity>();
         services.AddScoped<IRepositorioColegios, RepositorioColegiosEf>();
         services.AddScoped<IRepositorioSupervisores, RepositorioSupervisoresEf>();
