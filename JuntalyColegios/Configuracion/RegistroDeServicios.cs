@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.UseCases;
@@ -29,6 +30,10 @@ public static class RegistroDeServicios
         services.AddScoped<IRepositorioRepresentantes, RepositorioRepresentantesEf>();
         services.AddScoped<IRepositorioVehiculos, RepositorioVehiculosEf>();
         services.AddScoped<IRepositorioAutorizados, RepositorioAutorizadosEf>();
+        services.AddScoped<IRepositorioFranjas, RepositorioFranjasEf>();
+
+        // Reloj del sistema (en los tests se sustituye por uno controlado).
+        services.TryAddSingleton(TimeProvider.System);
 
         // Casos de uso (puertos de entrada).
         services.AddScoped<ISolicitarDemoUseCase, SolicitarDemoUseCase>();
@@ -58,6 +63,10 @@ public static class RegistroDeServicios
         services.AddScoped<IDesvincularAlumnoUseCase, DesvincularAlumnoUseCase>();
         services.AddScoped<IAgregarVehiculoUseCase, AgregarVehiculoUseCase>();
         services.AddScoped<IAsignarTagUseCase, AsignarTagUseCase>();
+
+        services.AddScoped<IListarFranjasUseCase, ListarFranjasUseCase>();
+        services.AddScoped<ICrearFranjasUseCase, CrearFranjasUseCase>();
+        services.AddScoped<IEliminarFranjaUseCase, EliminarFranjaUseCase>();
 
         // Panel de padres: todos los casos de uso resuelven la familia con ContextoPadre.
         services.AddScoped<ContextoPadre>();

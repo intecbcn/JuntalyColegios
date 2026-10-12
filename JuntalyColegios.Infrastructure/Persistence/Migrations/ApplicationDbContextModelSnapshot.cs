@@ -107,6 +107,35 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.ToTable("Colegios", (string)null);
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.FranjaRetiro", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ClaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("DiaSemana")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeOnly>("HoraFin")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<TimeOnly>("HoraInicio")
+                        .HasColumnType("time without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClaseId");
+
+                    b.HasIndex("ColegioId", "DiaSemana");
+
+                    b.ToTable("FranjasRetiro", (string)null);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.PersonaAutorizada", b =>
                 {
                     b.Property<Guid>("Id")
@@ -462,6 +491,20 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Clase", b =>
                 {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.FranjaRetiro", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Clase", null)
+                        .WithMany()
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
                         .WithMany()
                         .HasForeignKey("ColegioId")

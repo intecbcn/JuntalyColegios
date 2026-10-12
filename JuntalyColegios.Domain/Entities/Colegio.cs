@@ -46,6 +46,10 @@ public sealed class Colegio
         ZonaHoraria = zonaValida;
     }
 
+    /// <summary>Fecha y hora del instante en la zona horaria del colegio (las franjas se definen en hora local).</summary>
+    public DateTime HoraLocal(DateTimeOffset instante) =>
+        TimeZoneInfo.ConvertTime(instante, TimeZoneInfo.FindSystemTimeZoneById(ZonaHoraria)).DateTime;
+
     public void Desactivar() => Activo = false;
 
     public void Activar() => Activo = true;

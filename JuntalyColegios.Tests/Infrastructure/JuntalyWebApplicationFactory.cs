@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Time.Testing;
 
 namespace JuntalyColegios.Tests.Infrastructure;
 
@@ -24,6 +25,12 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
     private readonly SqliteConnection _conexion = new("DataSource=:memory:");
 
     public FakeEmailSender EmailSender { get; } = new();
+
+    /// <summary>
+    /// Reloj de la app en los tests: lunes 12/10/2026 a las 16:05 UTC (12:05 en Caracas). Los tests de
+    /// franjas y detecciones lo mueven con Advance/SetUtcNow.
+    /// </summary>
+    public FakeTimeProvider Reloj { get; } = new(new DateTimeOffset(2026, 10, 12, 16, 5, 0, TimeSpan.Zero));
 
     public const string EmailAdminInicial = "admin@juntaly.test";
 
@@ -54,6 +61,8 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
         {
             services.RemoveAll<IEmailSender>();
             services.AddSingleton<IEmailSender>(EmailSender);
+            services.RemoveAll<TimeProvider>();
+            services.AddSingleton<TimeProvider>(Reloj);
 
             // Desde EF Core 9 AddDbContext registra también la configuración del proveedor por
             // separado: hay que quitar ambas para que no convivan Npgsql y SQLite.

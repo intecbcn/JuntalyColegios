@@ -151,6 +151,29 @@ public sealed class RepositorioAutorizadosEnMemoria : IRepositorioAutorizados
     }
 }
 
+public sealed class RepositorioFranjasEnMemoria : IRepositorioFranjas
+{
+    public List<FranjaRetiro> Franjas { get; } = [];
+
+    public Task AgregarVariasAsync(IReadOnlyCollection<FranjaRetiro> franjas, CancellationToken cancellationToken)
+    {
+        Franjas.AddRange(franjas);
+        return Task.CompletedTask;
+    }
+
+    public Task<FranjaRetiro?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Franjas.SingleOrDefault(f => f.Id == id));
+
+    public Task<IReadOnlyList<FranjaRetiro>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<FranjaRetiro>>(Franjas.Where(f => f.ColegioId == colegioId).ToList());
+
+    public Task EliminarAsync(FranjaRetiro franja, CancellationToken cancellationToken)
+    {
+        Franjas.Remove(franja);
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
 {
     public List<Alumno> Alumnos { get; } = [];
