@@ -47,6 +47,8 @@ public static class RegistroDeServicios
         services.AddScoped<IEditarColegioUseCase, EditarColegioUseCase>();
         services.AddScoped<ICambiarEstadoColegioUseCase, CambiarEstadoColegioUseCase>();
         services.AddScoped<IAltaSupervisorUseCase, AltaSupervisorUseCase>();
+        services.AddScoped<IEditarSupervisorUseCase, EditarSupervisorUseCase>();
+        services.AddScoped<IEliminarSupervisorUseCase, EliminarSupervisorUseCase>();
 
         // Área del supervisor: todos los casos de uso resuelven su colegio con ContextoSupervisor.
         services.AddScoped<ContextoSupervisor>();

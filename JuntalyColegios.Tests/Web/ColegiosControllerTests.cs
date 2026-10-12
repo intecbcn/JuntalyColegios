@@ -184,4 +184,58 @@ public class ColegiosControllerTests
         Assert.NotNull(_sut.TempData["Error"]);
         await alta.DidNotReceiveWithAnyArgs().EjecutarAsync(default!, default);
     }
+
+    [Fact]
+    public async Task EditarSupervisorPost_DatosValidos_GuardaYVuelveAlDetalle()
+    {
+        var colegioId = Guid.NewGuid();
+        var supervisorId = Guid.NewGuid();
+        var editar = Substitute.For<IEditarSupervisorUseCase>();
+
+        var resultado = await _sut.EditarSupervisor(colegioId, supervisorId,
+            new SupervisorFormulario { Nombre = "Luis Gómez", Email = "luis@colegio.com" }, editar, CancellationToken.None);
+
+        var redireccion = Assert.IsType<RedirectToActionResult>(resultado);
+        Assert.Equal(nameof(ColegiosController.Detalle), redireccion.ActionName);
+        Assert.Equal(colegioId, redireccion.RouteValues!["id"]);
+        await editar.Received(1).EjecutarAsync(colegioId, supervisorId, new DatosSupervisorDto("Luis Gómez", "luis@colegio.com"), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task EditarSupervisorPost_EmailOcupado_VuelveAlFormularioConElError()
+    {
+        var editar = Substitute.For<IEditarSupervisorUseCase>();
+        editar.EjecutarAsync(default, default, default!, default).ThrowsAsyncForAnyArgs(new DominioException("Ya existe una cuenta con ese email."));
+
+        var resultado = await _sut.EditarSupervisor(Guid.NewGuid(), Guid.NewGuid(),
+            new SupervisorFormulario { Nombre = "Luis", Email = "ocupado@colegio.com" }, editar, CancellationToken.None);
+
+        Assert.IsType<ViewResult>(resultado);
+        Assert.Contains("Ya existe una cuenta con ese email.", _sut.ModelState[string.Empty]!.Errors.Select(e => e.ErrorMessage));
+    }
+
+    [Fact]
+    public async Task EliminarSupervisor_LoEliminaYVuelveAlDetalleConAviso()
+    {
+        var colegioId = Guid.NewGuid();
+        var supervisorId = Guid.NewGuid();
+        var eliminar = Substitute.For<IEliminarSupervisorUseCase>();
+
+        var resultado = await _sut.EliminarSupervisor(colegioId, supervisorId, eliminar, CancellationToken.None);
+
+        Assert.Equal(nameof(ColegiosController.Detalle), Assert.IsType<RedirectToActionResult>(resultado).ActionName);
+        await eliminar.Received(1).EjecutarAsync(colegioId, supervisorId, Arg.Any<CancellationToken>());
+        Assert.NotNull(_sut.TempData["Mensaje"]);
+    }
+
+    [Fact]
+    public async Task EliminarSupervisor_DeOtroColegio_Devuelve404()
+    {
+        var eliminar = Substitute.For<IEliminarSupervisorUseCase>();
+        eliminar.EjecutarAsync(default, default, default).ThrowsAsyncForAnyArgs(new NoEncontradoException("El supervisor no existe."));
+
+        var resultado = await _sut.EliminarSupervisor(Guid.NewGuid(), Guid.NewGuid(), eliminar, CancellationToken.None);
+
+        Assert.IsType<NotFoundResult>(resultado);
+    }
 }

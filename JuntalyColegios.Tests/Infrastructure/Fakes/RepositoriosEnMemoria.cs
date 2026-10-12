@@ -49,6 +49,23 @@ public sealed class RepositorioSupervisoresEnMemoria : IRepositorioSupervisores
     public Task<IReadOnlyList<Supervisor>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<Supervisor>>(Supervisores.Where(s => s.ColegioId == colegioId).ToList());
 
+    public Task<Supervisor?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Supervisores.SingleOrDefault(s => s.Id == id));
+
+    public int Actualizaciones { get; private set; }
+
+    public Task ActualizarAsync(Supervisor supervisor, CancellationToken cancellationToken)
+    {
+        Actualizaciones++;
+        return Task.CompletedTask;
+    }
+
+    public Task EliminarAsync(Supervisor supervisor, CancellationToken cancellationToken)
+    {
+        Supervisores.Remove(supervisor);
+        return Task.CompletedTask;
+    }
+
     public Task<Supervisor?> ObtenerPorUsuarioAsync(string usuarioId, CancellationToken cancellationToken) =>
         Task.FromResult(Supervisores.SingleOrDefault(s => s.UsuarioId == usuarioId));
 }

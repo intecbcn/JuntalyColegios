@@ -18,6 +18,16 @@ internal static class ColegiosMapeo
 
     public static async Task<Colegio> ObtenerExistenteAsync(this IRepositorioColegios colegios, Guid id, CancellationToken ct) =>
         await colegios.ObtenerAsync(id, ct) ?? throw new NoEncontradoException("El colegio no existe.");
+
+    /// <summary>El supervisor solo existe para el colegio al que pertenece.</summary>
+    public static async Task<Supervisor> SupervisorDelColegioAsync(
+        this IRepositorioSupervisores supervisores, Guid colegioId, Guid supervisorId, CancellationToken ct)
+    {
+        var supervisor = await supervisores.ObtenerAsync(supervisorId, ct);
+        return supervisor is not null && supervisor.ColegioId == colegioId
+            ? supervisor
+            : throw new NoEncontradoException("El supervisor no existe.");
+    }
 }
 
 public sealed class CrearColegioUseCase(IRepositorioColegios colegios) : ICrearColegioUseCase
@@ -98,5 +108,36 @@ public sealed class AltaSupervisorUseCase(
             throw;
         }
         return supervisor.Id;
+    }
+}
+
+/// <summary>
+/// Cambia nombre y email del supervisor. Si cambia el email también cambia el de su cuenta (con el que
+/// inicia sesión); si otra cuenta ya lo usa no se cambia nada.
+/// </summary>
+public sealed class EditarSupervisorUseCase(IRepositorioSupervisores supervisores, IServicioUsuarios usuarios) : IEditarSupervisorUseCase
+{
+    public async Task EjecutarAsync(Guid colegioId, Guid supervisorId, DatosSupervisorDto datos, CancellationToken cancellationToken)
+    {
+        var supervisor = await supervisores.SupervisorDelColegioAsync(colegioId, supervisorId, cancellationToken);
+        var nombre = Supervisor.ValidarNombre(datos.Nombre);
+        var email = Email.Crear(datos.Email);
+
+        if (email.Valor != supervisor.Email)
+            await usuarios.CambiarEmailAsync(supervisor.UsuarioId, email.Valor, cancellationToken);
+
+        supervisor.Actualizar(nombre, email);
+        await supervisores.ActualizarAsync(supervisor, cancellationToken);
+    }
+}
+
+/// <summary>Da de baja al supervisor y elimina su cuenta: deja de poder iniciar sesión.</summary>
+public sealed class EliminarSupervisorUseCase(IRepositorioSupervisores supervisores, IServicioUsuarios usuarios) : IEliminarSupervisorUseCase
+{
+    public async Task EjecutarAsync(Guid colegioId, Guid supervisorId, CancellationToken cancellationToken)
+    {
+        var supervisor = await supervisores.SupervisorDelColegioAsync(colegioId, supervisorId, cancellationToken);
+        await supervisores.EliminarAsync(supervisor, cancellationToken);
+        await usuarios.EliminarUsuarioAsync(supervisor.UsuarioId, cancellationToken);
     }
 }

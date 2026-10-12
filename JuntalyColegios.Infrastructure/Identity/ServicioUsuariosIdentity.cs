@@ -58,6 +58,21 @@ public sealed class ServicioUsuariosIdentity(
             await usuarios.DeleteAsync(usuario);
     }
 
+    public async Task CambiarEmailAsync(string usuarioId, string email, CancellationToken cancellationToken)
+    {
+        var usuario = await usuarios.FindByIdAsync(usuarioId)
+            ?? throw new DominioException("La cuenta de usuario no existe.");
+        if (await usuarios.FindByEmailAsync(email) is { } otro && otro.Id != usuario.Id)
+            throw new DominioException("Ya existe una cuenta con ese email.");
+
+        // El email lo cambia alguien de confianza (el administrador): sigue confirmado. El usuario inicia
+        // sesión con el email nuevo y conserva su contraseña.
+        Validar(await usuarios.SetEmailAsync(usuario, email));
+        Validar(await usuarios.SetUserNameAsync(usuario, email));
+        usuario.EmailConfirmed = true;
+        Validar(await usuarios.UpdateAsync(usuario));
+    }
+
     private string UrlBase() =>
         configuracion["App:UrlBase"]?.TrimEnd('/') is { Length: > 0 } url
             ? url

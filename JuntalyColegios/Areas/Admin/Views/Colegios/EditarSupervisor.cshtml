@@ -1,0 +1,32 @@
+@model JuntalyColegios.Areas.Admin.Models.SupervisorFormulario
+@{
+    ViewData["Title"] = "Editar supervisor";
+    var colegioId = Context.GetRouteValue("id");
+}
+
+<a asp-action="Detalle" asp-route-id="@colegioId" class="btn btn-link px-0">&larr; @(ViewData["Colegio"] ?? "Volver al colegio")</a>
+<h1>Editar supervisor</h1>
+<p class="text-muted">Si cambias el email, el supervisor iniciará sesión con el nuevo y conservará su contraseña.</p>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditarSupervisor" asp-route-id="@colegioId" asp-route-supervisorId="@Context.Request.Query["supervisorId"]" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" maxlength="100" autocomplete="off" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Detalle" asp-route-id="@colegioId" class="btn btn-link">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

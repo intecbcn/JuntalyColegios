@@ -55,11 +55,24 @@ else
 {
     <div class="table-responsive jc-table-wrap">
     <table class="table">
-        <thead><tr><th>Nombre</th><th>Email</th></tr></thead>
+        <thead><tr><th>Nombre</th><th>Email</th><th></th></tr></thead>
         <tbody>
             @foreach (var supervisor in Model.Detalle.Supervisores)
             {
-                <tr><td>@supervisor.Nombre</td><td>@supervisor.Email</td></tr>
+                <tr>
+                    <td>@supervisor.Nombre</td>
+                    <td>@supervisor.Email</td>
+                    <td class="text-end">
+                        <div class="jc-actions justify-content-end">
+                            <a asp-action="EditarSupervisor" asp-route-id="@colegio.Id" asp-route-supervisorId="@supervisor.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <form asp-action="EliminarSupervisor" asp-route-id="@colegio.Id" method="post"
+                                  onsubmit="return confirm('¿Eliminar este supervisor? Su cuenta dejará de poder iniciar sesión.');">
+                                <input type="hidden" name="supervisorId" value="@supervisor.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

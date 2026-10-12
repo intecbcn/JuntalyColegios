@@ -42,6 +42,14 @@ public sealed class Supervisor
         };
     }
 
+    /// <summary>Valida todo antes de asignar: si algo falla, el supervisor no cambia.</summary>
+    public void Actualizar(string nombre, Email email)
+    {
+        var nombreValido = ValidarNombre(nombre);
+        Nombre = nombreValido;
+        Email = email.Valor;
+    }
+
     /// <summary>
     /// Valida el nombre por adelantado: el alta crea primero la cuenta de usuario y no debe crearla si
     /// el supervisor luego no es válido.

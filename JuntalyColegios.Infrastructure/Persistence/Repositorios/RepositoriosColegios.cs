@@ -39,6 +39,21 @@ public sealed class RepositorioSupervisoresEf(ApplicationDbContext db) : IReposi
     public async Task<IReadOnlyList<Supervisor>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
         await db.Supervisores.AsNoTracking().Where(s => s.ColegioId == colegioId).ToListAsync(cancellationToken);
 
+    public Task<Supervisor?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        db.Supervisores.SingleOrDefaultAsync(s => s.Id == id, cancellationToken);
+
+    public Task ActualizarAsync(Supervisor supervisor, CancellationToken cancellationToken)
+    {
+        db.Supervisores.Update(supervisor);
+        return db.SaveChangesAsync(cancellationToken);
+    }
+
+    public Task EliminarAsync(Supervisor supervisor, CancellationToken cancellationToken)
+    {
+        db.Supervisores.Remove(supervisor);
+        return db.SaveChangesAsync(cancellationToken);
+    }
+
     public Task<Supervisor?> ObtenerPorUsuarioAsync(string usuarioId, CancellationToken cancellationToken) =>
         db.Supervisores.AsNoTracking().SingleOrDefaultAsync(s => s.UsuarioId == usuarioId, cancellationToken);
 }

@@ -55,4 +55,27 @@ public class AdminColegiosE2ETests : IAsyncLifetime
         await _page.GotoAsync("/Admin/Colegios");
         await Expect(_page.GetByRole(AriaRole.Cell, new() { Name = "Colegio E2E Los Próceres" })).ToBeVisibleAsync();
     }
+
+    [Fact]
+    public async Task Admin_EditaYEliminaUnSupervisor()
+    {
+        var colegio = await DatosDePrueba.CrearColegioConSupervisorAsync(_fixture.Factory, "sup.gestion.e2e@juntaly.test", "Colegio E2E Miranda");
+        await _page.GotoAsync("/Identity/Account/Login");
+        await _page.FillAsync("#Input_Email", JuntalyWebApplicationFactory.EmailAdminInicial);
+        await _page.FillAsync("#Input_Password", AutenticacionTests.ContrasenaPorDefecto);
+        await _page.ClickAsync("#login-submit");
+        await _page.GotoAsync($"/Admin/Colegios/Detalle/{colegio.Id}");
+
+        var fila = _page.GetByRole(AriaRole.Row, new() { Name = "sup.gestion.e2e@juntaly.test" });
+        await fila.GetByRole(AriaRole.Link, new() { Name = "Editar" }).ClickAsync();
+        await _page.GetByLabel("Nombre del supervisor").FillAsync("Supervisora Editada");
+        await _page.GetByRole(AriaRole.Button, new() { Name = "Guardar" }).ClickAsync();
+        await Expect(_page.GetByRole(AriaRole.Cell, new() { Name = "Supervisora Editada" })).ToBeVisibleAsync();
+
+        _page.Dialog += (_, dialogo) => dialogo.AcceptAsync();
+        await _page.GetByRole(AriaRole.Row, new() { Name = "Supervisora Editada" }).GetByRole(AriaRole.Button, new() { Name = "Eliminar" }).ClickAsync();
+
+        await Expect(_page.GetByRole(AriaRole.Alert)).ToContainTextAsync("eliminado");
+        await Expect(_page.GetByRole(AriaRole.Cell, new() { Name = "Supervisora Editada" })).ToHaveCountAsync(0);
+    }
 }

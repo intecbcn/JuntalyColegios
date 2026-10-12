@@ -10,3 +10,5 @@ public sealed record SupervisorDto(Guid Id, string Nombre, string Email);
 public sealed record ColegioDetalleDto(ColegioDto Colegio, IReadOnlyList<SupervisorDto> Supervisores);
 
 public sealed record AltaSupervisorDto(Guid ColegioId, string Nombre, string Email);
+
+public sealed record DatosSupervisorDto(string Nombre, string Email);

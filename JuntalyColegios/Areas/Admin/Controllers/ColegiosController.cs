@@ -147,4 +147,59 @@ public class ColegiosController : Controller
         }
         return RedirectToAction(nameof(Detalle), new { id });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> EditarSupervisor(Guid id, Guid supervisorId, [FromServices] IObtenerColegioUseCase obtener, CancellationToken ct)
+    {
+        try
+        {
+            var detalle = await obtener.EjecutarAsync(id, ct);
+            var supervisor = detalle.Supervisores.SingleOrDefault(s => s.Id == supervisorId);
+            if (supervisor is null) return NotFound();
+            ViewData["Colegio"] = detalle.Colegio.Nombre;
+            return View(new SupervisorFormulario { Nombre = supervisor.Nombre, Email = supervisor.Email });
+        }
+        catch (NoEncontradoException)
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditarSupervisor(
+        Guid id, Guid supervisorId, SupervisorFormulario formulario, [FromServices] IEditarSupervisorUseCase editar, CancellationToken ct)
+    {
+        if (!ModelState.IsValid) return View(formulario);
+        try
+        {
+            await editar.EjecutarAsync(id, supervisorId, new DatosSupervisorDto(formulario.Nombre, formulario.Email), ct);
+            TempData["Mensaje"] = "Supervisor actualizado.";
+            return RedirectToAction(nameof(Detalle), new { id });
+        }
+        catch (NoEncontradoException)
+        {
+            return NotFound();
+        }
+        catch (DominioException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(formulario);
+        }
+    }
+
+    /// <summary>Da de baja al supervisor y elimina su cuenta (deja de poder iniciar sesión).</summary>
+    [HttpPost]
+    public async Task<IActionResult> EliminarSupervisor(Guid id, Guid supervisorId, [FromServices] IEliminarSupervisorUseCase eliminar, CancellationToken ct)
+    {
+        try
+        {
+            await eliminar.EjecutarAsync(id, supervisorId, ct);
+            TempData["Mensaje"] = "Supervisor eliminado. Su cuenta ya no puede iniciar sesión.";
+            return RedirectToAction(nameof(Detalle), new { id });
+        }
+        catch (NoEncontradoException)
+        {
+            return NotFound();
+        }
+    }
 }

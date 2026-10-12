@@ -51,4 +51,26 @@ public class SupervisorYEmailTests
         Assert.Throws<DominioException>(() =>
             Supervisor.Crear(Guid.NewGuid(), "", "Luis", Email.Crear("luis@colegio.com")));
     }
+
+    [Fact]
+    public void Supervisor_Actualizar_CambiaNombreYEmail()
+    {
+        var supervisor = Supervisor.Crear(Guid.NewGuid(), "usuario-1", "Luis", Email.Crear("luis@colegio.com"));
+
+        supervisor.Actualizar(" Luis Gómez ", Email.Crear("Luis.Gomez@Colegio.com"));
+
+        Assert.Equal("Luis Gómez", supervisor.Nombre);
+        Assert.Equal("luis.gomez@colegio.com", supervisor.Email);
+    }
+
+    [Fact]
+    public void Supervisor_Actualizar_NombreVacio_LanzaDominioExceptionYNoCambiaNada()
+    {
+        var supervisor = Supervisor.Crear(Guid.NewGuid(), "usuario-1", "Luis", Email.Crear("luis@colegio.com"));
+
+        Assert.Throws<DominioException>(() => supervisor.Actualizar(" ", Email.Crear("otro@colegio.com")));
+
+        Assert.Equal("Luis", supervisor.Nombre);
+        Assert.Equal("luis@colegio.com", supervisor.Email);
+    }
 }

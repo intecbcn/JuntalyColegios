@@ -34,3 +34,15 @@ public interface IAltaSupervisorUseCase
 {
     Task<Guid> EjecutarAsync(AltaSupervisorDto alta, CancellationToken cancellationToken);
 }
+
+public interface IEditarSupervisorUseCase
+{
+    /// <summary>Lanza NoEncontradoException si el supervisor no es de ese colegio.</summary>
+    Task EjecutarAsync(Guid colegioId, Guid supervisorId, DatosSupervisorDto datos, CancellationToken cancellationToken);
+}
+
+public interface IEliminarSupervisorUseCase
+{
+    /// <summary>Elimina el supervisor y su cuenta. Lanza NoEncontradoException si no es de ese colegio.</summary>
+    Task EjecutarAsync(Guid colegioId, Guid supervisorId, CancellationToken cancellationToken);
+}
