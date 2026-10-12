@@ -42,6 +42,24 @@ public sealed class ContextoSupervisor(IRepositorioSupervisores supervisores, IR
             : throw new NoEncontradoException("El alumno no existe.");
     }
 
+    public static async Task<Representante> RepresentanteDelColegioAsync(
+        IRepositorioRepresentantes representantes, Guid colegioId, Guid representanteId, CancellationToken cancellationToken)
+    {
+        var representante = await representantes.ObtenerAsync(representanteId, cancellationToken);
+        return representante is not null && representante.ColegioId == colegioId
+            ? representante
+            : throw new NoEncontradoException("El representante no existe.");
+    }
+
+    public static async Task<Vehiculo> VehiculoDelColegioAsync(
+        IRepositorioVehiculos vehiculos, Guid colegioId, Guid vehiculoId, CancellationToken cancellationToken)
+    {
+        var vehiculo = await vehiculos.ObtenerAsync(vehiculoId, cancellationToken);
+        return vehiculo is not null && vehiculo.ColegioId == colegioId
+            ? vehiculo
+            : throw new NoEncontradoException("El vehículo no existe.");
+    }
+
     /// <summary>Los nombres de clase no se repiten dentro de un colegio.</summary>
     public static async Task ValidarNombreLibreAsync(
         IRepositorioClases clases, Guid colegioId, string nombre, Guid? claseEditada, CancellationToken cancellationToken)

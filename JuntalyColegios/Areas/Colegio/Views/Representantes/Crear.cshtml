@@ -1,0 +1,53 @@
+@model JuntalyColegios.Areas.ColegioSupervisor.Models.CrearRepresentanteViewModel
+@{
+    ViewData["Title"] = "Nuevo padre o representante";
+    var f = Model.Formulario;
+}
+
+<h1>Nuevo padre o representante</h1>
+<p class="text-muted">Recibirá un email con un enlace para establecer su contraseña y acceder a su panel.</p>
+<div class="row">
+    <div class="col-md-7">
+        @* Campos sin prefijo: el formulario se enlaza con [Bind(Prefix = "")]. *@
+        <form asp-action="Crear" method="post">
+            @Html.ValidationSummary(true, null, new { @class = "text-danger", role = "alert" })
+            <div class="mb-3">
+                <label for="Nombre" class="form-label">Nombre completo</label>
+                <input id="Nombre" name="Nombre" value="@f.Nombre" class="form-control" maxlength="100" required autocomplete="off" />
+                @Html.ValidationMessage("Nombre", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email</label>
+                <input id="Email" name="Email" type="email" value="@f.Email" class="form-control" required autocomplete="off" />
+                @Html.ValidationMessage("Email", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <label for="Telefono" class="form-label">Teléfono</label>
+                <input id="Telefono" name="Telefono" value="@f.Telefono" class="form-control" maxlength="30" autocomplete="off" />
+                @Html.ValidationMessage("Telefono", new { @class = "text-danger" })
+            </div>
+
+            <fieldset class="mb-3">
+                <legend class="form-label fs-6">Hijos en el colegio</legend>
+                @if (Model.Alumnos.Count == 0)
+                {
+                    <p class="text-muted">No hay alumnos activos. Puedes vincularlos más adelante.</p>
+                }
+                <div style="max-height: 280px; overflow-y: auto">
+                    @foreach (var alumno in Model.Alumnos)
+                    {
+                        var id = $"alumno-{alumno.AlumnoId}";
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="AlumnoIds" value="@alumno.AlumnoId" id="@id"
+                                   checked="@f.AlumnoIds.Contains(alumno.AlumnoId)" />
+                            <label class="form-check-label" for="@id">@alumno.NombreCompleto <span class="text-muted">(@alumno.Clase)</span></label>
+                        </div>
+                    }
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary">Dar de alta</button>
+            <a asp-action="Index" class="btn btn-link">Cancelar</a>
+        </form>
+    </div>
+</div>

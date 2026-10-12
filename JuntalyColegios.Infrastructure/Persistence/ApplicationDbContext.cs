@@ -14,6 +14,10 @@ namespace JuntalyColegios.Infrastructure.Persistence
 
         public DbSet<Alumno> Alumnos => Set<Alumno>();
 
+        public DbSet<Representante> Representantes => Set<Representante>();
+
+        public DbSet<Vehiculo> Vehiculos => Set<Vehiculo>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

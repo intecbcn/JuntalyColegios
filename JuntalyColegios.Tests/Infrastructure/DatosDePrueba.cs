@@ -37,6 +37,45 @@ public static class DatosDePrueba
         return clase;
     }
 
+    public static async Task<Alumno> CrearAlumnoAsync(JuntalyWebApplicationFactory factory, Clase clase, string nombres, string apellidos)
+    {
+        var alumno = Alumno.Crear(clase, nombres, apellidos);
+        await EnBaseDeDatosAsync(factory, db =>
+        {
+            db.Alumnos.Add(alumno);
+            return db.SaveChangesAsync();
+        });
+        return alumno;
+    }
+
+    /// <summary>Crea un padre (cuenta con rol Padre) del colegio, vinculado a los alumnos indicados.</summary>
+    public static async Task<Representante> CrearRepresentanteAsync(
+        JuntalyWebApplicationFactory factory, Guid colegioId, string email, params Alumno[] hijos)
+    {
+        var usuario = await AutenticacionTests.CrearUsuarioAsync(factory, email, Roles.Padre);
+        var padre = Representante.Crear(colegioId, usuario.Id, "Padre de prueba", Email.Crear(email), null);
+        foreach (var hijo in hijos) padre.VincularAlumno(hijo);
+        await EnBaseDeDatosAsync(factory, db =>
+        {
+            db.Representantes.Add(padre);
+            return db.SaveChangesAsync();
+        });
+        return padre;
+    }
+
+    public static async Task<Vehiculo> CrearVehiculoAsync(
+        JuntalyWebApplicationFactory factory, Representante padre, string placa, string? tag = null)
+    {
+        var vehiculo = Vehiculo.Crear(padre, Placa.Crear(placa), null);
+        if (tag is not null) vehiculo.AsignarTag(TagRfid.Crear(tag));
+        await EnBaseDeDatosAsync(factory, db =>
+        {
+            db.Vehiculos.Add(vehiculo);
+            return db.SaveChangesAsync();
+        });
+        return vehiculo;
+    }
+
     public static async Task EnBaseDeDatosAsync(JuntalyWebApplicationFactory factory, Func<ApplicationDbContext, Task> accion)
     {
         using var scope = factory.Services.CreateScope();

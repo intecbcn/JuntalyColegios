@@ -1,0 +1,35 @@
+@model IReadOnlyList<JuntalyColegios.Application.DTOs.RepresentanteResumenDto>
+@{
+    ViewData["Title"] = "Padres y representantes";
+}
+
+<a asp-controller="Inicio" asp-action="Index" class="btn btn-link px-0">&larr; Mi colegio</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Padres y representantes</h1>
+    <a asp-action="Crear" class="btn btn-primary">Nuevo padre o representante</a>
+</div>
+<partial name="_Avisos" />
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">Todavía no hay padres dados de alta.</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Hijos</th><th>Vehículos</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var padre in Model)
+            {
+                <tr>
+                    <td>@padre.Nombre</td>
+                    <td>@padre.Email</td>
+                    <td>@padre.Telefono</td>
+                    <td>@padre.NumeroHijos</td>
+                    <td>@padre.NumeroVehiculos</td>
+                    <td class="text-end"><a asp-action="Detalle" asp-route-id="@padre.Id" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -25,6 +25,8 @@ public static class RegistroDeServicios
         services.AddScoped<IRepositorioSupervisores, RepositorioSupervisoresEf>();
         services.AddScoped<IRepositorioClases, RepositorioClasesEf>();
         services.AddScoped<IRepositorioAlumnos, RepositorioAlumnosEf>();
+        services.AddScoped<IRepositorioRepresentantes, RepositorioRepresentantesEf>();
+        services.AddScoped<IRepositorioVehiculos, RepositorioVehiculosEf>();
 
         // Casos de uso (puertos de entrada).
         services.AddScoped<ISolicitarDemoUseCase, SolicitarDemoUseCase>();
@@ -46,6 +48,14 @@ public static class RegistroDeServicios
         services.AddScoped<IObtenerAlumnoUseCase, ObtenerAlumnoUseCase>();
         services.AddScoped<IEditarAlumnoUseCase, EditarAlumnoUseCase>();
         services.AddScoped<ICambiarEstadoAlumnoUseCase, CambiarEstadoAlumnoUseCase>();
+        services.AddScoped<IListarRepresentantesUseCase, ListarRepresentantesUseCase>();
+        services.AddScoped<IListarAlumnosParaVincularUseCase, ListarAlumnosParaVincularUseCase>();
+        services.AddScoped<IAltaRepresentanteUseCase, AltaRepresentanteUseCase>();
+        services.AddScoped<IObtenerRepresentanteUseCase, ObtenerRepresentanteUseCase>();
+        services.AddScoped<IVincularAlumnoUseCase, VincularAlumnoUseCase>();
+        services.AddScoped<IDesvincularAlumnoUseCase, DesvincularAlumnoUseCase>();
+        services.AddScoped<IAgregarVehiculoUseCase, AgregarVehiculoUseCase>();
+        services.AddScoped<IAsignarTagUseCase, AsignarTagUseCase>();
 
         return services;
     }

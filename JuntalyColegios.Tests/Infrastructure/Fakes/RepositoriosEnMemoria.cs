@@ -75,6 +75,59 @@ public sealed class RepositorioClasesEnMemoria : IRepositorioClases
     }
 }
 
+public sealed class RepositorioRepresentantesEnMemoria : IRepositorioRepresentantes
+{
+    public List<Representante> Representantes { get; } = [];
+
+    public bool FallarAlAgregar { get; set; }
+
+    public Task AgregarAsync(Representante representante, CancellationToken cancellationToken)
+    {
+        if (FallarAlAgregar) throw new InvalidOperationException("Fallo simulado de base de datos.");
+        Representantes.Add(representante);
+        return Task.CompletedTask;
+    }
+
+    public Task<Representante?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Representantes.SingleOrDefault(r => r.Id == id));
+
+    public Task<Representante?> ObtenerPorUsuarioAsync(string usuarioId, CancellationToken cancellationToken) =>
+        Task.FromResult(Representantes.SingleOrDefault(r => r.UsuarioId == usuarioId));
+
+    public Task<IReadOnlyList<Representante>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Representante>>(Representantes.Where(r => r.ColegioId == colegioId).ToList());
+
+    public Task ActualizarAsync(Representante representante, CancellationToken cancellationToken) => Task.CompletedTask;
+}
+
+public sealed class RepositorioVehiculosEnMemoria : IRepositorioVehiculos
+{
+    public List<Vehiculo> Vehiculos { get; } = [];
+
+    public Task AgregarAsync(Vehiculo vehiculo, CancellationToken cancellationToken)
+    {
+        Vehiculos.Add(vehiculo);
+        return Task.CompletedTask;
+    }
+
+    public Task<Vehiculo?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Vehiculos.SingleOrDefault(v => v.Id == id));
+
+    public Task<Vehiculo?> ObtenerPorTagAsync(Guid colegioId, string tag, CancellationToken cancellationToken) =>
+        Task.FromResult(Vehiculos.SingleOrDefault(v => v.ColegioId == colegioId && v.Tag == tag));
+
+    public Task<IReadOnlyList<Vehiculo>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Vehiculo>>(Vehiculos.Where(v => v.ColegioId == colegioId).ToList());
+
+    public Task ActualizarAsync(Vehiculo vehiculo, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task EliminarAsync(Vehiculo vehiculo, CancellationToken cancellationToken)
+    {
+        Vehiculos.Remove(vehiculo);
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
 {
     public List<Alumno> Alumnos { get; } = [];

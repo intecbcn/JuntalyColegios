@@ -107,6 +107,42 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.ToTable("Colegios", (string)null);
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Representante", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColegioId");
+
+                    b.HasIndex("UsuarioId")
+                        .IsUnique();
+
+                    b.ToTable("Representantes", (string)null);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Supervisor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -137,6 +173,41 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Supervisores", (string)null);
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Vehiculo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Placa")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<Guid>("RepresentanteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Tag")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColegioId", "Tag")
+                        .IsUnique();
+
+                    b.HasIndex("RepresentanteId", "Placa")
+                        .IsUnique();
+
+                    b.ToTable("Vehiculos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -363,6 +434,47 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Representante", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("JuntalyColegios.Domain.Entities.VinculoAlumno", "Alumnos", b1 =>
+                        {
+                            b1.Property<Guid>("RepresentanteId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("AlumnoId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("RepresentanteId", "AlumnoId");
+
+                            b1.HasIndex("AlumnoId");
+
+                            b1.ToTable("RepresentantesAlumnos", (string)null);
+
+                            b1.HasOne("JuntalyColegios.Domain.Entities.Alumno", null)
+                                .WithMany()
+                                .HasForeignKey("AlumnoId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.WithOwner()
+                                .HasForeignKey("RepresentanteId");
+                        });
+
+                    b.Navigation("Alumnos");
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Supervisor", b =>
                 {
                     b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
@@ -374,6 +486,21 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Vehiculo", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Representante", null)
+                        .WithMany()
+                        .HasForeignKey("RepresentanteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

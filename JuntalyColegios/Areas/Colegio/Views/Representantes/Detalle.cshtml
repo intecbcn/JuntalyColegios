@@ -1,0 +1,99 @@
+@model JuntalyColegios.Areas.ColegioSupervisor.Models.DetalleRepresentanteViewModel
+@{
+    var padre = Model.Detalle;
+    ViewData["Title"] = padre.Nombre;
+}
+
+<a asp-action="Index" class="btn btn-link px-0">&larr; Padres y representantes</a>
+<h1>@padre.Nombre</h1>
+<p class="text-muted">@padre.Email @(padre.Telefono is null ? "" : $"· {padre.Telefono}")</p>
+<partial name="_Avisos" />
+
+<h2 class="h4 mt-4">Hijos</h2>
+@if (padre.Hijos.Count == 0)
+{
+    <p class="text-muted">Sin hijos vinculados.</p>
+}
+else
+{
+    <table class="table align-middle">
+        <thead><tr><th>Alumno</th><th>Clase</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var hijo in padre.Hijos)
+            {
+                <tr>
+                    <td>@hijo.NombreCompleto</td>
+                    <td>@hijo.Clase</td>
+                    <td class="text-end">
+                        <form asp-action="Desvincular" asp-route-id="@padre.Id" method="post">
+                            <input type="hidden" name="alumnoId" value="@hijo.AlumnoId" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Desvincular</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (padre.AlumnosParaVincular.Count > 0)
+{
+    <form asp-action="Vincular" asp-route-id="@padre.Id" method="post" class="row g-2 align-items-end" style="max-width: 640px">
+        <div class="col">
+            <label for="alumnoId" class="form-label">Vincular otro hijo</label>
+            <select id="alumnoId" name="alumnoId" class="form-select">
+                @foreach (var alumno in padre.AlumnosParaVincular)
+                {
+                    <option value="@alumno.AlumnoId">@alumno.NombreCompleto (@alumno.Clase)</option>
+                }
+            </select>
+        </div>
+        <div class="col-auto"><button type="submit" class="btn btn-outline-primary">Vincular</button></div>
+    </form>
+}
+
+<h2 class="h4 mt-5">Vehículos y tags RFID</h2>
+<p class="text-muted">La antena reconoce el vehículo por su tag y llama a los hijos de este representante.</p>
+@if (padre.Vehiculos.Count == 0)
+{
+    <p class="text-muted">Sin vehículos registrados.</p>
+}
+else
+{
+    <table class="table align-middle">
+        <thead><tr><th>Placa</th><th>Descripción</th><th>Tag RFID</th></tr></thead>
+        <tbody>
+            @foreach (var vehiculo in padre.Vehiculos)
+            {
+                var idTag = $"tag-{vehiculo.Id}";
+                <tr>
+                    <td class="font-monospace">@vehiculo.Placa</td>
+                    <td>@vehiculo.Descripcion</td>
+                    <td>
+                        <form asp-action="AsignarTag" asp-route-id="@padre.Id" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="vehiculoId" value="@vehiculo.Id" />
+                            <label for="@idTag" class="visually-hidden">Tag RFID de @vehiculo.Placa</label>
+                            <input id="@idTag" name="tag" value="@vehiculo.Tag" class="form-control form-control-sm font-monospace"
+                                   maxlength="32" placeholder="Sin tag" autocomplete="off" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">Asignar tag</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3 class="h5 mt-3">Añadir vehículo</h3>
+<form asp-action="AgregarVehiculo" asp-route-id="@padre.Id" method="post" class="row g-3" style="max-width: 760px">
+    <div class="col-md-4">
+        <label asp-for="NuevoVehiculo.Placa" class="form-label"></label>
+        <input asp-for="NuevoVehiculo.Placa" class="form-control text-uppercase" autocomplete="off" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="NuevoVehiculo.Descripcion" class="form-label"></label>
+        <input asp-for="NuevoVehiculo.Descripcion" class="form-control" placeholder="Marca, modelo y color" autocomplete="off" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Añadir vehículo</button>
+    </div>
+</form>
