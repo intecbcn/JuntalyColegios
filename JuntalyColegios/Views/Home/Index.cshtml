@@ -38,7 +38,14 @@
                 <a href="#demo" class="jc-navlink">Demo</a>
                 <a href="#precio" class="jc-navlink">Precio</a>
                 <a href="#faq" class="jc-navlink">Preguntas</a>
-                <a href="/Identity/Account/Login" class="jc-navlink">Ingresar</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a href="/Panel" class="jc-navlink">Mi panel</a>
+                }
+                else
+                {
+                    <a href="/Identity/Account/Login" class="jc-navlink">Ingresar</a>
+                }
                 <a href="#contacto" class="jc-btn jc-btn-cta jc-nav-cta">Solicitar demo →</a>
             </nav>
             <button type="button" id="jcNavToggle" class="jc-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="jcNav">
@@ -408,7 +415,14 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
             <div class="jc-mono" style="font-weight:800;font-size:12px;color:#F9E1A6;">JUNTALY</div>
-            <a href="/Identity/Account/Login" style="color:#fff;text-decoration:none;font-weight:700;font-size:15px;">Ingresar</a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a href="/Panel" style="color:#fff;text-decoration:none;font-weight:700;font-size:15px;">Mi panel</a>
+            }
+            else
+            {
+                <a href="/Identity/Account/Login" style="color:#fff;text-decoration:none;font-weight:700;font-size:15px;">Ingresar</a>
+            }
             <a href="https://instagram.com/juntaly" style="color:#fff;text-decoration:none;font-weight:700;font-size:15px;">Instagram</a>
         </div>
     </div>
