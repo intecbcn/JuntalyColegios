@@ -177,6 +177,34 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.ToTable("FranjasRetiro", (string)null);
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.PantallaLlamadas", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ClaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("HashToken")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClaseId");
+
+                    b.HasIndex("HashToken")
+                        .IsUnique();
+
+                    b.HasIndex("ColegioId", "ClaseId");
+
+                    b.ToTable("PantallasLlamadas", (string)null);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.PersonaAutorizada", b =>
                 {
                     b.Property<Guid>("Id")
@@ -607,6 +635,20 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.FranjaRetiro", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Clase", null)
+                        .WithMany()
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.PantallaLlamadas", b =>
                 {
                     b.HasOne("JuntalyColegios.Domain.Entities.Clase", null)
                         .WithMany()

@@ -5,6 +5,7 @@ using JuntalyColegios.Application.UseCases;
 using JuntalyColegios.Application.UseCases.Colegios;
 using JuntalyColegios.Application.UseCases.Historial;
 using JuntalyColegios.Application.UseCases.Padres;
+using JuntalyColegios.Application.UseCases.Pantallas;
 using JuntalyColegios.Application.UseCases.Salida;
 using JuntalyColegios.Application.UseCases.Supervision;
 using JuntalyColegios.Infrastructure.Email;
@@ -35,6 +36,7 @@ public static class RegistroDeServicios
         services.AddScoped<IRepositorioFranjas, RepositorioFranjasEf>();
         services.AddScoped<IRepositorioDetecciones, RepositorioDeteccionesEf>();
         services.AddScoped<IRepositorioRecogidas, RepositorioRecogidasEf>();
+        services.AddScoped<IRepositorioPantallas, RepositorioPantallasEf>();
 
         // Reloj del sistema (en los tests se sustituye por uno controlado).
         services.TryAddSingleton(TimeProvider.System);
@@ -77,6 +79,12 @@ public static class RegistroDeServicios
         services.AddScoped<IObtenerPantallaSalidaUseCase, ObtenerPantallaSalidaUseCase>();
         services.AddScoped<IMarcarEntregadaUseCase, MarcarEntregadaUseCase>();
         services.AddScoped<IGenerarClaveAntenaUseCase, GenerarClaveAntenaUseCase>();
+
+        // Pantallas de llamada (portería y aulas) con enlace secreto.
+        services.AddScoped<IListarPantallasUseCase, ListarPantallasUseCase>();
+        services.AddScoped<ICrearPantallaUseCase, CrearPantallaUseCase>();
+        services.AddScoped<IRevocarPantallaUseCase, RevocarPantallaUseCase>();
+        services.AddScoped<IObtenerPantallaPublicaUseCase, ObtenerPantallaPublicaUseCase>();
 
         services.AddScoped<IListarDeteccionesUseCase, ListarDeteccionesUseCase>();
         services.AddScoped<IObtenerHistorialPadreUseCase, ObtenerHistorialPadreUseCase>();

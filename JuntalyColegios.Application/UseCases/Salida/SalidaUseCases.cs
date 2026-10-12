@@ -1,10 +1,8 @@
-using System.Buffers.Text;
-using System.Security.Cryptography;
-using System.Text;
 using JuntalyColegios.Application.DTOs;
 using JuntalyColegios.Application.Excepciones;
 using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
+using JuntalyColegios.Application.Seguridad;
 using JuntalyColegios.Application.UseCases.Supervision;
 using JuntalyColegios.Domain.Entities;
 using JuntalyColegios.Domain.Exceptions;
@@ -13,15 +11,12 @@ using JuntalyColegios.Domain.ValueObjects;
 
 namespace JuntalyColegios.Application.UseCases.Salida;
 
-/// <summary>
-/// Clave con la que se identifica la antena de un colegio: 256 bits aleatorios. Solo se guarda su hash
-/// SHA-256; al ser aleatoria y larga, el hash sirve también para buscar el colegio sin exponer la clave.
-/// </summary>
+/// <summary>Clave con la que se identifica la antena de un colegio (ver <see cref="TokenSeguro"/>).</summary>
 public static class ClaveDeAntena
 {
-    public static string Generar() => Base64Url.EncodeToString(RandomNumberGenerator.GetBytes(32));
+    public static string Generar() => TokenSeguro.Generar();
 
-    public static string Hash(string clave) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(clave)));
+    public static string Hash(string clave) => TokenSeguro.Hash(clave);
 }
 
 /// <summary>

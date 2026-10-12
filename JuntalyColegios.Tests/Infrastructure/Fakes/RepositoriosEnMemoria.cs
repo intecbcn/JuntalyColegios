@@ -233,6 +233,34 @@ public sealed class RepositorioDeteccionesEnMemoria : IRepositorioDetecciones, I
             .ToList());
 }
 
+public sealed class RepositorioPantallasEnMemoria : IRepositorioPantallas
+{
+    public List<PantallaLlamadas> Pantallas { get; } = [];
+
+    public Task AgregarAsync(PantallaLlamadas pantalla, CancellationToken cancellationToken)
+    {
+        Pantallas.Add(pantalla);
+        return Task.CompletedTask;
+    }
+
+    public Task<PantallaLlamadas?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Pantallas.SingleOrDefault(p => p.Id == id));
+
+    public Task<PantallaLlamadas?> ObtenerPorHashAsync(string hashToken, CancellationToken cancellationToken) =>
+        Task.FromResult(Pantallas.SingleOrDefault(p => p.HashToken == hashToken));
+
+    public Task<IReadOnlyList<PantallaLlamadas>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<PantallaLlamadas>>(Pantallas.Where(p => p.ColegioId == colegioId).ToList());
+
+    public Task ActualizarAsync(PantallaLlamadas pantalla, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task EliminarAsync(PantallaLlamadas pantalla, CancellationToken cancellationToken)
+    {
+        Pantallas.Remove(pantalla);
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
 {
     public List<Alumno> Alumnos { get; } = [];

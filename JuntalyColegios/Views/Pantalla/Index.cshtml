@@ -1,0 +1,41 @@
+@model JuntalyColegios.Application.DTOs.PantallaPublicaDto
+@{
+    // Página independiente: sin menú ni enlaces a la aplicación, pensada para dejarse abierta en una TV o tablet.
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="theme-color" content="#163D5A" />
+    <title>@Model.Titulo · @Model.NombreColegio</title>
+    <link rel="icon" href="~/images/logo-juntaly.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/pantalla.css" asp-append-version="true" />
+</head>
+<body class="jc-pantalla">
+    <header class="jc-pantalla-cabecera">
+        <div class="jc-pantalla-titulos">
+            <p class="jc-pantalla-colegio">@Model.NombreColegio</p>
+            <h1 class="jc-pantalla-titulo">@Model.Titulo</h1>
+        </div>
+        <div class="jc-pantalla-controles">
+            <span class="jc-pantalla-reloj" id="reloj">@Model.HoraLocal.ToString("HH:mm")</span>
+            <button type="button" class="jc-pantalla-boton" id="pantalla-completa">Pantalla completa</button>
+        </div>
+    </header>
+
+    <main class="jc-pantalla-cuerpo" id="contenido" data-url="@Url.Action("Contenido", "Pantalla", new { token = Context.GetRouteValue("token") })">
+        <partial name="_Turnos" model="Model" />
+    </main>
+
+    <footer class="jc-pantalla-pie">Juntaly Colegios · se actualiza automáticamente</footer>
+
+    <script src="~/js/pantalla.js" asp-append-version="true"></script>
+</body>
+</html>

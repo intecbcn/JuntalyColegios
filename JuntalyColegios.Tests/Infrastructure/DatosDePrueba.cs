@@ -102,6 +102,18 @@ public static class DatosDePrueba
         return clave;
     }
 
+    /// <summary>Crea una pantalla de llamadas (portería si no hay clase) y devuelve su token secreto.</summary>
+    public static async Task<string> CrearPantallaAsync(JuntalyWebApplicationFactory factory, Guid colegioId, Guid? claseId = null)
+    {
+        var token = TokenSeguro.Generar();
+        await EnBaseDeDatosAsync(factory, db =>
+        {
+            db.PantallasLlamadas.Add(PantallaLlamadas.Crear(colegioId, claseId, TokenSeguro.Hash(token)));
+            return db.SaveChangesAsync();
+        });
+        return token;
+    }
+
     public static async Task EnBaseDeDatosAsync(JuntalyWebApplicationFactory factory, Func<ApplicationDbContext, Task> accion)
     {
         using var scope = factory.Services.CreateScope();

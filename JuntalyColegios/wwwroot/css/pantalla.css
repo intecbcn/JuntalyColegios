@@ -1,0 +1,107 @@
+/* Pantalla de llamadas estilo turnero: legible de lejos en una TV y usable en tablet y móvil.
+   Tipografía fluida con clamp() y rejillas que se adaptan al ancho sin scroll horizontal. */
+:root {
+    --jc-bg: #F6F7D5;
+    --jc-navy: #163D5A;
+    --jc-blue: #205780;
+    --jc-mint: #98D3C1;
+    --jc-yellow: #F9E1A6;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100%; }
+
+.jc-pantalla {
+    min-height: 100dvh; display: flex; flex-direction: column;
+    background: var(--jc-navy); color: #fff;
+    font-family: 'Nunito', system-ui, sans-serif;
+    padding: clamp(12px, 2.5vw, 40px);
+    padding-left: max(clamp(12px, 2.5vw, 40px), env(safe-area-inset-left));
+    padding-right: max(clamp(12px, 2.5vw, 40px), env(safe-area-inset-right));
+    overflow-x: hidden;
+}
+
+/* ── Cabecera ─────────────────────────────────────────────────────────── */
+.jc-pantalla-cabecera {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px 24px; margin-bottom: clamp(12px, 2.5vw, 32px);
+}
+.jc-pantalla-titulos { min-width: 0; }
+.jc-pantalla-colegio {
+    margin: 0; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: clamp(12px, 1.4vw, 22px); color: var(--jc-yellow); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.jc-pantalla-titulo { margin: 4px 0 0; font-weight: 900; font-size: clamp(26px, 4vw, 64px); line-height: 1; }
+.jc-pantalla-controles { display: flex; align-items: center; gap: 16px; }
+.jc-pantalla-reloj { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: clamp(22px, 3vw, 52px); }
+.jc-pantalla-boton {
+    font: inherit; font-weight: 800; font-size: clamp(13px, 1.2vw, 18px);
+    padding: 10px 16px; border-radius: 12px; border: 3px solid var(--jc-yellow);
+    background: transparent; color: var(--jc-yellow); cursor: pointer;
+}
+.jc-pantalla-boton:hover, .jc-pantalla-boton:focus-visible { background: var(--jc-yellow); color: var(--jc-navy); outline: none; }
+
+/* ── Llamando ahora ───────────────────────────────────────────────────── */
+.jc-pantalla-cuerpo { flex: 1; min-width: 0; }
+.jc-turno-actual, .jc-turno-vacio {
+    background: var(--jc-yellow); color: var(--jc-navy);
+    border: 4px solid #fff; border-radius: clamp(16px, 2vw, 32px);
+    padding: clamp(18px, 3.5vw, 56px);
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.25);
+    min-width: 0;
+}
+.jc-turno-vacio { background: rgba(255, 255, 255, 0.08); color: #fff; border-style: dashed; text-align: center; }
+.jc-turno-vacio p:last-child { margin: 8px 0 0; font-weight: 700; font-size: clamp(16px, 1.8vw, 28px); opacity: 0.85; }
+.jc-turno-etiqueta {
+    margin: 0; font-family: 'JetBrains Mono', monospace; font-weight: 800; text-transform: uppercase;
+    font-size: clamp(14px, 1.8vw, 30px); letter-spacing: 0.06em;
+}
+.jc-turno-alumno {
+    margin: 8px 0 12px; font-weight: 900; line-height: 1.02;
+    font-size: clamp(36px, 8vw, 150px); overflow-wrap: anywhere;
+}
+.jc-turno-datos { margin: 0; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.jc-turno-datos > span {
+    font-weight: 900; font-size: clamp(18px, 3vw, 54px);
+    background: var(--jc-navy); color: #fff; border-radius: 14px; padding: 4px 16px;
+}
+.jc-turno-datos .jc-turno-placa { font-family: 'JetBrains Mono', monospace; background: #fff; color: var(--jc-navy); border: 3px solid var(--jc-navy); }
+.jc-turno-datos .jc-turno-hora { background: transparent; color: var(--jc-navy); padding-left: 0; }
+
+/* Llamado recién llegado: entra con un destello para atraer la mirada. */
+.jc-turno-nuevo { animation: jc-destello 1.2s ease-out 2; }
+@keyframes jc-destello {
+    0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(249, 225, 166, 0.9); }
+    40% { transform: scale(1.02); box-shadow: 0 0 0 24px rgba(249, 225, 166, 0); }
+    100% { transform: scale(1); box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.25); }
+}
+@media (prefers-reduced-motion: reduce) { .jc-turno-nuevo { animation: none; } }
+
+/* ── También esperando ────────────────────────────────────────────────── */
+.jc-turnos-titulo {
+    margin: clamp(18px, 3vw, 40px) 0 12px; font-weight: 900; font-size: clamp(18px, 2.2vw, 36px); color: var(--jc-mint);
+}
+.jc-turnos-anteriores {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: clamp(10px, 1.4vw, 20px);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+.jc-turno {
+    background: #fff; color: var(--jc-navy); border-radius: 16px; border: 3px solid var(--jc-mint);
+    padding: clamp(12px, 1.6vw, 22px); min-width: 0;
+}
+.jc-turno-nombre { display: block; font-weight: 900; font-size: clamp(20px, 2.4vw, 40px); line-height: 1.1; overflow-wrap: anywhere; }
+.jc-turno-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 6px; font-weight: 800; font-size: clamp(14px, 1.5vw, 24px); }
+.jc-turno-meta .jc-turno-placa { font-family: 'JetBrains Mono', monospace; }
+
+.jc-pantalla-pie {
+    margin-top: clamp(14px, 2vw, 28px); text-align: center; opacity: 0.6;
+    font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 1vw, 15px);
+}
+
+/* Móvil: cabecera apilada y el botón ocupa todo el ancho para pulsarlo con el pulgar. */
+@media (max-width: 560px) {
+    .jc-pantalla-controles { width: 100%; justify-content: space-between; }
+    .jc-turno-actual, .jc-turno-vacio { box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25); }
+}

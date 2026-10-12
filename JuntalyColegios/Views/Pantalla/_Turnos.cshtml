@@ -1,0 +1,41 @@
+@model JuntalyColegios.Application.DTOs.PantallaPublicaDto
+@* Fragmento que pantalla.js recarga cada pocos segundos. data-ultimo permite detectar un llamado nuevo. *@
+<div id="turnos" data-ultimo="@(Model.LlamandoAhora?.RecogidaId.ToString() ?? "")" data-hora="@Model.HoraLocal.ToString("HH:mm")">
+    @if (Model.LlamandoAhora is { } actual)
+    {
+        <section class="jc-turno-actual" aria-live="polite">
+            <p class="jc-turno-etiqueta">Llamando ahora</p>
+            <p class="jc-turno-alumno">@actual.Alumno</p>
+            <p class="jc-turno-datos">
+                <span class="jc-turno-clase">@actual.Clase</span>
+                @if (actual.Placa is not null) { <span class="jc-turno-placa">@actual.Placa</span> }
+                <span class="jc-turno-hora">@actual.LlamadoLocal.ToString("HH:mm")</span>
+            </p>
+        </section>
+    }
+    else
+    {
+        <section class="jc-turno-vacio">
+            <p class="jc-turno-etiqueta">Sin llamados</p>
+            <p>Cuando llegue un vehículo aparecerá aquí el alumno.</p>
+        </section>
+    }
+
+    @if (Model.Anteriores.Count > 0)
+    {
+        <h2 class="jc-turnos-titulo">También esperando</h2>
+        <ol class="jc-turnos-anteriores">
+            @foreach (var llamado in Model.Anteriores)
+            {
+                <li class="jc-turno">
+                    <span class="jc-turno-nombre">@llamado.Alumno</span>
+                    <span class="jc-turno-meta">
+                        <span>@llamado.Clase</span>
+                        @if (llamado.Placa is not null) { <span class="jc-turno-placa">@llamado.Placa</span> }
+                        <span>@llamado.LlamadoLocal.ToString("HH:mm")</span>
+                    </span>
+                </li>
+            }
+        </ol>
+    }
+</div>

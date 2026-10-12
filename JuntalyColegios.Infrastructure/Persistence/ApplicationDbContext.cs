@@ -28,6 +28,8 @@ namespace JuntalyColegios.Infrastructure.Persistence
 
         public DbSet<Recogida> Recogidas => Set<Recogida>();
 
+        public DbSet<PantallaLlamadas> PantallasLlamadas => Set<PantallaLlamadas>();
+
         /// <summary>Claves de Data Protection (cookies, antiforgery, tokens de invitación): sobreviven a reinicios de IIS.</summary>
         public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 

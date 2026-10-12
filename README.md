@@ -157,7 +157,7 @@ La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay
 | Perfil | Qué puede hacer |
 |---|---|
 | **Administrador** (`/Admin`) | Crear, editar y desactivar colegios (con su zona horaria); dar de alta supervisores; generar la clave de la antena RFID de cada colegio |
-| **Supervisor del colegio** (`/Colegio`) | Clases y alumnos; padres y su vínculo con los hijos; vehículos y asignación del tag RFID; **franjas horarias de retiro** por día de la semana (para todo el colegio o por clase); **pantalla de salida**; registro de detecciones |
+| **Supervisor del colegio** (`/Colegio`) | Clases y alumnos; padres y su vínculo con los hijos; vehículos y asignación del tag RFID; **franjas horarias de retiro** por día de la semana (para todo el colegio o por clase); **pantalla de salida**; **pantallas de llamada** para portería y aulas; registro de detecciones |
 | **Padre / representante** (`/Padres`) | Ver a sus hijos y su clase; registrar sus vehículos (el tag lo asigna el colegio); autorizar a otras personas a recoger; historial de recogidas |
 
 ### Flujo de la salida escolar (RFID)
@@ -166,6 +166,7 @@ La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay
 2. Se identifica el vehículo y la familia, y se llama **solo a los hijos que están en su franja de retiro** (en la hora local del colegio). Fuera de franja, con un tag desconocido o si el vehículo ya se detectó en los últimos 5 minutos, no se llama a nadie; toda lectura queda en el registro de detecciones.
 3. La **pantalla de salida** se actualiza sola y muestra cada alumno llamado con su clase, el vehículo y las personas autorizadas de la familia; el personal pulsa «Entregado» al entregarlo.
 4. La pantalla incluye un **simulador de llegada** para probar el flujo sin antena.
+5. **Pantallas de llamada** estilo turnero para una TV en la portería o una tablet en cada aula: se abren con un enlace secreto que genera el supervisor (sin iniciar sesión, revocable), muestran en grande el último alumno llamado y los que esperan (solo nombre, clase y placa), suenan al llegar uno nuevo y se adaptan a TV, tablet y móvil.
 
 ### Seguridad
 
@@ -176,7 +177,7 @@ La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay
 
 ## 6. Tests automatizados
 
-El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan. La suite tiene **358 tests**.
+El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan. La suite tiene **407 tests**.
 
 Todos los tests viven en `JuntalyColegios.Tests/`:
 
