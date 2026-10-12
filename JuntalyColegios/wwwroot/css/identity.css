@@ -74,7 +74,7 @@
    (que trae su propio padding/altura con mayor especificidad). */
 .jc-identity-card .form-control, .jc-identity-card .form-select {
     font-weight: 600; font-size: 16px; border: 3px solid var(--jc-navy); border-radius: 10px;
-    background: var(--jc-bg); color: var(--jc-navy);
+    background: var(--jc-campo); color: var(--jc-navy);
     padding: 0.9rem 1rem; min-height: 54px;
 }
 .jc-identity-card .form-control:focus, .jc-identity-card .form-select:focus {
@@ -142,3 +142,27 @@
     .jc-identity-header { padding: 18px 16px 0; }
     .jc-identity-back { display: none; }
 }
+
+/* Bootstrap pinta un recuadro con el color del body detrás de la etiqueta flotante: se quita para
+   que no tape el tono del campo. */
+.jc-identity-card .form-floating > .form-control:focus ~ label::after,
+.jc-identity-card .form-floating > .form-control:not(:placeholder-shown) ~ label::after { background-color: transparent; }
+
+/* ── Login: ver contraseña, Recordarme y enlaces ───────────────────────── */
+.jc-campo-clave { position: relative; }
+.jc-campo-clave > .form-control { padding-right: 3.4rem; }
+.jc-boton-ojo {
+    position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
+    width: 40px; height: 40px; display: grid; place-items: center;
+    border: 2px solid transparent; border-radius: 8px; background: transparent; color: var(--jc-navy);
+}
+.jc-boton-ojo:hover { background: rgba(32, 87, 128, 0.12); }
+.jc-boton-ojo:focus-visible { outline: none; border-color: var(--jc-blue); }
+.jc-boton-ojo svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.jc-boton-ojo .jc-ojo-cerrado { display: none; }
+.jc-boton-ojo.jc-clave-visible .jc-ojo-abierto { display: none; }
+.jc-boton-ojo.jc-clave-visible .jc-ojo-cerrado { display: block; }
+.jc-identity-card .checkbox label.form-label { display: inline-flex; align-items: center; gap: 0.5em; margin-bottom: 0; }
+.jc-identity-card .checkbox .form-check-input { margin-left: 0; margin-top: 0; }
+.jc-enlaces-cuenta { margin-top: 26px; }
+.jc-enlaces-cuenta p { margin-bottom: 10px; }

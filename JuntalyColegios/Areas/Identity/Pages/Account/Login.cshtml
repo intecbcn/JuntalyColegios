@@ -18,12 +18,16 @@
                     <label asp-for="Input.Email" class="form-label">Email</label>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3 jc-campo-clave">
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="contraseña" />
                     <label asp-for="Input.Password" class="form-label">Contraseña</label>
+                    <button type="button" class="jc-boton-ojo" data-mostrar-clave="Input_Password" aria-label="Mostrar contraseña" aria-pressed="false">
+                        <svg class="jc-ojo-abierto" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" /><circle cx="12" cy="12" r="3" /></svg>
+                        <svg class="jc-ojo-cerrado" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19C5 19 1 12 1 12a18.5 18.5 0 0 1 5.1-5.9M9.9 5.2A9.1 9.1 0 0 1 12 5c7 0 11 7 11 7a18.5 18.5 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2" /><path d="M1 1l22 22" /></svg>
+                    </button>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-                <div class="checkbox mb-3">
+                <div class="checkbox mb-3 d-flex justify-content-end">
                     <label asp-for="Input.RememberMe" class="form-label">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
                         Recordarme
@@ -32,7 +36,7 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Iniciar sesión</button>
                 </div>
-                <div>
+                <div class="jc-enlaces-cuenta">
                     <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">¿Olvidaste tu contraseña?</a>
                     </p>

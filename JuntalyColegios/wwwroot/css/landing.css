@@ -4,6 +4,8 @@
 
 :root {
     --jc-bg: #F6F7D5;
+    /* Fondo de los campos editables antes del foco: distinto del fondo de la página. */
+    --jc-campo: #E4EFF7;
     --jc-navy: #163D5A;
     --jc-blue: #205780;
     --jc-mint: #98D3C1;

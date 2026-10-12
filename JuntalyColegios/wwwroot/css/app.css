@@ -129,7 +129,7 @@
 .jc-app-main .form-label, .jc-app-main legend.form-label { font-weight: 800; color: var(--jc-navy); }
 .jc-app-main .form-control, .jc-app-main .form-select {
     font-weight: 600; border: 3px solid var(--jc-navy); border-radius: 10px;
-    background-color: var(--jc-bg); color: var(--jc-navy); padding: 0.6rem 0.9rem;
+    background-color: var(--jc-campo); color: var(--jc-navy); padding: 0.6rem 0.9rem;
 }
 .jc-app-main .form-select { padding-right: 2.25rem; }
 .jc-app-main .form-control:focus, .jc-app-main .form-select:focus { border-color: var(--jc-navy); background-color: #fff; box-shadow: 4px 4px 0 var(--jc-blue); }
