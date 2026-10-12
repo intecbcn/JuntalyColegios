@@ -1,0 +1,110 @@
+@model JuntalyColegios.Areas.PanelPadres.Models.PanelPadreViewModel
+@{
+    var panel = Model.Panel;
+    ViewData["Title"] = "Mi familia";
+}
+
+<h1>Mi familia</h1>
+<p class="text-muted">@panel.NombrePadre · @panel.NombreColegio</p>
+<partial name="_Avisos" />
+
+<h2 class="h4 mt-4">Mis hijos</h2>
+@if (panel.Hijos.Count == 0)
+{
+    <p class="text-muted">El colegio aún no ha vinculado a tus hijos. Contacta con la secretaría.</p>
+}
+else
+{
+    <table class="table align-middle">
+        <thead><tr><th>Alumno</th><th>Clase</th></tr></thead>
+        <tbody>
+            @foreach (var hijo in panel.Hijos)
+            {
+                <tr><td>@hijo.NombreCompleto</td><td>@hijo.Clase</td></tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h2 class="h4 mt-5">Mis vehículos</h2>
+<p class="text-muted">Cuando tu vehículo tenga tag, la antena del colegio lo reconocerá a la salida y llamará a tus hijos.</p>
+@if (panel.Vehiculos.Count > 0)
+{
+    <table class="table align-middle">
+        <thead><tr><th>Placa</th><th>Descripción</th><th>Tag RFID</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var vehiculo in panel.Vehiculos)
+            {
+                <tr>
+                    <td class="font-monospace">@vehiculo.Placa</td>
+                    <td>@vehiculo.Descripcion</td>
+                    <td>
+                        @if (vehiculo.Tag is null) { <span class="badge text-bg-warning">Pendiente de asignar por el colegio</span> }
+                        else { <span class="font-monospace">@vehiculo.Tag</span> }
+                    </td>
+                    <td class="text-end">
+                        <form asp-action="EliminarVehiculo" method="post">
+                            <input type="hidden" name="vehiculoId" value="@vehiculo.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<form asp-action="RegistrarVehiculo" method="post" class="row g-3" style="max-width: 760px">
+    <div class="col-md-4">
+        <label asp-for="NuevoVehiculo.Placa" class="form-label"></label>
+        <input asp-for="NuevoVehiculo.Placa" class="form-control text-uppercase" autocomplete="off" />
+    </div>
+    <div class="col-md-5">
+        <label asp-for="NuevoVehiculo.Descripcion" class="form-label"></label>
+        <input asp-for="NuevoVehiculo.Descripcion" class="form-control" placeholder="Marca, modelo y color" autocomplete="off" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Registrar vehículo</button>
+    </div>
+</form>
+
+<h2 class="h4 mt-5">Personas autorizadas a recoger</h2>
+<p class="text-muted">El personal del colegio comprobará su documento en la salida.</p>
+@if (panel.Autorizados.Count > 0)
+{
+    <table class="table align-middle">
+        <thead><tr><th>Nombre</th><th>Documento</th><th>Parentesco</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var autorizada in panel.Autorizados)
+            {
+                <tr>
+                    <td>@autorizada.Nombre</td>
+                    <td class="font-monospace">@autorizada.Documento</td>
+                    <td>@autorizada.Parentesco</td>
+                    <td class="text-end">
+                        <form asp-action="EliminarAutorizado" method="post">
+                            <input type="hidden" name="autorizadoId" value="@autorizada.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Retirar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<form asp-action="AgregarAutorizado" method="post" class="row g-3" style="max-width: 900px">
+    <div class="col-md-4">
+        <label asp-for="NuevoAutorizado.Nombre" class="form-label"></label>
+        <input asp-for="NuevoAutorizado.Nombre" class="form-control" autocomplete="off" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="NuevoAutorizado.Documento" class="form-label"></label>
+        <input asp-for="NuevoAutorizado.Documento" class="form-control" placeholder="V-12345678" autocomplete="off" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="NuevoAutorizado.Parentesco" class="form-label"></label>
+        <input asp-for="NuevoAutorizado.Parentesco" class="form-control" placeholder="Abuela, chófer…" autocomplete="off" />
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Autorizar</button>
+    </div>
+</form>

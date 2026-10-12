@@ -2,6 +2,7 @@ using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.UseCases;
 using JuntalyColegios.Application.UseCases.Colegios;
+using JuntalyColegios.Application.UseCases.Padres;
 using JuntalyColegios.Application.UseCases.Supervision;
 using JuntalyColegios.Infrastructure.Email;
 using JuntalyColegios.Infrastructure.Identity;
@@ -27,6 +28,7 @@ public static class RegistroDeServicios
         services.AddScoped<IRepositorioAlumnos, RepositorioAlumnosEf>();
         services.AddScoped<IRepositorioRepresentantes, RepositorioRepresentantesEf>();
         services.AddScoped<IRepositorioVehiculos, RepositorioVehiculosEf>();
+        services.AddScoped<IRepositorioAutorizados, RepositorioAutorizadosEf>();
 
         // Casos de uso (puertos de entrada).
         services.AddScoped<ISolicitarDemoUseCase, SolicitarDemoUseCase>();
@@ -56,6 +58,14 @@ public static class RegistroDeServicios
         services.AddScoped<IDesvincularAlumnoUseCase, DesvincularAlumnoUseCase>();
         services.AddScoped<IAgregarVehiculoUseCase, AgregarVehiculoUseCase>();
         services.AddScoped<IAsignarTagUseCase, AsignarTagUseCase>();
+
+        // Panel de padres: todos los casos de uso resuelven la familia con ContextoPadre.
+        services.AddScoped<ContextoPadre>();
+        services.AddScoped<IObtenerPanelPadreUseCase, ObtenerPanelPadreUseCase>();
+        services.AddScoped<IRegistrarMiVehiculoUseCase, RegistrarMiVehiculoUseCase>();
+        services.AddScoped<IEliminarMiVehiculoUseCase, EliminarMiVehiculoUseCase>();
+        services.AddScoped<IAgregarAutorizadoUseCase, AgregarAutorizadoUseCase>();
+        services.AddScoped<IEliminarAutorizadoUseCase, EliminarAutorizadoUseCase>();
 
         return services;
     }

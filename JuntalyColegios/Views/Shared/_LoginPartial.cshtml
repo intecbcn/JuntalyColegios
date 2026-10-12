@@ -17,6 +17,12 @@
             <a class="nav-link text-dark" href="/Colegio">Mi colegio</a>
         </li>
     }
+    @if (User.IsInRole(Roles.Padre))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Padres">Mi familia</a>
+        </li>
+    }
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Mi cuenta">Hola, @User.Identity?.Name</a>
     </li>

@@ -1,6 +1,7 @@
 using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Areas.ColegioSupervisor.Models;
 using JuntalyColegios.Domain.Exceptions;
+using JuntalyColegios.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JuntalyColegios.Areas.ColegioSupervisor.Controllers;

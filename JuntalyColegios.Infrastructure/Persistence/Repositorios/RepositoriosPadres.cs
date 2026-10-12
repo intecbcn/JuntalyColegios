@@ -32,6 +32,27 @@ public sealed class RepositorioRepresentantesEf(ApplicationDbContext db) : IRepo
     }
 }
 
+public sealed class RepositorioAutorizadosEf(ApplicationDbContext db) : IRepositorioAutorizados
+{
+    public async Task AgregarAsync(PersonaAutorizada autorizada, CancellationToken cancellationToken)
+    {
+        db.PersonasAutorizadas.Add(autorizada);
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
+    public Task<PersonaAutorizada?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        db.PersonasAutorizadas.SingleOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyList<PersonaAutorizada>> ListarPorRepresentanteAsync(Guid representanteId, CancellationToken cancellationToken) =>
+        await db.PersonasAutorizadas.AsNoTracking().Where(a => a.RepresentanteId == representanteId).ToListAsync(cancellationToken);
+
+    public Task EliminarAsync(PersonaAutorizada autorizada, CancellationToken cancellationToken)
+    {
+        db.PersonasAutorizadas.Remove(autorizada);
+        return db.SaveChangesAsync(cancellationToken);
+    }
+}
+
 public sealed class RepositorioVehiculosEf(ApplicationDbContext db) : IRepositorioVehiculos
 {
     public async Task AgregarAsync(Vehiculo vehiculo, CancellationToken cancellationToken)

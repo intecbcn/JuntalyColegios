@@ -75,7 +75,7 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 - [x] Gestión de colegios y supervisores (AdminApp): alta, edición, activar/desactivar y alta de supervisor con invitación por email
 - [x] Clases y alumnos (supervisor): clases por colegio, alta/edición/baja de alumnos, aislamiento entre colegios
 - [x] Padres, vínculo con alumnos y tags RFID (supervisor): alta con invitación, hijos, vehículos y tag único por colegio
-- [ ] Panel de padres: hijos, vehículos, personas autorizadas
+- [x] Panel de padres: hijos y su clase, vehículos (con estado del tag) y personas autorizadas
 - [ ] Franjas horarias de retiro por día de la semana
 - [ ] Flujo RFID: detección, pantalla de salida y simulador
 - [ ] Historial de recogidas, registro de detecciones y datos demo
@@ -97,3 +97,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Fix: «¿Olvidaste tu contraseña?» no enviaba el email (Identity UI usaba un emisor no-op); restringido AllowedHosts para evitar envenenar los enlaces de recuperación con un Host falso (2 tests de regresión rojo → verde) |
 | 2026-10-12 | Fase 3: clases y alumnos del supervisor, aislados por colegio (lo ajeno → 404, sin colegio activo → 403). TDD: 49 tests en rojo → verde. Migración `ClasesYAlumnos` (pendiente de aplicar). Suite 156/156 |
 | 2026-10-12 | Fase 4: alta de padres por el supervisor con invitación, vínculo con hijos, vehículos y tags RFID (únicos por colegio). TDD: 55 tests en rojo → verde. Migración `PadresYVehiculos` (pendiente de aplicar). Suite 211/211 |
+| 2026-10-12 | Fase 5: panel de padres (/Padres) con hijos, vehículos y personas autorizadas, limitado a la propia familia. TDD: 32 tests en rojo → verde; refactor de la regla de placa única compartida con el supervisor. Migración `PersonasAutorizadas` (pendiente de aplicar). Suite 243/243 |

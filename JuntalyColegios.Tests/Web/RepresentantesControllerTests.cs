@@ -4,6 +4,7 @@ using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Areas.ColegioSupervisor.Controllers;
 using JuntalyColegios.Areas.ColegioSupervisor.Models;
 using JuntalyColegios.Domain.Exceptions;
+using JuntalyColegios.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;

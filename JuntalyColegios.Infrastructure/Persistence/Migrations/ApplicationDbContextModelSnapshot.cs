@@ -107,6 +107,41 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.ToTable("Colegios", (string)null);
                 });
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.PersonaAutorizada", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Documento")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Parentesco")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("RepresentanteId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColegioId");
+
+                    b.HasIndex("RepresentanteId", "Documento")
+                        .IsUnique();
+
+                    b.ToTable("PersonasAutorizadas", (string)null);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Representante", b =>
                 {
                     b.Property<Guid>("Id")
@@ -431,6 +466,21 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("ColegioId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.PersonaAutorizada", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Representante", null)
+                        .WithMany()
+                        .HasForeignKey("RepresentanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

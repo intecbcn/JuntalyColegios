@@ -128,6 +128,29 @@ public sealed class RepositorioVehiculosEnMemoria : IRepositorioVehiculos
     }
 }
 
+public sealed class RepositorioAutorizadosEnMemoria : IRepositorioAutorizados
+{
+    public List<PersonaAutorizada> Autorizados { get; } = [];
+
+    public Task AgregarAsync(PersonaAutorizada autorizada, CancellationToken cancellationToken)
+    {
+        Autorizados.Add(autorizada);
+        return Task.CompletedTask;
+    }
+
+    public Task<PersonaAutorizada?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Autorizados.SingleOrDefault(a => a.Id == id));
+
+    public Task<IReadOnlyList<PersonaAutorizada>> ListarPorRepresentanteAsync(Guid representanteId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<PersonaAutorizada>>(Autorizados.Where(a => a.RepresentanteId == representanteId).ToList());
+
+    public Task EliminarAsync(PersonaAutorizada autorizada, CancellationToken cancellationToken)
+    {
+        Autorizados.Remove(autorizada);
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
 {
     public List<Alumno> Alumnos { get; } = [];

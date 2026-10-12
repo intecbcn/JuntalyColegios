@@ -2,6 +2,7 @@ using JuntalyColegios.Application.DTOs;
 using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.Seguridad;
+using JuntalyColegios.Application.UseCases.Vehiculos;
 using JuntalyColegios.Domain.Entities;
 using JuntalyColegios.Domain.Exceptions;
 using JuntalyColegios.Domain.ValueObjects;
@@ -151,15 +152,7 @@ public sealed class AgregarVehiculoUseCase(
     {
         var colegio = await contexto.ColegioDeAsync(usuarioId, cancellationToken);
         var representante = await ContextoSupervisor.RepresentanteDelColegioAsync(representantes, colegio.Id, representanteId, cancellationToken);
-
-        var vehiculo = Vehiculo.Crear(representante, Placa.Crear(datos.Placa), datos.Descripcion);
-        var yaRegistrado = (await vehiculos.ListarPorColegioAsync(colegio.Id, cancellationToken))
-            .Any(v => v.RepresentanteId == representante.Id && v.Placa == vehiculo.Placa);
-        if (yaRegistrado)
-            throw new DominioException($"El vehículo {vehiculo.Placa} ya está registrado.");
-
-        await vehiculos.AgregarAsync(vehiculo, cancellationToken);
-        return vehiculo.Id;
+        return await RegistroDeVehiculos.RegistrarAsync(vehiculos, representante, datos, cancellationToken);
     }
 }
 

@@ -36,6 +36,23 @@ public sealed class RepresentanteConfiguracion : IEntityTypeConfiguration<Repres
     }
 }
 
+public sealed class PersonaAutorizadaConfiguracion : IEntityTypeConfiguration<PersonaAutorizada>
+{
+    public void Configure(EntityTypeBuilder<PersonaAutorizada> builder)
+    {
+        builder.ToTable("PersonasAutorizadas");
+        builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id).ValueGeneratedNever();
+        builder.Property(a => a.Nombre).HasMaxLength(PersonaAutorizada.LongitudMaximaNombre).IsRequired();
+        builder.Property(a => a.Documento).HasMaxLength(PersonaAutorizada.LongitudMaximaDocumento).IsRequired();
+        builder.Property(a => a.Parentesco).HasMaxLength(PersonaAutorizada.LongitudMaximaParentesco);
+
+        builder.HasOne<Representante>().WithMany().HasForeignKey(a => a.RepresentanteId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<Colegio>().WithMany().HasForeignKey(a => a.ColegioId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(a => new { a.RepresentanteId, a.Documento }).IsUnique();
+    }
+}
+
 public sealed class VehiculoConfiguracion : IEntityTypeConfiguration<Vehiculo>
 {
     public void Configure(EntityTypeBuilder<Vehiculo> builder)
