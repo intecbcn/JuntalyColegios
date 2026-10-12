@@ -245,6 +245,8 @@ dotnet publish JuntalyColegios/JuntalyColegios.csproj -c Release -o publicacion
 ```
 
 > Al publicar, `dotnet publish` genera un `web.config` nuevo: conservar el bloque `<environmentVariables>` del servidor (o definir las variables en el *Configuration Editor* de IIS para el sitio).
+>
+> Alternativa: copiar un archivo `.env` (mismo formato que `.env.example`) a la carpeta del sitio, junto a `JuntalyColegios.dll`. La app lo carga al arrancar y no se sobrescribe al publicar. Si falta la cadena de conexión, la app no arranca y el log indica qué variable definir.
 
 Notas:
 

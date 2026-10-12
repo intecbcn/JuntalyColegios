@@ -10,22 +10,28 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.WebEncoders;
 
 // Carga variables de entorno desde .env (credenciales de Supabase) antes de construir la configuración.
-// Busca .env subiendo desde el directorio actual hasta encontrarlo (p.ej. la raíz del repo),
-// ya que el working directory difiere entre "dotnet run" y "dotnet ef". No se commitea (ver .gitignore);
-// en producción las variables se definen en el entorno real y no requieren este archivo.
+// Primero junto a la aplicación (en IIS el directorio de trabajo no es la carpeta del sitio) y si no,
+// subiendo desde el directorio actual (la raíz del repo con "dotnet run" o "dotnet ef"). No se commitea
+// (ver .gitignore); en producción también pueden definirse en el entorno (web.config) sin este archivo.
+var envJuntoALaApp = Path.Combine(AppContext.BaseDirectory, ".env");
 try
 {
-    DotNetEnv.Env.TraversePath().Load();
+    if (File.Exists(envJuntoALaApp)) DotNetEnv.Env.Load(envJuntoALaApp);
+    else DotNetEnv.Env.TraversePath().Load();
 }
 catch (FileNotFoundException)
 {
-    // No hay .env (p.ej. en producción las variables se definen directamente en el entorno).
+    // No hay .env: las variables vienen del entorno.
 }
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// Sin cadena de conexión la app no puede arrancar (crea roles y datos al iniciar): se falla con un mensaje claro.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException(
+        "Falta la cadena de conexión: define la variable de entorno ConnectionStrings__DefaultConnection " +
+        "(en IIS, en el web.config del sitio) o un archivo .env junto a la aplicación.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
