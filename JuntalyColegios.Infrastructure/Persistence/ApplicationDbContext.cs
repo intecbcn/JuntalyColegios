@@ -1,6 +1,7 @@
 using JuntalyColegios.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JuntalyColegios.Infrastructure.Persistence
 {
@@ -25,6 +26,17 @@ namespace JuntalyColegios.Infrastructure.Persistence
         public DbSet<Deteccion> Detecciones => Set<Deteccion>();
 
         public DbSet<Recogida> Recogidas => Set<Recogida>();
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            // SQLite (base de los tests) no sabe ordenar ni comparar DateTimeOffset: allí se guardan como
+            // binario ordenable. PostgreSQL usa su timestamptz nativo.
+            if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                configurationBuilder.Properties<DateTimeOffset>().HaveConversion<DateTimeOffsetToBinaryConverter>();
+                configurationBuilder.Properties<DateTimeOffset?>().HaveConversion<DateTimeOffsetToBinaryConverter>();
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

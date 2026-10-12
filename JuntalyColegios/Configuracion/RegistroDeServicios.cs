@@ -3,6 +3,7 @@ using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.UseCases;
 using JuntalyColegios.Application.UseCases.Colegios;
+using JuntalyColegios.Application.UseCases.Historial;
 using JuntalyColegios.Application.UseCases.Padres;
 using JuntalyColegios.Application.UseCases.Salida;
 using JuntalyColegios.Application.UseCases.Supervision;
@@ -74,6 +75,9 @@ public static class RegistroDeServicios
         services.AddScoped<IObtenerPantallaSalidaUseCase, ObtenerPantallaSalidaUseCase>();
         services.AddScoped<IMarcarEntregadaUseCase, MarcarEntregadaUseCase>();
         services.AddScoped<IGenerarClaveAntenaUseCase, GenerarClaveAntenaUseCase>();
+
+        services.AddScoped<IListarDeteccionesUseCase, ListarDeteccionesUseCase>();
+        services.AddScoped<IObtenerHistorialPadreUseCase, ObtenerHistorialPadreUseCase>();
 
         services.AddScoped<IListarFranjasUseCase, ListarFranjasUseCase>();
         services.AddScoped<ICrearFranjasUseCase, CrearFranjasUseCase>();

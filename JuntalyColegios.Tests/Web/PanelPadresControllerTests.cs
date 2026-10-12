@@ -38,7 +38,10 @@ public class PanelPadresControllerTests
         var panel = new PanelPadreDto("Carlos", "Colegio A", [], [], []);
         obtener.EjecutarAsync(UsuarioId, Arg.Any<CancellationToken>()).Returns(panel);
 
-        var resultado = await _sut.Index(obtener, CancellationToken.None);
+        var historial = Substitute.For<IObtenerHistorialPadreUseCase>();
+        historial.EjecutarAsync(UsuarioId, Arg.Any<CancellationToken>()).Returns([]);
+
+        var resultado = await _sut.Index(obtener, historial, CancellationToken.None);
 
         var modelo = Assert.IsType<PanelPadreViewModel>(Assert.IsType<ViewResult>(resultado).Model);
         Assert.Same(panel, modelo.Panel);

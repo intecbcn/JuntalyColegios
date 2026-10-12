@@ -1,0 +1,44 @@
+@model IReadOnlyList<JuntalyColegios.Application.DTOs.DeteccionRegistroDto>
+@using JuntalyColegios.Application.Formato
+@using JuntalyColegios.Domain.Entities
+@{
+    ViewData["Title"] = "Registro de detecciones";
+}
+
+<a asp-controller="Inicio" asp-action="Index" class="btn btn-link px-0">&larr; Mi colegio</a>
+<h1>Registro de detecciones</h1>
+<p class="text-muted">
+    Últimas lecturas de la antena (hora del colegio). Solo «Alumnos llamados» genera llamadas; el resto se registra
+    para poder revisar qué pasó.
+</p>
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">Todavía no hay lecturas.</p>
+}
+else
+{
+    <table class="table table-sm align-middle">
+        <thead><tr><th>Fecha y hora</th><th>Resultado</th><th>Vehículo</th><th>Familia</th><th>Tag</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                var estilo = d.Resultado switch
+                {
+                    ResultadoDeteccion.GeneraRecogida => "text-bg-success",
+                    ResultadoDeteccion.FueraDeFranja => "text-bg-warning",
+                    ResultadoDeteccion.TagDesconocido => "text-bg-danger",
+                    _ => "text-bg-secondary"
+                };
+                <tr>
+                    <td>@DiasSemana.Nombre(d.DetectadoEnLocal.DayOfWeek) @d.DetectadoEnLocal.ToString("dd/MM HH:mm")</td>
+                    <td><span class="badge @estilo">@ResultadosDeteccion.Texto(d.Resultado)</span></td>
+                    <td class="font-monospace">@(d.Placa ?? "—")</td>
+                    <td>@(d.Familia ?? "—")</td>
+                    <td class="font-monospace small">@d.Tag</td>
+                    <td>@(d.Simulada ? "Simulada" : "")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

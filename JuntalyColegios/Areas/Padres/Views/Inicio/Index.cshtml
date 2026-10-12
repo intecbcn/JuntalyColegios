@@ -108,3 +108,30 @@ else
         <button type="submit" class="btn btn-primary w-100">Autorizar</button>
     </div>
 </form>
+
+<h2 class="h4 mt-5">Últimas recogidas</h2>
+@if (Model.Historial.Count == 0)
+{
+    <p class="text-muted">Todavía no hay recogidas registradas.</p>
+}
+else
+{
+    <table id="historial" class="table table-sm align-middle">
+        <thead><tr><th>Día</th><th>Alumno</th><th>Vehículo</th><th>Llegada</th><th>Entrega</th></tr></thead>
+        <tbody>
+            @foreach (var r in Model.Historial)
+            {
+                <tr>
+                    <td>@JuntalyColegios.Application.Formato.DiasSemana.Nombre(r.LlegadaLocal.DayOfWeek) @r.LlegadaLocal.ToString("dd/MM")</td>
+                    <td>@r.Alumno</td>
+                    <td class="font-monospace">@(r.Placa ?? "—")</td>
+                    <td>@r.LlegadaLocal.ToString("HH:mm")</td>
+                    <td>
+                        @if (r.EntregaLocal is { } entrega) { <span>Entregado a las @entrega.ToString("HH:mm")</span> }
+                        else { <span class="badge text-bg-info">Pendiente de entregar</span> }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

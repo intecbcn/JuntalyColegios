@@ -23,8 +23,13 @@ public class InicioController : Controller
     private string UsuarioId =>
         User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new InvalidOperationException("Usuario no autenticado.");
 
-    public async Task<IActionResult> Index([FromServices] IObtenerPanelPadreUseCase obtener, CancellationToken ct) =>
-        View(new PanelPadreViewModel { Panel = await obtener.EjecutarAsync(UsuarioId, ct) });
+    public async Task<IActionResult> Index(
+        [FromServices] IObtenerPanelPadreUseCase obtener, [FromServices] IObtenerHistorialPadreUseCase historial, CancellationToken ct) =>
+        View(new PanelPadreViewModel
+        {
+            Panel = await obtener.EjecutarAsync(UsuarioId, ct),
+            Historial = await historial.EjecutarAsync(UsuarioId, ct)
+        });
 
     [HttpPost]
     public Task<IActionResult> RegistrarVehiculo(

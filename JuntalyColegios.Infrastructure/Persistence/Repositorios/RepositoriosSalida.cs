@@ -15,10 +15,16 @@ public sealed class RepositorioDeteccionesEf(ApplicationDbContext db) : IReposit
     }
 
     public async Task<IReadOnlyList<Deteccion>> ListarDeVehiculoDesdeAsync(Guid vehiculoId, DateTimeOffset desde, CancellationToken cancellationToken) =>
-        (await db.Detecciones.AsNoTracking().Where(d => d.VehiculoId == vehiculoId).ToListAsync(cancellationToken))
-            // SQLite (tests) no traduce comparaciones de DateTimeOffset: se filtra en memoria las de ese vehículo.
-            .Where(d => d.DetectadoEn >= desde)
-            .ToList();
+        await db.Detecciones.AsNoTracking()
+            .Where(d => d.VehiculoId == vehiculoId && d.DetectadoEn >= desde)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Deteccion>> ListarRecientesAsync(Guid colegioId, int maximo, CancellationToken cancellationToken) =>
+        await db.Detecciones.AsNoTracking()
+            .Where(d => d.ColegioId == colegioId)
+            .OrderByDescending(d => d.DetectadoEn)
+            .Take(maximo)
+            .ToListAsync(cancellationToken);
 }
 
 public sealed class RepositorioRecogidasEf(ApplicationDbContext db) : IRepositorioRecogidas
@@ -34,4 +40,12 @@ public sealed class RepositorioRecogidasEf(ApplicationDbContext db) : IRepositor
         db.Recogidas.Update(recogida);
         return db.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Recogida>> ListarRecientesDeAlumnosAsync(
+        IReadOnlyCollection<Guid> alumnoIds, int maximo, CancellationToken cancellationToken) =>
+        await db.Recogidas.AsNoTracking()
+            .Where(r => alumnoIds.Contains(r.AlumnoId))
+            .OrderByDescending(r => r.DetectadoEn)
+            .Take(maximo)
+            .ToListAsync(cancellationToken);
 }

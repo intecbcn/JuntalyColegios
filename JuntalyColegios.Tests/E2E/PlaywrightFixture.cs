@@ -62,6 +62,9 @@ public sealed class PlaywrightFixture : IAsyncLifetime
         {
             base.ConfigureWebHost(builder);
             builder.UseUrls("http://127.0.0.1:0");
+            // Los recorridos de demo usan las cuentas de prueba sembradas al arrancar.
+            builder.UseSetting("Demo:Sembrar", "true");
+            builder.UseSetting("Demo:Contrasena", AutenticacionTests.ContrasenaPorDefecto);
         }
     }
 }

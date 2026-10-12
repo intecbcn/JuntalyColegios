@@ -200,6 +200,20 @@ public sealed class RepositorioDeteccionesEnMemoria : IRepositorioDetecciones, I
         Task.FromResult<IReadOnlyList<Recogida>>(Recogidas.Where(r => r.ColegioId == colegioId && r.Pendiente).ToList());
 
     public Task ActualizarAsync(Recogida recogida, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task<IReadOnlyList<Recogida>> ListarRecientesDeAlumnosAsync(IReadOnlyCollection<Guid> alumnoIds, int maximo, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Recogida>>(Recogidas
+            .Where(r => alumnoIds.Contains(r.AlumnoId))
+            .OrderByDescending(r => r.DetectadoEn)
+            .Take(maximo)
+            .ToList());
+
+    public Task<IReadOnlyList<Deteccion>> ListarRecientesAsync(Guid colegioId, int maximo, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Deteccion>>(Detecciones
+            .Where(d => d.ColegioId == colegioId)
+            .OrderByDescending(d => d.DetectadoEn)
+            .Take(maximo)
+            .ToList());
 }
 
 public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos

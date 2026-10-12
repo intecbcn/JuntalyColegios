@@ -1,6 +1,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using JuntalyColegios.Configuracion;
+using JuntalyColegios.Infrastructure.Demo;
 using JuntalyColegios.Infrastructure.Identity;
 using JuntalyColegios.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +45,14 @@ var app = builder.Build();
 
 // Roles de la aplicación y administrador inicial (idempotente; ver InicializadorIdentidad).
 await InicializadorIdentidad.InicializarAsync(app.Services);
+
+// Datos de demostración con cuentas de prueba (Demo__Sembrar=true). Idempotente.
+if (app.Configuration.GetValue<bool>("Demo:Sembrar"))
+{
+    var contrasenaDemo = app.Configuration["Demo:Contrasena"]
+        ?? throw new InvalidOperationException("Demo:Sembrar está activo pero falta Demo:Contrasena.");
+    await SembradorDemo.SembrarAsync(app.Services, new OpcionesDemo(contrasenaDemo, app.Configuration["Demo:ClaveAntena"]));
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

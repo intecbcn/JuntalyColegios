@@ -28,6 +28,8 @@ public sealed class PanelPadreViewModel
 {
     public required PanelPadreDto Panel { get; init; }
 
+    public IReadOnlyList<HistorialRecogidaDto> Historial { get; init; } = [];
+
     public VehiculoFormulario NuevoVehiculo { get; init; } = new();
 
     public AutorizadoFormulario NuevoAutorizado { get; init; } = new();
