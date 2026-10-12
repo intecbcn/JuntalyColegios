@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Time.Testing;
 
 namespace JuntalyColegios.Tests.Infrastructure;
 
@@ -30,7 +29,7 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
     /// Reloj de la app en los tests: lunes 12/10/2026 a las 16:05 UTC (12:05 en Caracas). Los tests de
     /// franjas y detecciones lo mueven con Advance/SetUtcNow.
     /// </summary>
-    public FakeTimeProvider Reloj { get; } = new(new DateTimeOffset(2026, 10, 12, 16, 5, 0, TimeSpan.Zero));
+    public RelojDePrueba Reloj { get; } = new(new DateTimeOffset(2026, 10, 12, 16, 5, 0, TimeSpan.Zero));
 
     public const string EmailAdminInicial = "admin@juntaly.test";
 
