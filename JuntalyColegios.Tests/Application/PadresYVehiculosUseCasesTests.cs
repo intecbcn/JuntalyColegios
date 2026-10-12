@@ -84,7 +84,7 @@ public class PadresYVehiculosUseCasesTests
         Assert.Equal(id, padre.Id);
         Assert.Equal(_colegioA.Id, padre.ColegioId);
         Assert.Equal("usuario-padre", padre.UsuarioId);
-        Assert.Equal([hijo1.Id, hijo2.Id], padre.Alumnos.Select(v => v.AlumnoId).Order());
+        Assert.Equal(new[] { hijo1.Id, hijo2.Id }.Order(), padre.Alumnos.Select(v => v.AlumnoId).Order());
     }
 
     [Fact]
