@@ -71,7 +71,14 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 - [x] Autenticación con ASP.NET Core Identity
 - [x] Landing page + solicitud de demo (con tests unitarios, de integración y E2E)
 - [x] Entorno de tests automatizados: xUnit + `WebApplicationFactory` + Playwright .NET, con TDD obligatorio en cada feature
-- [ ] _(añadir aquí las siguientes funcionalidades a medida que se definan)_
+- [x] Roles (AdminApp, SupervisorColegio, Padre), administrador inicial por configuración, registro público cerrado (alta en cascada) y menú por rol
+- [ ] Gestión de colegios y supervisores (AdminApp)
+- [ ] Clases y alumnos (supervisor)
+- [ ] Padres, vínculo con alumnos y tags RFID (supervisor)
+- [ ] Panel de padres: hijos, vehículos, personas autorizadas
+- [ ] Franjas horarias de retiro por día de la semana
+- [ ] Flujo RFID: detección, pantalla de salida y simulador
+- [ ] Historial de recogidas, registro de detecciones y datos demo
 
 ---
 
@@ -85,3 +92,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-06 | Entorno de tests (24 tests: unitarios, integración y E2E) y regla TDD; corregidos 2 bugs detectados por los tests: inyección de HTML en el correo de demo y mensaje de error tras un envío correcto del formulario |
 | 2026-10-12 | Repositorio de GitHub pasado a público (revisado antes el historial: sin secretos) |
 | 2026-10-12 | Fase 0 del módulo funcional: tests de integración sobre SQLite en memoria y utilidad de inicio de sesión (TDD: 2 tests en rojo → verde; suite 26/26) |
+| 2026-10-12 | Fase 1: roles, administrador inicial, registro público cerrado y menú por rol (TDD: 13 tests en rojo → verde). Seguridad: cerrada también RegisterConfirmation, que entregaba enlaces de confirmación de cualquier cuenta y permitía enumerar emails (test de regresión). Suite 41/41 |

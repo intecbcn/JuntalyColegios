@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 
 namespace JuntalyColegios.Tests.Infrastructure;
 
@@ -26,9 +25,15 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
 
     public FakeEmailSender EmailSender { get; } = new();
 
+    public const string EmailAdminInicial = "admin@juntaly.test";
+
     public JuntalyWebApplicationFactory()
     {
+        // El esquema se crea antes de arrancar la app, porque Program.cs inicializa roles y el
+        // administrador durante el arranque.
         _conexion.Open();
+        using var db = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(_conexion).Options);
+        db.Database.EnsureCreated();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -38,6 +43,8 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
         // llegarían vacíos: se habilitan para que la app de test sirva lo mismo que en local.
         builder.UseStaticWebAssets();
         builder.UseSetting("ConnectionStrings:DefaultConnection", ConexionFicticia);
+        builder.UseSetting("AdminInicial:Email", EmailAdminInicial);
+        builder.UseSetting("AdminInicial:Password", AutenticacionTests.ContrasenaPorDefecto);
 
         builder.ConfigureServices(services =>
         {
@@ -50,14 +57,6 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
             services.RemoveAll<IDbContextOptionsConfiguration<ApplicationDbContext>>();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(_conexion));
         });
-    }
-
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        var host = base.CreateHost(builder);
-        using var scope = host.Services.CreateScope();
-        scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreated();
-        return host;
     }
 
     protected override void Dispose(bool disposing)

@@ -2,6 +2,7 @@ using JuntalyColegios.Application.Ports.In;
 using JuntalyColegios.Application.Ports.Out;
 using JuntalyColegios.Application.UseCases;
 using JuntalyColegios.Infrastructure.Email;
+using JuntalyColegios.Infrastructure.Identity;
 using JuntalyColegios.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -36,6 +38,9 @@ builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<ISolicitarDemoUseCase, SolicitarDemoUseCase>();
 
 var app = builder.Build();
+
+// Roles de la aplicación y administrador inicial (idempotente; ver InicializadorIdentidad).
+await InicializadorIdentidad.InicializarAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -55,6 +60,11 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Inicio}/{action=Index}/{id?}")
+    .WithStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
