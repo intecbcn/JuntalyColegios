@@ -55,6 +55,9 @@ public class JuntalyWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseSetting("App:UrlBase", UrlBase);
         builder.UseSetting("AdminInicial:Email", EmailAdminInicial);
         builder.UseSetting("AdminInicial:Password", AutenticacionTests.ContrasenaPorDefecto);
+        // Los tests no dependen del .env de quien los ejecuta (Program.cs lo carga en el entorno del proceso):
+        // la demo solo se siembra donde un test lo pide explícitamente.
+        builder.UseSetting("Demo:Sembrar", "false");
 
         builder.ConfigureServices(services =>
         {
