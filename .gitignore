@@ -405,3 +405,6 @@ Desktop.ini
 
 # Claude Code (config local por usuario)
 .claude/settings.local.json
+
+# Paquete de despliegue (dotnet publish)
+publicacion/

@@ -57,7 +57,7 @@ Esta aplicación web es la plataforma de Juntaly Colegios: landing comercial con
 
 - [.NET SDK 10](https://dotnet.microsoft.com/download)
 - Una base de datos PostgreSQL (por ejemplo un proyecto gratuito en Supabase)
-- (Opcional) Una cuenta SMTP para el envío de emails (solicitud de demo, confirmación de cuenta)
+- (Opcional) Una cuenta SMTP para el envío de emails (invitaciones, recuperación de contraseña, solicitud de demo)
 
 ### Pasos
 
@@ -70,9 +70,9 @@ cd JuntalyColegios
 dotnet tool restore --tool-manifest JuntalyColegios/dotnet-tools.json
 dotnet restore JuntalyColegios.slnx
 
-# 3. Configurar la cadena de conexión
+# 3. Configurar la base de datos, el administrador inicial y (opcional) los datos de demostración
 cp .env.example .env
-#    → editar .env con los datos reales de PostgreSQL/Supabase
+#    → editar .env (ver la tabla de variables más abajo)
 
 # 4. (Opcional) Configurar SMTP con User Secrets
 dotnet user-secrets set "Smtp:Host" "smtp.ejemplo.com" --project JuntalyColegios
@@ -88,9 +88,21 @@ dotnet ef database update --project JuntalyColegios.Infrastructure --startup-pro
 dotnet run --project JuntalyColegios
 ```
 
-La aplicación queda disponible en la URL que indique la consola (ver `JuntalyColegios/Properties/launchSettings.json`).
+La aplicación queda disponible en la URL que indique la consola (ver `JuntalyColegios/Properties/launchSettings.json`). Al arrancar crea los roles, el administrador inicial y, si se activan, los datos de demostración.
 
-> **Secretos**: el archivo `.env` y los User Secrets **no** se suben al repositorio. En producción, la cadena de conexión y la configuración SMTP se definen como variables de entorno (`ConnectionStrings__DefaultConnection`, `Smtp__Host`, etc.).
+### Variables de configuración
+
+| Variable | Obligatoria | Uso |
+|---|---|---|
+| `ConnectionStrings__DefaultConnection` | Sí | Cadena de conexión de PostgreSQL |
+| `AdminInicial__Email` / `AdminInicial__Password` | Recomendada | Administrador de la plataforma (rol AdminApp), se crea al arrancar si no existe |
+| `App__UrlBase` | En producción | URL pública con la que se construyen los enlaces de los emails (por defecto `https://colegios.juntaly.com`) |
+| `Smtp__Host`, `Smtp__Port`, `Smtp__User`, `Smtp__Password`, `Smtp__From` | Para enviar emails | Invitaciones, recuperación de contraseña y solicitud de demo |
+| `Demo__Sembrar` | No | `true` crea el colegio de demostración con las cuentas de prueba |
+| `Demo__Contrasena` | Si `Demo__Sembrar` | Contraseña de las cuentas de prueba |
+| `Demo__ClaveAntena` | No | Clave de antena del colegio de demo, para probar la API de la antena |
+
+> **Secretos**: el archivo `.env` y los User Secrets **no** se suben al repositorio. En producción las variables se definen en el entorno del servidor (ver [Despliegue](#8-despliegue)).
 
 ### Comandos útiles
 
@@ -106,23 +118,30 @@ La aplicación está dividida en **4 proyectos** que fuerzan la regla de depende
 
 ```
 JuntalyColegios.slnx
-├── JuntalyColegios.Domain/            # Núcleo: entidades, value objects, excepciones (sin dependencias)
+├── JuntalyColegios.Domain/            # Núcleo, sin dependencias
+│   ├── Entities/                      #   Colegio, Clase, Alumno, Representante, Vehiculo, PersonaAutorizada,
+│   │                                  #   FranjaRetiro, Deteccion, Recogida, Supervisor
+│   ├── ValueObjects/                  #   Email, Placa, TagRfid
+│   └── Servicios/                     #   HorarioDeRetiro (¿está el alumno en su franja?)
 ├── JuntalyColegios.Application/       # Casos de uso y puertos
-│   ├── Ports/In/                      #   puertos de entrada (ej. ISolicitarDemoUseCase)
-│   ├── Ports/Out/                     #   puertos de salida (ej. IEmailSender)
-│   ├── UseCases/                      #   implementación de casos de uso (ej. SolicitarDemoUseCase)
-│   └── DTOs/                          #   objetos de transferencia (ej. SolicitudDemoDto)
+│   ├── Ports/In/                      #   un puerto de entrada por operación de negocio
+│   ├── Ports/Out/                     #   repositorios, servicio de usuarios, email
+│   ├── UseCases/                      #   Colegios (admin), Supervision, Padres, Salida (RFID), Historial
+│   └── DTOs/
 ├── JuntalyColegios.Infrastructure/    # Adaptadores
-│   ├── Persistence/                   #   ApplicationDbContext (EF Core + Identity) y Migrations/
-│   └── Email/                         #   SmtpEmailSender (implementa IEmailSender)
+│   ├── Persistence/                   #   ApplicationDbContext, configuraciones, repositorios y Migrations/
+│   ├── Identity/                      #   roles, administrador inicial y alta de usuarios con invitación
+│   ├── Email/                         #   SmtpEmailSender
+│   └── Demo/                          #   datos de demostración
 ├── JuntalyColegios/                   # Web (ASP.NET Core MVC) — composition root
-│   ├── Program.cs                     #   configuración e inyección de dependencias
-│   ├── Controllers/                   #   HomeController (landing + solicitud de demo)
-│   ├── Models/                        #   modelos de vista / request
-│   ├── Views/                         #   vistas Razor (landing, layouts)
-│   ├── Areas/Identity/Pages/          #   páginas de cuenta (login, registro, gestión) personalizadas
-│   └── wwwroot/                       #   CSS, JS, imágenes y librerías cliente
-├── JuntalyColegios.Tests/             # Tests (xUnit): Application/, Web/, Integration/, E2E/ (Playwright)
+│   ├── Program.cs, Configuracion/     #   arranque e inyección de dependencias
+│   ├── Controllers/                   #   landing, /Panel (redirección por rol) y API de la antena
+│   ├── Areas/Admin/                   #   administrador: colegios, supervisores y clave de antena
+│   ├── Areas/Colegio/                 #   supervisor: clases, alumnos, padres, tags, franjas, salida, detecciones
+│   ├── Areas/Padres/                  #   panel de la familia
+│   ├── Areas/Identity/Pages/          #   login y gestión de cuenta (registro público cerrado)
+│   └── wwwroot/                       #   CSS, JS (salida.js: refresco de la pantalla de salida) e imágenes
+├── JuntalyColegios.Tests/             # Tests (xUnit): Domain/, Application/, Web/, Integration/, E2E/ (Playwright)
 ├── .agents/                           # Guías de trabajo por especialidad (arquitectura, backend, ...)
 ├── AGENTS.md                          # Guía general de desarrollo del proyecto
 └── REQUISITOS.md                      # Checklist de entrega y progreso
@@ -132,28 +151,43 @@ Cada capa tiene su propio README con más detalle: [Domain](JuntalyColegios.Doma
 
 ## 5. Funcionalidades principales
 
-| Funcionalidad | Estado |
+La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay registro público): el administrador da de alta colegios y supervisores, y cada supervisor da de alta a los padres de su colegio. Cada cuenta nueva recibe un email para establecer su contraseña.
+
+| Perfil | Qué puede hacer |
 |---|---|
-| Landing comercial (cómo funciona, instalación, beneficios, precio, FAQ) | ✅ |
-| Formulario "Solicita una demo" con envío por email a ventas y protección anti-bots (honeypot + antiforgery) | ✅ |
-| Registro, login, confirmación de email y recuperación de contraseña (Identity, en español) | ✅ |
-| Gestión de cuenta (perfil, cambio de contraseña, 2FA, datos personales) | ✅ |
-| _Próximos módulos: gestión de alumnos, vehículos/tags RFID y pantalla de salida_ | 🚧 |
+| **Administrador** (`/Admin`) | Crear, editar y desactivar colegios (con su zona horaria); dar de alta supervisores; generar la clave de la antena RFID de cada colegio |
+| **Supervisor del colegio** (`/Colegio`) | Clases y alumnos; padres y su vínculo con los hijos; vehículos y asignación del tag RFID; **franjas horarias de retiro** por día de la semana (para todo el colegio o por clase); **pantalla de salida**; registro de detecciones |
+| **Padre / representante** (`/Padres`) | Ver a sus hijos y su clase; registrar sus vehículos (el tag lo asigna el colegio); autorizar a otras personas a recoger; historial de recogidas |
+
+### Flujo de la salida escolar (RFID)
+
+1. La antena del colegio lee el tag de un vehículo y lo envía a `POST /api/antena/detecciones` con la clave del colegio (`X-Antena-Clave`).
+2. Se identifica el vehículo y la familia, y se llama **solo a los hijos que están en su franja de retiro** (en la hora local del colegio). Fuera de franja, con un tag desconocido o si el vehículo ya se detectó en los últimos 5 minutos, no se llama a nadie; toda lectura queda en el registro de detecciones.
+3. La **pantalla de salida** se actualiza sola y muestra cada alumno llamado con su clase, el vehículo y las personas autorizadas de la familia; el personal pulsa «Entregado» al entregarlo.
+4. La pantalla incluye un **simulador de llegada** para probar el flujo sin antena.
+
+### Seguridad
+
+- Cada supervisor solo accede a los datos de su colegio y cada padre a los de su familia (lo ajeno responde 404).
+- La clave de la antena se guarda solo como hash y se muestra una única vez al generarla.
+- Antiforgery en todos los formularios, emails con contenido escapado y hosts permitidos restringidos para no envenenar los enlaces de recuperación.
+- En Supabase todas las tablas tienen RLS y sin permisos para los roles públicos de su API REST.
 
 ## 6. Tests automatizados
 
-El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan.
+El proyecto se desarrolla con **TDD**: cada funcionalidad o corrección empieza escribiendo sus tests, que se ejecutan para comprobar que fallan, y solo después se implementa el código hasta que pasan. La suite tiene **349 tests**.
 
 Todos los tests viven en `JuntalyColegios.Tests/`:
 
 | Carpeta | Tipo | Herramientas | Qué verifica |
 |---|---|---|---|
-| `Application/` | Unitarios | xUnit + dobles de prueba | Casos de uso aislados de infraestructura (ej. contenido y escape HTML del correo de demo) |
-| `Web/` | Unitarios | xUnit + NSubstitute | Controladores: validación, honeypot anti-bots, manejo de errores |
-| `Integration/` | Integración | `WebApplicationFactory` | Pipeline HTTP real: rutas, vistas, antiforgery, páginas de Identity |
-| `E2E/` | Extremo a extremo | Playwright .NET (Chromium headless) | Recorridos en navegador: demo interactiva, calculadora de precio, envío del formulario, navegación al login |
+| `Domain/` | Unitarios | xUnit | Reglas de las entidades: validaciones, franjas y su prioridad, tags, recogidas |
+| `Application/` | Unitarios | xUnit + repositorios en memoria + NSubstitute | Casos de uso, aislamiento entre colegios y familias, regla de llamada a la salida (con un reloj controlado) |
+| `Web/` | Unitarios | xUnit + NSubstitute | Controladores: validación, errores de negocio, respuestas de la API |
+| `Integration/` | Integración | `WebApplicationFactory` + SQLite en memoria | Pipeline HTTP real: roles y accesos, antiforgery, API de la antena, invitaciones por email, datos de demo |
+| `E2E/` | Extremo a extremo | Playwright .NET (Chromium headless) | Recorridos en navegador de cada perfil, incluida la actualización automática de la pantalla de salida |
 
-Los tests **no usan servicios reales**: el SMTP se sustituye por un doble en memoria y la base de datos no se toca. No necesitan `.env` ni configuración previa; la primera ejecución de los E2E descarga Chromium automáticamente.
+Los tests **no usan servicios reales**: el SMTP se sustituye por un doble en memoria y PostgreSQL por SQLite en memoria. No necesitan `.env` ni configuración previa; la primera ejecución de los E2E descarga Chromium automáticamente.
 
 ```bash
 dotnet test JuntalyColegios.slnx                            # toda la suite
@@ -163,14 +197,60 @@ dotnet test JuntalyColegios.slnx --filter "Category=E2E"    # solo E2E con naveg
 
 ## 7. Usuario y contraseña de prueba
 
-| Usuario | Contraseña |
-|---|---|
-| _pendiente_ | _pendiente_ |
+En https://colegios.juntaly.com hay un colegio de demostración («U. E. Colegio Demo Juntaly») con clases, familias, vehículos con tag e historial:
+
+| Perfil | Usuario | Contraseña |
+|---|---|---|
+| Supervisor del colegio | `supervisor@demo.juntaly.com` | `Demo123!` |
+| Padre / representante | `padre@demo.juntaly.com` | `Demo123!` |
+
+Recorrido sugerido:
+
+1. Entrar como **supervisor** → **Pantalla de salida** → en el simulador elegir `AB123CD · Andrea Martínez` → **Simular llegada**. Se llama a *Sofía Martínez* (franja general 06:00–22:00); su hermano *Diego* (5.º Año, franja propia de 13:00 a 14:00 entre semana) solo se llama dentro de su franja.
+2. Pulsar **Entregado**, y revisar **Franjas de retiro** y **Registro de detecciones**.
+3. Entrar como **padre** → ver a sus hijos, el vehículo con su tag, la persona autorizada y el historial de recogidas.
 
 ## 8. Despliegue
 
 - **URL de producción**: [https://colegios.juntaly.com](https://colegios.juntaly.com)
-- _Detalles de la infraestructura de despliegue: pendiente._
+- **Servidor**: Windows con **IIS** y el [ASP.NET Core Hosting Bundle de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0), detrás de **Cloudflare**.
+- **Base de datos**: PostgreSQL en **Supabase** (RLS activo en todas las tablas).
+
+### Publicar una versión
+
+```bash
+# 1. Aplicar las migraciones pendientes a la base de producción
+dotnet ef database update --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
+
+# 2. Generar el paquete
+dotnet publish JuntalyColegios/JuntalyColegios.csproj -c Release -o publicacion
+```
+
+3. Detener el sitio (o dejar un `app_offline.htm`), copiar el contenido de `publicacion/` a la carpeta del sitio en el servidor y volver a arrancarlo.
+4. La primera vez, definir las variables de entorno del sitio (tabla de la [sección 3](#variables-de-configuración)) en el `web.config` del servidor, dentro de `<aspNetCore>`, **sin subirlo al repositorio**:
+
+```xml
+<aspNetCore processPath="dotnet" arguments=".\JuntalyColegios.dll" stdoutLogEnabled="false" hostingModel="inprocess">
+  <environmentVariables>
+    <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Production" />
+    <environmentVariable name="ConnectionStrings__DefaultConnection" value="Host=...;Password=..." />
+    <environmentVariable name="AdminInicial__Email" value="..." />
+    <environmentVariable name="AdminInicial__Password" value="..." />
+    <environmentVariable name="Smtp__Host" value="..." />
+    <!-- Smtp__Port, Smtp__User, Smtp__Password, Smtp__From -->
+    <environmentVariable name="Demo__Sembrar" value="true" />
+    <environmentVariable name="Demo__Contrasena" value="Demo123!" />
+  </environmentVariables>
+</aspNetCore>
+```
+
+> Al publicar, `dotnet publish` genera un `web.config` nuevo: conservar el bloque `<environmentVariables>` del servidor (o definir las variables en el *Configuration Editor* de IIS para el sitio).
+
+Notas:
+
+- Las claves de Data Protection (sesiones, antiforgery, enlaces de invitación) se guardan en la base de datos, así que sobreviven a los reciclajes del app pool.
+- Si Cloudflare o IIS presentan la app con otro nombre de host, añadirlo a `AllowedHosts` en `appsettings.json`.
+- La app necesita la base de datos al arrancar (crea roles, administrador y datos de demo): si Supabase pausa el proyecto por inactividad, hay que restaurarlo desde su panel.
 
 ## 9. Presentación y vídeo
 

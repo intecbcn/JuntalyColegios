@@ -14,7 +14,7 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 - [x] c. Instalación y ejecución
 - [x] d. Estructura del proyecto
 - [x] e. Funcionalidades principales
-- [ ] f. Usuario y contraseña de prueba (el proyecto tiene login)
+- [x] f. Usuario y contraseña de prueba (el proyecto tiene login): supervisor@demo.juntaly.com y padre@demo.juntaly.com / Demo123!
 
 ## 2. Código fuente
 
@@ -42,7 +42,7 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 ## 6. Contenido obligatorio en el repositorio
 
 - [~] Documentación (`README.md` creado; faltan usuario de prueba, slides y vídeo)
-- [ ] Información del despliegue (puede ir en el `README.md`)
+- [x] Información del despliegue (`README.md` §8: IIS + Cloudflare + Supabase, publicación y variables)
 - [ ] Slides (enlace en la documentación o el documento subido)
 
 ## 7. Datos para el formulario de entrega
@@ -58,8 +58,8 @@ Mismos campos y orden que el formulario.
 | URL Despliegue o Publicación | https://colegios.juntaly.com _(verificar que esté desplegado)_ | [~] |
 | URL Slides | | [ ] |
 | URL Vídeo | | [ ] |
-| Usuario de prueba | | [ ] |
-| Contraseña del usuario de prueba | | [ ] |
+| Usuario de prueba | supervisor@demo.juntaly.com (también padre@demo.juntaly.com) | [~] |
+| Contraseña del usuario de prueba | Demo123! | [~] |
 
 ---
 
@@ -102,3 +102,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Fase 7: flujo RFID completo (API de antena con clave por colegio guardada como hash, detecciones, recogidas, anti-duplicado de 5 min, pantalla de salida con refresco automático, autorizados visibles y simulador). TDD: 49 tests en rojo → verde. Migración `DeteccionesYRecogidas` (pendiente de aplicar). Pendiente: limitar peticiones (rate limiting) en la API de la antena. Suite 333/333 |
 | 2026-10-12 | Fase 8: historial de recogidas del padre, registro de detecciones del supervisor y datos de demostración (Demo__Sembrar) con cuentas de prueba de supervisor y padre. TDD: 13 tests en rojo → verde. Las consultas por fecha se ordenan ya en la base de datos (conversor solo para SQLite en tests). Suite 348/348 |
 | 2026-10-12 | Migraciones aplicadas en Supabase (esquema anterior de Identity, vacío, recreado). Seguridad: corregido el aviso crítico de Supabase «rls_disabled_in_public» (las tablas, incluida AspNetUsers, eran legibles con la clave pública anon): RLS en todas las tablas y permisos retirados a anon/authenticated, también por defecto para tablas futuras. Verificado en la base: 19/19 tablas con RLS y sin acceso para anon |
+| 2026-10-12 | Despliegue preparado: claves de Data Protection en la base (sobreviven a reciclajes de IIS; TDD 1 test rojo → verde, migración `ClavesDataProtection` aplicada con RLS), README actualizado (configuración, estructura, funcionalidades, tests, usuarios de prueba y despliegue en IIS) y paquete de publicación. Pendiente: copiar al servidor IIS y verificar en producción. Suite 349/349 |
