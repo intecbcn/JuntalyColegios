@@ -28,9 +28,9 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 
 ## 4. Presentación (slides)
 
-- [ ] Slides creadas (Google Slides, PowerPoint, Canva…)
-- [ ] URL pública o documento subido al repositorio
-- [ ] Enlace añadido al `README.md`
+- [x] Slides creadas
+- [x] URL pública: https://claude.ai/artifact/2G7qPP9PUmp1Wvu4bZ1eMD
+- [x] Enlace añadido al `README.md`
 
 ## 5. Vídeo explicativo
 
@@ -41,9 +41,9 @@ Checklist de seguimiento: qué se pide, qué está hecho y qué falta. Actualiza
 
 ## 6. Contenido obligatorio en el repositorio
 
-- [~] Documentación (`README.md` creado; faltan usuario de prueba, slides y vídeo)
+- [~] Documentación (`README.md` completo; falta el enlace del vídeo)
 - [x] Información del despliegue (`README.md` §8: publicación y variables de configuración)
-- [ ] Slides (enlace en la documentación o el documento subido)
+- [x] Slides (enlace en el `README.md`)
 
 ## 7. Datos para el formulario de entrega
 
@@ -56,7 +56,7 @@ Mismos campos y orden que el formulario.
 | Email | _(el de inscripción; no se publica en el repo)_ | [ ] |
 | URL Repositorio de GitHub | https://github.com/intecbcn/JuntalyColegios | [x] |
 | URL Despliegue o Publicación | https://colegios.juntaly.com | [x] |
-| URL Slides | | [ ] |
+| URL Slides | https://claude.ai/artifact/2G7qPP9PUmp1Wvu4bZ1eMD | [x] |
 | URL Vídeo | | [ ] |
 | Usuario de prueba | supervisor@demo.juntaly.com (también padre@demo.juntaly.com) | [x] |
 | Contraseña del usuario de prueba | Demo123! | [x] |
@@ -111,4 +111,5 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Pantallas de llamada estilo turnero (portería y aulas) con enlace secreto revocable, solo lectura y datos mínimos; refresco automático, pantalla completa con aviso sonoro y diseño responsive (E2E en TV, tablet y móvil sin scroll horizontal). TDD: 30 tests en rojo → verde. Migración `PantallasLlamadas` aplicada con RLS. Suite 407/407 |
 | 2026-10-12 | Repositorio sin información de la base de datos ni del servidor de producción (appsettings, .env.example, README, comentarios); el dominio y la URL de los enlaces se configuran solo en el servidor. README: instalación verificada en un clon limpio, PostgreSQL local, sección «Probar en local» con cuentas, antena y emails en consola; manifiesto de dotnet-ef en `.config/`. En desarrollo sin SMTP los emails se escriben en la consola (TDD: tests en rojo → verde). Suite 412/412 |
 | 2026-10-12 | Fix: el repositorio no compilaba en un clon limpio, porque la regla `[Oo]ut/` del .gitignore ignoraba `Application/Ports/Out/`. Además, los tests dependían del `.env` local. Verificado en un clon limpio siguiendo el README: compila y pasa 412/412 (también con el `.env` del ejemplo) |
+| 2026-10-12 | Slides enlazadas en el README |
 | 2026-10-12 | Paneles de administración, supervisor y padres con la identidad visual de Juntaly (layout propio con menú plegable en móvil, `app.css`; se retira `site.css` de la plantilla) y diseño responsive: tablas con scroll dentro de su tarjeta, cabeceras y botones que se apilan en pantallas estrechas. TDD: 3 tests de integración + 2 E2E a 390 px en rojo → verde. Suite 355/355 |

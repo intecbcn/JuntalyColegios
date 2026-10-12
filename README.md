@@ -255,5 +255,5 @@ Notas:
 
 ## 9. Presentación y vídeo
 
-- **Slides**: _pendiente_
+- **Slides**: [presentación de Juntaly Colegios](https://claude.ai/artifact/2G7qPP9PUmp1Wvu4bZ1eMD)
 - **Vídeo explicativo**: _pendiente_
