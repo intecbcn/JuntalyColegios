@@ -29,6 +29,7 @@ Implementa la lógica de servidor **en la capa hexagonal que le corresponda a ca
 - Respetar la regla de dependencia hexagonal en todo momento: Domain no conoce a nadie, Application no conoce EF Core ni Infrastructure, Infrastructure implementa los puertos de Application, Web solo llama a Application (nunca a Infrastructure directamente desde un controlador).
 - Mantener `ApplicationDbContext : IdentityDbContext` (en `JuntalyColegios.Infrastructure/Persistence/`) como fuente única de acceso a datos; agregar `DbSet<T>` para entidades nuevas.
 - Generar migraciones con `dotnet ef migrations add <Nombre> --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios` y revisar el `Designer.cs`/snapshot antes de aplicar.
+- **Toda migración que cree tablas debe terminar con `migrationBuilder.ProtegerTablasPublicas();`** (ver `Infrastructure/Persistence/Migrations/ProteccionSupabase.cs`): Supabase expone el esquema `public` por su API REST y, sin RLS, cualquiera con la clave pública podría leer o modificar los datos.
 - Escribir controladores delgados que deleguen en casos de uso de `Application` (nunca lógica de negocio ni acceso a datos directo en el controlador).
 - Diseñar cada caso de uso con **una sola responsabilidad** (SRP) y depender de interfaces (`Ports/Out`), nunca de `ApplicationDbContext` directamente (DIP).
 - Usar `async`/`await` en todo acceso a base de datos (patrón ya usado por Identity/EF Core en el proyecto).
@@ -38,6 +39,7 @@ Implementa la lógica de servidor **en la capa hexagonal que le corresponda a ca
 - [ ] ¿Cada pieza nueva está en el proyecto/capa correcto (Domain/Application/Infrastructure/Web)?
 - [ ] ¿El caso de uso depende de un puerto (interfaz), no de una implementación concreta de Infrastructure?
 - [ ] ¿Los métodos de acceso a datos son `async` y usan `CancellationToken` cuando aplica?
+- [ ] Si la migración crea tablas, ¿llama a `ProtegerTablasPublicas()` al final?
 - [ ] ¿Se generó la migración correspondiente si el modelo cambió? ¿Se probó `dotnet ef database update`?
 - [ ] ¿El controlador valida `ModelState.IsValid` antes de invocar al caso de uso?
 - [ ] ¿Hay `[Authorize]` donde corresponde? (si hay dudas, consultar a [seguridad](./seguridad.md))
