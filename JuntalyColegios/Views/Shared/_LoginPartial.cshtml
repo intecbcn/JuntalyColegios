@@ -11,6 +11,12 @@
             <a class="nav-link text-dark" href="/Admin">Administración</a>
         </li>
     }
+    @if (User.IsInRole(Roles.SupervisorColegio))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Colegio">Mi colegio</a>
+        </li>
+    }
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Mi cuenta">Hola, @User.Identity?.Name</a>
     </li>

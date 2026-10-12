@@ -10,6 +10,10 @@ namespace JuntalyColegios.Infrastructure.Persistence
 
         public DbSet<Supervisor> Supervisores => Set<Supervisor>();
 
+        public DbSet<Clase> Clases => Set<Clase>();
+
+        public DbSet<Alumno> Alumnos => Set<Alumno>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

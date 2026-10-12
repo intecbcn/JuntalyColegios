@@ -73,7 +73,7 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 - [x] Entorno de tests automatizados: xUnit + `WebApplicationFactory` + Playwright .NET, con TDD obligatorio en cada feature
 - [x] Roles (AdminApp, SupervisorColegio, Padre), administrador inicial por configuración, registro público cerrado (alta en cascada) y menú por rol
 - [x] Gestión de colegios y supervisores (AdminApp): alta, edición, activar/desactivar y alta de supervisor con invitación por email
-- [ ] Clases y alumnos (supervisor)
+- [x] Clases y alumnos (supervisor): clases por colegio, alta/edición/baja de alumnos, aislamiento entre colegios
 - [ ] Padres, vínculo con alumnos y tags RFID (supervisor)
 - [ ] Panel de padres: hijos, vehículos, personas autorizadas
 - [ ] Franjas horarias de retiro por día de la semana
@@ -95,3 +95,4 @@ Registro vivo de lo construido y lo pendiente en la propia aplicación.
 | 2026-10-12 | Fase 1: roles, administrador inicial, registro público cerrado y menú por rol (TDD: 13 tests en rojo → verde). Seguridad: cerrada también RegisterConfirmation, que entregaba enlaces de confirmación de cualquier cuenta y permitía enumerar emails (test de regresión). Suite 41/41 |
 | 2026-10-12 | Fase 2: gestión de colegios y alta de supervisores con invitación por email (TDD: 55 tests en rojo → verde; incluye compensación de cuentas huérfanas). Migración `ModuloColegios` (pendiente de aplicar en Supabase). Panel por rol tras el login (/Panel) y "Mi panel" en la landing. Suite 105/105 |
 | 2026-10-12 | Fix: «¿Olvidaste tu contraseña?» no enviaba el email (Identity UI usaba un emisor no-op); restringido AllowedHosts para evitar envenenar los enlaces de recuperación con un Host falso (2 tests de regresión rojo → verde) |
+| 2026-10-12 | Fase 3: clases y alumnos del supervisor, aislados por colegio (lo ajeno → 404, sin colegio activo → 403). TDD: 49 tests en rojo → verde. Migración `ClasesYAlumnos` (pendiente de aplicar). Suite 156/156 |

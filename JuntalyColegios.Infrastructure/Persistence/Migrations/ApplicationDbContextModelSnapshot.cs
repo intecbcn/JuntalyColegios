@@ -22,6 +22,64 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Alumno", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Apellidos")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("ClaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Nombres")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClaseId");
+
+                    b.HasIndex("ColegioId", "ClaseId");
+
+                    b.ToTable("Alumnos", (string)null);
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Clase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ColegioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Nivel")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColegioId", "Nombre")
+                        .IsUnique();
+
+                    b.ToTable("Clases", (string)null);
+                });
+
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Colegio", b =>
                 {
                     b.Property<Guid>("Id")
@@ -279,6 +337,30 @@ namespace JuntalyColegios.Infrastructure.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Alumno", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Clase", null)
+                        .WithMany()
+                        .HasForeignKey("ClaseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JuntalyColegios.Domain.Entities.Clase", b =>
+                {
+                    b.HasOne("JuntalyColegios.Domain.Entities.Colegio", null)
+                        .WithMany()
+                        .HasForeignKey("ColegioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("JuntalyColegios.Domain.Entities.Supervisor", b =>

@@ -1,0 +1,70 @@
+@model JuntalyColegios.Areas.ColegioSupervisor.Models.DetalleClaseViewModel
+@{
+    var clase = Model.Detalle;
+    ViewData["Title"] = clase.Nombre;
+}
+
+<a asp-controller="Inicio" asp-action="Index" class="btn btn-link px-0">&larr; Clases</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="mb-0">@clase.Nombre</h1>
+        @if (clase.Nivel is not null) { <span class="text-muted">@clase.Nivel</span> }
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Editar" asp-route-id="@clase.Id" class="btn btn-outline-primary">Editar</a>
+        @if (clase.Alumnos.Count == 0)
+        {
+            <form asp-action="Eliminar" asp-route-id="@clase.Id" method="post">
+                <button type="submit" class="btn btn-outline-danger">Eliminar clase</button>
+            </form>
+        }
+    </div>
+</div>
+<partial name="_Avisos" />
+
+<h2 class="h4">Alumnos</h2>
+@if (clase.Alumnos.Count == 0)
+{
+    <p class="text-muted">Esta clase aún no tiene alumnos.</p>
+}
+else
+{
+    <table class="table align-middle">
+        <thead><tr><th>Apellidos</th><th>Nombres</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var alumno in clase.Alumnos)
+            {
+                <tr class="@(alumno.Activo ? "" : "text-muted")">
+                    <td>@alumno.Apellidos</td>
+                    <td>@alumno.Nombres</td>
+                    <td>@(alumno.Activo ? "Activo" : "De baja")</td>
+                    <td class="text-end">
+                        <a asp-controller="Alumnos" asp-action="Editar" asp-route-id="@alumno.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3 class="h5 mt-4">Añadir alumno</h3>
+<form asp-controller="Alumnos" asp-action="Crear" method="post" class="row g-3">
+    <input type="hidden" asp-for="NuevoAlumno.ClaseId" />
+    <div class="col-md-5">
+        <label asp-for="NuevoAlumno.Nombres" class="form-label"></label>
+        <input asp-for="NuevoAlumno.Nombres" class="form-control" maxlength="100" autocomplete="off" />
+        <span asp-validation-for="NuevoAlumno.Nombres" class="text-danger"></span>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="NuevoAlumno.Apellidos" class="form-label"></label>
+        <input asp-for="NuevoAlumno.Apellidos" class="form-control" maxlength="100" autocomplete="off" />
+        <span asp-validation-for="NuevoAlumno.Apellidos" class="text-danger"></span>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Añadir alumno</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

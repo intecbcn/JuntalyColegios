@@ -45,4 +45,51 @@ public sealed class RepositorioSupervisoresEnMemoria : IRepositorioSupervisores
 
     public Task<IReadOnlyList<Supervisor>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<Supervisor>>(Supervisores.Where(s => s.ColegioId == colegioId).ToList());
+
+    public Task<Supervisor?> ObtenerPorUsuarioAsync(string usuarioId, CancellationToken cancellationToken) =>
+        Task.FromResult(Supervisores.SingleOrDefault(s => s.UsuarioId == usuarioId));
+}
+
+public sealed class RepositorioClasesEnMemoria : IRepositorioClases
+{
+    public List<Clase> Clases { get; } = [];
+
+    public Task AgregarAsync(Clase clase, CancellationToken cancellationToken)
+    {
+        Clases.Add(clase);
+        return Task.CompletedTask;
+    }
+
+    public Task<Clase?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Clases.SingleOrDefault(c => c.Id == id));
+
+    public Task<IReadOnlyList<Clase>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Clase>>(Clases.Where(c => c.ColegioId == colegioId).ToList());
+
+    public Task ActualizarAsync(Clase clase, CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public Task EliminarAsync(Clase clase, CancellationToken cancellationToken)
+    {
+        Clases.Remove(clase);
+        return Task.CompletedTask;
+    }
+}
+
+public sealed class RepositorioAlumnosEnMemoria : IRepositorioAlumnos
+{
+    public List<Alumno> Alumnos { get; } = [];
+
+    public Task AgregarAsync(Alumno alumno, CancellationToken cancellationToken)
+    {
+        Alumnos.Add(alumno);
+        return Task.CompletedTask;
+    }
+
+    public Task<Alumno?> ObtenerAsync(Guid id, CancellationToken cancellationToken) =>
+        Task.FromResult(Alumnos.SingleOrDefault(a => a.Id == id));
+
+    public Task<IReadOnlyList<Alumno>> ListarPorColegioAsync(Guid colegioId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<Alumno>>(Alumnos.Where(a => a.ColegioId == colegioId).ToList());
+
+    public Task ActualizarAsync(Alumno alumno, CancellationToken cancellationToken) => Task.CompletedTask;
 }

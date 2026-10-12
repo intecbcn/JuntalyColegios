@@ -1,0 +1,33 @@
+@model JuntalyColegios.Application.DTOs.ClasesDelColegioDto
+@{
+    ViewData["Title"] = Model.NombreColegio;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">@Model.NombreColegio</h1>
+    <a asp-controller="Clases" asp-action="Crear" class="btn btn-primary">Nueva clase</a>
+</div>
+<partial name="_Avisos" />
+
+<h2 class="h4">Clases</h2>
+@if (Model.Clases.Count == 0)
+{
+    <p class="text-muted">Todavía no hay clases. Crea la primera con «Nueva clase».</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead><tr><th>Clase</th><th>Nivel</th><th>Alumnos</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var clase in Model.Clases)
+            {
+                <tr>
+                    <td>@clase.Nombre</td>
+                    <td>@clase.Nivel</td>
+                    <td>@clase.NumeroAlumnos</td>
+                    <td class="text-end"><a asp-controller="Clases" asp-action="Detalle" asp-route-id="@clase.Id" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

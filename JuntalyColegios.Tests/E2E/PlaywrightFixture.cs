@@ -23,6 +23,9 @@ public sealed class PlaywrightFixture : IAsyncLifetime
 
     public FakeEmailSender EmailSender => _factory.EmailSender;
 
+    /// <summary>Factory de la app levantada, para sembrar datos de prueba antes de cada recorrido.</summary>
+    public JuntalyWebApplicationFactory Factory => _factory;
+
     public async Task InitializeAsync()
     {
         var codigo = Microsoft.Playwright.Program.Main(["install", "chromium"]);

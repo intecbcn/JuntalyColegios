@@ -1,0 +1,13 @@
+@model JuntalyColegios.Areas.ColegioSupervisor.Models.ClaseFormulario
+
+<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label"></label>
+    <input asp-for="Nombre" class="form-control" maxlength="50" placeholder="p. ej. 3.º A" autocomplete="off" />
+    <span asp-validation-for="Nombre" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Nivel" class="form-label"></label>
+    <input asp-for="Nivel" class="form-control" maxlength="50" placeholder="p. ej. Primaria" autocomplete="off" />
+    <span asp-validation-for="Nivel" class="text-danger"></span>
+</div>

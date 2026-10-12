@@ -1,0 +1,42 @@
+@model JuntalyColegios.Areas.ColegioSupervisor.Models.EditarAlumnoViewModel
+@{
+    ViewData["Title"] = "Editar alumno";
+}
+
+<a asp-controller="Clases" asp-action="Detalle" asp-route-id="@Model.Alumno.ClaseId" class="btn btn-link px-0">&larr; Volver a la clase</a>
+<h1>Editar alumno</h1>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Editar" asp-route-id="@Model.AlumnoId" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="mb-3">
+                <label asp-for="Alumno.Nombres" class="form-label"></label>
+                <input asp-for="Alumno.Nombres" class="form-control" maxlength="100" />
+                <span asp-validation-for="Alumno.Nombres" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Alumno.Apellidos" class="form-label"></label>
+                <input asp-for="Alumno.Apellidos" class="form-control" maxlength="100" />
+                <span asp-validation-for="Alumno.Apellidos" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Alumno.ClaseId" class="form-label"></label>
+                <select asp-for="Alumno.ClaseId" asp-items="@(new SelectList(Model.Clases, "Id", "Nombre"))" class="form-select"></select>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+
+        <form asp-action="CambiarEstado" asp-route-id="@Model.AlumnoId" method="post" class="mt-4">
+            <input type="hidden" name="activo" value="@(Model.Activo ? "false" : "true")" />
+            <input type="hidden" name="claseId" value="@Model.Alumno.ClaseId" />
+            <button type="submit" class="btn @(Model.Activo ? "btn-outline-danger" : "btn-outline-success")">
+                @(Model.Activo ? "Dar de baja" : "Reactivar")
+            </button>
+            <div class="form-text">Un alumno dado de baja no se llama a la salida.</div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
