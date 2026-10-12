@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.WebEncoders;
 
-// Carga variables de entorno desde .env (credenciales de Supabase) antes de construir la configuración.
-// Primero junto a la aplicación (en IIS el directorio de trabajo no es la carpeta del sitio) y si no,
+// Carga variables de entorno desde .env (cadena de conexión y demás secretos) antes de construir la configuración.
+// Primero junto a la aplicación (en algunos servidores web el directorio de trabajo no es la carpeta de la
+// aplicación) y si no,
 // subiendo desde el directorio actual (la raíz del repo con "dotnet run" o "dotnet ef"). No se commitea
 // (ver .gitignore); en producción también pueden definirse en el entorno (web.config) sin este archivo.
 var envJuntoALaApp = Path.Combine(AppContext.BaseDirectory, ".env");
@@ -31,7 +32,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException(
         "Falta la cadena de conexión: define la variable de entorno ConnectionStrings__DefaultConnection " +
-        "(en IIS, en el web.config del sitio) o un archivo .env junto a la aplicación.");
+        "(o un archivo .env junto a la aplicación).");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -40,7 +41,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 // Claves de Data Protection en la base de datos: las cookies de sesión, el antiforgery y los enlaces de
-// invitación siguen siendo válidos tras reiniciar o reciclar el app pool de IIS.
+// invitación siguen siendo válidos tras reiniciar la aplicación o el proceso del servidor web.
 builder.Services.AddDataProtection()
     .SetApplicationName("JuntalyColegios")
     .PersistKeysToDbContext<ApplicationDbContext>();
@@ -52,7 +53,7 @@ builder.Services.Configure<WebEncoderOptions>(options =>
     options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
 // Puertos de Application con sus adaptadores de Infrastructure y casos de uso (ver RegistroDeServicios).
-builder.Services.AddJuntalyColegios();
+builder.Services.AddJuntalyColegios(builder.Configuration, builder.Environment);
 builder.Services.AddLimiteAntena(builder.Configuration);
 
 var app = builder.Build();

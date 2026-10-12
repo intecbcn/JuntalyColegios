@@ -20,10 +20,11 @@ namespace JuntalyColegios.Configuracion;
 /// </summary>
 public static class RegistroDeServicios
 {
-    public static IServiceCollection AddJuntalyColegios(this IServiceCollection services)
+    public static IServiceCollection AddJuntalyColegios(
+        this IServiceCollection services, IConfiguration configuracion, IHostEnvironment entorno)
     {
         // Adaptadores (puertos de salida).
-        services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddScoped(typeof(IEmailSender), EmisorDeEmail.Elegir(configuracion, entorno));
         services.AddScoped<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, EmailSenderIdentityUi>();
         services.AddScoped<IServicioUsuarios, ServicioUsuariosIdentity>();
         services.AddScoped<IRepositorioColegios, RepositorioColegiosEf>();
