@@ -44,20 +44,23 @@ Esta aplicación web es la plataforma de Juntaly Colegios: landing comercial con
 | Arquitectura | Hexagonal (puertos y adaptadores), principios SOLID |
 | Autenticación | ASP.NET Core Identity (con confirmación de cuenta por email) |
 | Persistencia | Entity Framework Core 10 + Npgsql |
-| Base de datos | PostgreSQL alojado en [Supabase](https://supabase.com) |
+| Base de datos | PostgreSQL |
 | Email | SMTP (`System.Net.Mail`) detrás de un puerto `IEmailSender` |
 | Frontend | Razor Views, Bootstrap 5, jQuery, jQuery Validation, CSS/JS propios |
 | Configuración | `appsettings.json` + User Secrets / variables de entorno / `.env` (DotNetEnv) |
 | Tests | xUnit, NSubstitute, `WebApplicationFactory` (integración) y Playwright .NET (E2E en Chromium headless) |
-| Herramientas | `dotnet-ef` (tool local, ver `JuntalyColegios/dotnet-tools.json`) |
+| Herramientas | `dotnet-ef` (tool local, ver `.config/dotnet-tools.json`) |
 
 ## 3. Instalación y ejecución
 
 ### Requisitos previos
 
 - [.NET SDK 10](https://dotnet.microsoft.com/download)
-- Una base de datos PostgreSQL (por ejemplo un proyecto gratuito en Supabase)
-- (Opcional) Una cuenta SMTP para el envío de emails (invitaciones, recuperación de contraseña, solicitud de demo)
+- Una base de datos **PostgreSQL** vacía (14 o superior). Por ejemplo, instalando [PostgreSQL](https://www.postgresql.org/download/) o con Docker:
+  ```bash
+  docker run -d --name juntaly-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=juntaly_colegios -p 5432:5432 postgres:16
+  ```
+- (Opcional) Una cuenta SMTP. **No hace falta para probar en local**: sin SMTP, en desarrollo los emails (invitaciones, recuperación de contraseña) se escriben en la consola.
 
 ### Pasos
 
@@ -66,29 +69,43 @@ Esta aplicación web es la plataforma de Juntaly Colegios: landing comercial con
 git clone https://github.com/intecbcn/JuntalyColegios.git
 cd JuntalyColegios
 
-# 2. Restaurar herramientas locales (dotnet-ef) y dependencias
-dotnet tool restore --tool-manifest JuntalyColegios/dotnet-tools.json
+# 2. Restaurar la herramienta dotnet-ef (manifiesto en .config/) y las dependencias
+dotnet tool restore
 dotnet restore JuntalyColegios.slnx
 
-# 3. Configurar la base de datos, el administrador inicial y (opcional) los datos de demostración
+# 3. Configurar: copiar el ejemplo y poner la cadena de conexión de tu PostgreSQL
 cp .env.example .env
-#    → editar .env (ver la tabla de variables más abajo)
+#    → en .env, ConnectionStrings__DefaultConnection (con el Docker de arriba:
+#      Host=localhost;Port=5432;Database=juntaly_colegios;Username=postgres;Password=postgres)
 
-# 4. (Opcional) Configurar SMTP con User Secrets
-dotnet user-secrets set "Smtp:Host" "smtp.ejemplo.com" --project JuntalyColegios
-dotnet user-secrets set "Smtp:Port" "587" --project JuntalyColegios
-dotnet user-secrets set "Smtp:User" "usuario" --project JuntalyColegios
-dotnet user-secrets set "Smtp:Password" "contraseña" --project JuntalyColegios
-dotnet user-secrets set "Smtp:From" "no-reply@ejemplo.com" --project JuntalyColegios
-
-# 5. Aplicar las migraciones a la base de datos
+# 4. Crear las tablas
 dotnet ef database update --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
 
-# 6. Ejecutar
-dotnet run --project JuntalyColegios
+# 5. Ejecutar
+dotnet run --project JuntalyColegios --launch-profile https
 ```
 
-La aplicación queda disponible en la URL que indique la consola (ver `JuntalyColegios/Properties/launchSettings.json`). Al arrancar crea los roles, el administrador inicial y, si se activan, los datos de demostración.
+La aplicación queda en **https://localhost:7158** (perfil `https` de `JuntalyColegios/Properties/launchSettings.json`). Al arrancar crea los roles, el administrador y, con la configuración de `.env.example`, el **colegio de demostración**.
+
+### Probar en local
+
+Con el `.env` copiado de `.env.example` (solo cambiando la cadena de conexión):
+
+| Perfil | Usuario | Contraseña | Entra en |
+|---|---|---|---|
+| Administrador | `admin@ejemplo.com` | `Admin123!` | `/Admin` |
+| Supervisor del colegio de demo | `supervisor@demo.juntaly.com` | `Demo123!` | `/Colegio` |
+| Padre / representante de demo | `padre@demo.juntaly.com` | `Demo123!` | `/Padres` |
+
+- **Pantalla de salida y simulador**: como supervisor, *Pantalla de salida* → elegir `AB123CD` → *Simular llegada* (ver el [recorrido sugerido](#7-usuario-y-contraseña-de-prueba)).
+- **Pantallas de llamada**: como supervisor, *Pantallas de llamada* → *Crear y ver enlace* → abrir el enlace en otra ventana o en el móvil.
+- **Altas con invitación** (supervisores, padres): sin SMTP, el email con el enlace para establecer la contraseña aparece en la consola donde corre `dotnet run`.
+- **API de la antena** (clave `Demo__ClaveAntena` del `.env.example`):
+  ```bash
+  curl -k -X POST https://localhost:7158/api/antena/detecciones \
+       -H "X-Antena-Clave: clave-antena-demo-local" -H "Content-Type: application/json" \
+       -d '{"tag":"E20000172211014418900001"}'
+  ```
 
 ### Variables de configuración
 
@@ -96,14 +113,15 @@ La aplicación queda disponible en la URL que indique la consola (ver `JuntalyCo
 |---|---|---|
 | `ConnectionStrings__DefaultConnection` | Sí | Cadena de conexión de PostgreSQL |
 | `AdminInicial__Email` / `AdminInicial__Password` | Recomendada | Administrador de la plataforma (rol AdminApp), se crea al arrancar si no existe |
-| `App__UrlBase` | En producción | URL pública con la que se construyen los enlaces de los emails (por defecto `https://colegios.juntaly.com`) |
-| `Smtp__Host`, `Smtp__Port`, `Smtp__User`, `Smtp__Password`, `Smtp__From` | Para enviar emails | Invitaciones, recuperación de contraseña y solicitud de demo |
 | `Demo__Sembrar` | No | `true` crea el colegio de demostración con las cuentas de prueba |
 | `Demo__Contrasena` | Si `Demo__Sembrar` | Contraseña de las cuentas de prueba |
 | `Demo__ClaveAntena` | No | Clave de antena del colegio de demo, para probar la API de la antena |
+| `Smtp__Host`, `Smtp__Port`, `Smtp__User`, `Smtp__Password`, `Smtp__From` | En un servidor | Envío de invitaciones, recuperación de contraseña y solicitud de demo (en desarrollo, sin SMTP, se escriben en la consola) |
+| `AllowedHosts` | En un servidor | Dominio público de la app (además de `localhost`), para rechazar peticiones con otro `Host` |
+| `App__UrlBase` | En un servidor | URL pública con la que se construyen los enlaces de los emails (en desarrollo, `https://localhost:7158`) |
 | `Antena__PeticionesPorMinuto` | No | Lecturas por minuto permitidas a cada antena (por defecto 120); al superarlas la API responde 429 |
 
-> **Secretos**: el archivo `.env` y los User Secrets **no** se suben al repositorio. En producción las variables se definen en el entorno del servidor (ver [Despliegue](#8-despliegue)).
+> **Secretos**: el archivo `.env` y los User Secrets **no** se suben al repositorio.
 
 ### Comandos útiles
 
@@ -173,7 +191,7 @@ La aplicación tiene tres perfiles y las cuentas se crean **en cascada** (no hay
 - Cada supervisor solo accede a los datos de su colegio y cada padre a los de su familia (lo ajeno responde 404).
 - La clave de la antena se guarda solo como hash y se muestra una única vez al generarla; cada antena tiene un límite de lecturas por minuto (429 con `Retry-After` al superarlo).
 - Antiforgery en todos los formularios, emails con contenido escapado y hosts permitidos restringidos para no envenenar los enlaces de recuperación.
-- En Supabase todas las tablas tienen RLS y sin permisos para los roles públicos de su API REST.
+- Todas las tablas tienen RLS y sin permisos para los roles públicos que algunos servicios de PostgreSQL gestionado exponen por API REST.
 
 ## 6. Tests automatizados
 
@@ -199,7 +217,7 @@ dotnet test JuntalyColegios.slnx --filter "Category=E2E"    # solo E2E con naveg
 
 ## 7. Usuario y contraseña de prueba
 
-En https://colegios.juntaly.com hay un colegio de demostración («U. E. Colegio Demo Juntaly») con clases, familias, vehículos con tag e historial:
+En https://colegios.juntaly.com (y en local, ver [Probar en local](#probar-en-local)) hay un colegio de demostración («U. E. Colegio Demo Juntaly») con clases, familias, vehículos con tag e historial:
 
 | Perfil | Usuario | Contraseña |
 |---|---|---|
@@ -214,47 +232,26 @@ Recorrido sugerido:
 
 ## 8. Despliegue
 
-- **URL de producción**: [https://colegios.juntaly.com](https://colegios.juntaly.com)
-- **Servidor**: Windows con **IIS** y el [ASP.NET Core Hosting Bundle de .NET 10](https://dotnet.microsoft.com/download/dotnet/10.0), detrás de **Cloudflare**.
-- **Base de datos**: PostgreSQL en **Supabase** (RLS activo en todas las tablas).
+- **URL**: [https://colegios.juntaly.com](https://colegios.juntaly.com)
 
-### Publicar una versión
+La aplicación es una app ASP.NET Core estándar: se puede publicar en cualquier servidor con el [runtime de ASP.NET Core 10](https://dotnet.microsoft.com/download/dotnet/10.0) y una base PostgreSQL.
 
 ```bash
-# 1. Aplicar las migraciones pendientes a la base de producción
+# 1. Aplicar las migraciones pendientes a la base de datos del servidor
 dotnet ef database update --project JuntalyColegios.Infrastructure --startup-project JuntalyColegios
 
 # 2. Generar el paquete
 dotnet publish JuntalyColegios/JuntalyColegios.csproj -c Release -o publicacion
 ```
 
-3. Detener el sitio (o dejar un `app_offline.htm`), copiar el contenido de `publicacion/` a la carpeta del sitio en el servidor y volver a arrancarlo.
-4. La primera vez, definir las variables de entorno del sitio (tabla de la [sección 3](#variables-de-configuración)) en el `web.config` del servidor, dentro de `<aspNetCore>`, **sin subirlo al repositorio**:
-
-```xml
-<aspNetCore processPath="dotnet" arguments=".\JuntalyColegios.dll" stdoutLogEnabled="false" hostingModel="inprocess">
-  <environmentVariables>
-    <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Production" />
-    <environmentVariable name="ConnectionStrings__DefaultConnection" value="Host=...;Password=..." />
-    <environmentVariable name="AdminInicial__Email" value="..." />
-    <environmentVariable name="AdminInicial__Password" value="..." />
-    <environmentVariable name="Smtp__Host" value="..." />
-    <!-- Smtp__Port, Smtp__User, Smtp__Password, Smtp__From -->
-    <environmentVariable name="Demo__Sembrar" value="true" />
-    <environmentVariable name="Demo__Contrasena" value="Demo123!" />
-  </environmentVariables>
-</aspNetCore>
-```
-
-> Al publicar, `dotnet publish` genera un `web.config` nuevo: conservar el bloque `<environmentVariables>` del servidor (o definir las variables en el *Configuration Editor* de IIS para el sitio).
->
-> Alternativa: copiar un archivo `.env` (mismo formato que `.env.example`) a la carpeta del sitio, junto a `JuntalyColegios.dll`. La app lo carga al arrancar y no se sobrescribe al publicar. Si falta la cadena de conexión, la app no arranca y el log indica qué variable definir.
+3. Copiar el contenido de `publicacion/` al servidor y arrancarlo.
+4. Definir la configuración del servidor (ver la [tabla de variables](#variables-de-configuración)) como variables de entorno o en un archivo `.env` junto a `JuntalyColegios.dll`; `dotnet publish` no lo incluye ni lo sobrescribe. Además de la cadena de conexión: `ASPNETCORE_ENVIRONMENT=Production`, `AllowedHosts`, `App__UrlBase`, `AdminInicial__*` y `Smtp__*`.
 
 Notas:
 
-- Las claves de Data Protection (sesiones, antiforgery, enlaces de invitación) se guardan en la base de datos, así que sobreviven a los reciclajes del app pool.
-- Si Cloudflare o IIS presentan la app con otro nombre de host, añadirlo a `AllowedHosts` en `appsettings.json`.
-- La app necesita la base de datos al arrancar (crea roles, administrador y datos de demo): si Supabase pausa el proyecto por inactividad, hay que restaurarlo desde su panel.
+- La app necesita la base de datos al arrancar (crea roles, administrador y datos de demo). Si falta la cadena de conexión no arranca y el log indica qué variable definir.
+- Las claves de Data Protection (sesiones, antiforgery, enlaces de invitación) se guardan en la base de datos: sobreviven a los reinicios de la aplicación.
+- Toda migración que crea tablas activa RLS y retira permisos a los roles públicos de la API REST que exponen algunos servicios de PostgreSQL gestionado.
 
 ## 9. Presentación y vídeo
 

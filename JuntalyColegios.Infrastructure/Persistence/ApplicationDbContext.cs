@@ -30,7 +30,7 @@ namespace JuntalyColegios.Infrastructure.Persistence
 
         public DbSet<PantallaLlamadas> PantallasLlamadas => Set<PantallaLlamadas>();
 
-        /// <summary>Claves de Data Protection (cookies, antiforgery, tokens de invitación): sobreviven a reinicios de IIS.</summary>
+        /// <summary>Claves de Data Protection (cookies, antiforgery, tokens de invitación): sobreviven a reinicios de la aplicación.</summary>
         public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

@@ -8,7 +8,7 @@ namespace JuntalyColegios.Configuracion;
 
 /// <summary>
 /// Límite de lecturas por minuto de la API pública de la antena. Se cuenta por antena (clave del
-/// colegio), no por IP: detrás de Cloudflare todas las peticiones llegan con IPs del proxy y un colegio
+/// colegio), no por IP: detrás de un proxy o CDN todas las peticiones llegan con sus IPs y un colegio
 /// no debe consumir el cupo de otro. Superado el límite se responde 429 con Retry-After.
 /// </summary>
 public static class LimiteAntena

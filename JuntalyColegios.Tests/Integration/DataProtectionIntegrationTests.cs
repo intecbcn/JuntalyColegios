@@ -7,7 +7,7 @@ namespace JuntalyColegios.Tests.Integration;
 
 /// <summary>
 /// Las claves de Data Protection (cookies de sesión, antiforgery, TempData y tokens de los enlaces de
-/// invitación) deben sobrevivir a reinicios y reciclajes del app pool de IIS: se guardan en la base.
+/// invitación) deben sobrevivir a los reinicios de la aplicación: se guardan en la base.
 /// </summary>
 public class DataProtectionIntegrationTests : IClassFixture<JuntalyWebApplicationFactory>
 {

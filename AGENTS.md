@@ -12,7 +12,7 @@ Este archivo es el **orquestador** del proyecto. Cualquier agente (o persona) qu
   - `JuntalyColegios/` — Web (MVC): Controllers, Views, `Program.cs` (composition root de DI).
 - **Principios SOLID**: obligatorios en todo el código, en las 4 capas. Ver checklist en [`.agents/arquitectura.md`](./.agents/arquitectura.md#principios-solid-obligatorios-en-todo-el-código-todas-las-capas). Auditados en **cada** cambio por [`.agents/auditoria.md`](./.agents/auditoria.md), no solo en features grandes.
 - **Autenticación**: ASP.NET Core Identity (`AddDefaultIdentity<IdentityUser>`, `RequireConfirmedAccount = true`).
-- **Datos**: Entity Framework Core + PostgreSQL (proveedor Npgsql, base alojada en Supabase; cadena de conexión vía `.env`/variables de entorno, ver `.env.example`). Contexto en `JuntalyColegios.Infrastructure/Persistence/ApplicationDbContext.cs`, migraciones en `Persistence/Migrations/`.
+- **Datos**: Entity Framework Core + PostgreSQL (proveedor Npgsql; cadena de conexión vía `.env`/variables de entorno, ver `.env.example`). Contexto en `JuntalyColegios.Infrastructure/Persistence/ApplicationDbContext.cs`, migraciones en `Persistence/Migrations/`.
 - **Vistas**: Razor Pages/MVC Views (`JuntalyColegios/Views/`, `JuntalyColegios/Areas/Identity/Pages/`).
 - **Estáticos**: `JuntalyColegios/wwwroot/` (Bootstrap 5, jQuery, jquery-validation vendorizados en `wwwroot/lib/`).
 - **Tests**: proyecto `JuntalyColegios.Tests/` (xUnit) con carpetas `Application/` (unitarios), `Web/` (controladores), `Integration/` (`WebApplicationFactory`) y `E2E/` (Playwright .NET, Chromium headless contra Kestrel real). **Desarrollo guiado por tests (TDD) obligatorio**: ver §6 y [`.agents/testing.md`](./.agents/testing.md).

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 namespace JuntalyColegios.Tests.Integration;
 
 /// <summary>
-/// Regresión del despliegue en IIS: sin cadena de conexión la app caía con un error críptico de Npgsql
+/// Regresión del despliegue: sin cadena de conexión la app caía con un error críptico de Npgsql
 /// ("The ConnectionString property has not been initialized") al crear los roles.
 /// </summary>
 public class ConfiguracionArranqueTests

@@ -3,18 +3,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JuntalyColegios.Infrastructure.Persistence.Migrations;
 
 /// <summary>
-/// Supabase publica el esquema <c>public</c> a través de su API REST con los roles <c>anon</c> y
-/// <c>authenticated</c>: sin protección, cualquiera con la URL del proyecto y la clave pública podría
-/// leer o modificar las tablas (incluidos usuarios y datos de menores). Esta aplicación no usa esa API:
-/// accede como <c>postgres</c>, dueño de las tablas y por tanto no sujeto a RLS.
+/// Algunos servicios de PostgreSQL gestionado publican el esquema <c>public</c> por una
+/// API REST con los roles <c>anon</c> y <c>authenticated</c>: sin protección, cualquiera con la clave pública
+/// podría leer o modificar las tablas (incluidos usuarios y datos de menores). Esta aplicación no usa esa
+/// API: accede como dueño de las tablas y por tanto no está sujeta a RLS.
 /// </summary>
-public static class ProteccionSupabase
+public static class ProteccionTablasPublicas
 {
     /// <summary>
     /// Activa RLS (sin políticas: los roles de la API no ven filas) en todas las tablas de <c>public</c>
     /// y retira a <c>anon</c>/<c>authenticated</c> los permisos actuales y los que se darían por defecto
     /// a tablas futuras. Llamarlo al final de cada migración que cree tablas nuevas. En un PostgreSQL
-    /// sin esos roles (fuera de Supabase) solo activa RLS.
+    /// sin esos roles solo activa RLS.
     /// </summary>
     public static void ProtegerTablasPublicas(this MigrationBuilder migrationBuilder) =>
         migrationBuilder.Sql("""

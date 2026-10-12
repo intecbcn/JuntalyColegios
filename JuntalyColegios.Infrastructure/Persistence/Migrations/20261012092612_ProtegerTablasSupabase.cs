@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JuntalyColegios.Infrastructure.Persistence.Migrations
 {
     /// <summary>
-    /// Cierra el acceso de la API REST de Supabase (roles anon/authenticated) a las tablas de la
-    /// aplicación: aviso "rls_disabled_in_public". Ver <see cref="ProteccionSupabase"/>.
+    /// Cierra el acceso de la API REST del proveedor de PostgreSQL (roles anon/authenticated) a las tablas
+    /// de la aplicación. Ver <see cref="ProteccionTablasPublicas"/>.
     /// </summary>
     public partial class ProtegerTablasSupabase : Migration
     {
