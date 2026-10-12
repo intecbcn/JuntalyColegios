@@ -3,13 +3,13 @@
     ViewData["Title"] = Model.NombreColegio;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="jc-page-head mb-3">
     <h1 class="mb-0">@Model.NombreColegio</h1>
     <a asp-controller="Clases" asp-action="Crear" class="btn btn-primary">Nueva clase</a>
 </div>
 <partial name="_Avisos" />
 
-<div class="mb-4">
+<div class="jc-actions mb-4">
     <a asp-controller="Salida" asp-action="Index" class="btn btn-success">Pantalla de salida</a>
     <a asp-controller="Representantes" asp-action="Index" class="btn btn-outline-secondary">Padres y representantes</a>
     <a asp-controller="Franjas" asp-action="Index" class="btn btn-outline-secondary">Franjas de retiro</a>
@@ -23,6 +23,7 @@
 }
 else
 {
+    <div class="table-responsive jc-table-wrap">
     <table class="table table-hover align-middle">
         <thead><tr><th>Clase</th><th>Nivel</th><th>Alumnos</th><th></th></tr></thead>
         <tbody>
@@ -37,4 +38,5 @@ else
             }
         </tbody>
     </table>
+    </div>
 }

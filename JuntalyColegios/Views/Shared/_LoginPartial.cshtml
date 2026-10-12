@@ -2,40 +2,32 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 
-<ul class="navbar-nav">
+<ul class="jc-app-menu">
 @if (SignInManager.IsSignedIn(User))
 {
     @if (User.IsInRole(Roles.AdminApp))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="/Admin">Administración</a>
-        </li>
+        <li><a class="jc-navlink" href="/Admin">Administración</a></li>
     }
     @if (User.IsInRole(Roles.SupervisorColegio))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="/Colegio">Mi colegio</a>
-        </li>
+        <li><a class="jc-navlink" href="/Colegio">Mi colegio</a></li>
     }
     @if (User.IsInRole(Roles.Padre))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="/Padres">Mi familia</a>
-        </li>
+        <li><a class="jc-navlink" href="/Padres">Mi familia</a></li>
     }
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Mi cuenta">Hola, @User.Identity?.Name</a>
+    <li>
+        <a class="jc-navlink jc-app-cuenta" asp-area="Identity" asp-page="/Account/Manage/Index" title="Mi cuenta">Hola, @User.Identity?.Name</a>
     </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link text-dark">Cerrar sesión</button>
+    <li>
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="jc-btn jc-btn-cta jc-app-salir">Cerrar sesión</button>
         </form>
     </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Iniciar sesión</a>
-    </li>
+    <li><a class="jc-btn jc-btn-cta" asp-area="Identity" asp-page="/Account/Login">Iniciar sesión</a></li>
 }
 </ul>

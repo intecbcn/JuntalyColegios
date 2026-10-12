@@ -1,0 +1,181 @@
+/* Paneles internos (Admin, supervisor del colegio y padres) servidos con _Layout.cshtml. Igual que
+   identity.css, sobrescribe las clases Bootstrap que ya usan las vistas para darles la identidad de
+   Juntaly Colegios (paleta, tipografías y .jc-nav-toggle definidos en landing.css, que este archivo
+   asume ya cargado). Todo va bajo .jc-app-body para no afectar a la landing ni a Identity.
+
+   Especificidad: landing.css colorea los enlaces con `.jc-body a:not(.jc-btn)` (0,2,1), así que los
+   botones que son <a> necesitan `.jc-app-body .btn.btn-x` (0,3,0) para conservar su color. */
+
+.jc-app-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(22,61,90,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(22,61,90,0.06) 1px,transparent 1px);
+    background-size: 44px 44px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.jc-app-header { position: sticky; top: 0; z-index: 20; padding: 14px 16px; background: rgba(246,247,213,0.92); backdrop-filter: blur(8px); }
+.jc-app-header-bar {
+    max-width: 1240px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px;
+    background: #fff; border: 3px solid var(--jc-navy); border-radius: 16px;
+    box-shadow: 5px 5px 0 var(--jc-navy);
+    padding: 10px 12px 10px 16px;
+}
+.jc-app-body a.jc-app-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--jc-navy); }
+.jc-app-brand img { width: 38px; height: 38px; object-fit: contain; }
+.jc-app-brand-text { display: flex; flex-direction: column; line-height: 1; }
+.jc-app-brand-name { font-weight: 900; font-size: 22px; letter-spacing: -0.03em; }
+.jc-app-brand-badge {
+    align-self: flex-start; margin: 3px 0 0 16px; transform: rotate(-6deg);
+    background: var(--jc-yellow); border: 2px solid var(--jc-navy);
+    padding: 0 6px 1px; font-weight: 900; font-size: 12px;
+}
+
+/* Menú: fila en escritorio; en tablet/móvil se pliega (Bootstrap collapse) bajo la marca y se abre
+   con .jc-nav-toggle (visible ≤860px por landing.css). */
+.jc-app-menu { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.jc-app-body .jc-navlink { display: inline-block; color: var(--jc-navy); }
+.jc-app-cuenta { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+.jc-app-salir { margin-left: 4px; }
+
+@media (min-width: 861px) {
+    .jc-app-nav.collapse { display: block; height: auto !important; }
+}
+@media (max-width: 860px) {
+    .jc-app-nav { flex: 1 0 100%; }
+    .jc-app-menu { flex-direction: column; align-items: stretch; padding: 8px 0 4px; border-top: 2px dashed rgba(22,61,90,0.25); margin-top: 6px; }
+    .jc-app-menu .jc-navlink, .jc-app-menu .jc-btn { display: block; width: 100%; text-align: center; }
+    .jc-app-cuenta { max-width: none; }
+    .jc-app-salir { margin: 6px 0 0; }
+}
+
+/* ── Contenido y footer ─────────────────────────────────────────────────── */
+.jc-app-main { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+.jc-app-footer {
+    text-align: center; padding: 24px 16px;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; color: var(--jc-blue);
+}
+
+/* ── Tipografía ─────────────────────────────────────────────────────────── */
+.jc-app-main h1, .jc-app-main h2, .jc-app-main h3, .jc-app-main h4, .jc-app-main h5 { font-weight: 900; letter-spacing: -0.02em; color: var(--jc-navy); }
+.jc-app-main h1 { font-size: clamp(26px, 5vw, 38px); overflow-wrap: anywhere; }
+.jc-app-main .h4, .jc-app-main h2.h4 { font-size: clamp(20px, 3vw, 24px); }
+.jc-app-main .text-muted { color: var(--jc-teal) !important; font-weight: 700; }
+.jc-app-main .lead { font-weight: 700; }
+.jc-app-main code { color: var(--jc-blue); font-family: 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+.jc-app-main .font-monospace { font-family: 'JetBrains Mono', monospace !important; font-weight: 700; }
+.jc-app-main dt { font-weight: 900; }
+.jc-app-main section.border-top { border-top: 3px dashed rgba(22,61,90,0.3) !important; }
+
+/* Cabecera de página (título + acción principal) y grupos de botones: envuelven en pantallas
+   estrechas en lugar de desbordar. */
+.jc-page-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 16px; }
+.jc-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.jc-actions form { margin: 0; }
+
+/* ── Botones ────────────────────────────────────────────────────────────── */
+.jc-app-main .btn {
+    font-weight: 900; font-size: 15px; padding: 10px 18px; border-radius: 12px;
+    border: 3px solid var(--jc-navy); box-shadow: 4px 4px 0 var(--jc-navy);
+    transition: transform .15s, box-shadow .15s;
+}
+.jc-app-main .btn:hover, .jc-app-main .btn:focus-visible { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--jc-navy); }
+.jc-app-main .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--jc-navy); }
+.jc-app-main .btn.btn-sm { font-size: 13px; padding: 5px 12px; border-radius: 10px; border-width: 2px; box-shadow: 3px 3px 0 var(--jc-navy); }
+.jc-app-main .btn.btn-sm:hover { box-shadow: 4px 4px 0 var(--jc-navy); }
+
+.jc-app-body .btn.btn-primary, .jc-app-body .btn.btn-primary:hover, .jc-app-body .btn.btn-primary:focus { background: var(--jc-blue); border-color: var(--jc-navy); color: #fff; }
+.jc-app-body .btn.btn-success, .jc-app-body .btn.btn-success:hover, .jc-app-body .btn.btn-success:focus { background: var(--jc-mint); border-color: var(--jc-navy); color: var(--jc-navy); }
+.jc-app-body .btn.btn-outline-primary, .jc-app-body .btn.btn-outline-secondary, .jc-app-body .btn.btn-outline-success { background: #fff; border-color: var(--jc-navy); color: var(--jc-navy); }
+.jc-app-body .btn.btn-outline-primary:hover, .jc-app-body .btn.btn-outline-secondary:hover, .jc-app-body .btn.btn-outline-success:hover { background: var(--jc-yellow); color: var(--jc-navy); }
+.jc-app-body .btn.btn-outline-danger { background: #fff; border-color: var(--jc-navy); color: #B3261E; }
+.jc-app-body .btn.btn-outline-danger:hover { background: #F7C6C0; color: var(--jc-navy); }
+
+/* Enlaces "← Volver" y "Cancelar": sin caja ni sombra. */
+.jc-app-main .btn.btn-link, .jc-app-main .btn.btn-link:hover, .jc-app-main .btn.btn-link:active {
+    border-color: transparent; background: none; box-shadow: none; transform: none;
+    color: var(--jc-blue); font-weight: 800; text-decoration: none;
+}
+.jc-app-main .btn.btn-link:hover { color: var(--jc-navy); text-decoration: underline; }
+
+/* ── Tablas: tarjeta con scroll horizontal propio ───────────────────────── */
+.jc-table-wrap {
+    background: #fff; border: 3px solid var(--jc-navy); border-radius: 16px;
+    box-shadow: 5px 5px 0 var(--jc-navy); margin-bottom: 1.5rem;
+}
+.jc-table-wrap .table {
+    --bs-table-bg: #fff; --bs-table-color: var(--jc-navy);
+    --bs-table-border-color: rgba(22,61,90,0.15); --bs-table-hover-bg: rgba(249,225,166,0.55);
+    margin-bottom: 0; font-weight: 700;
+}
+.jc-table-wrap .table > :not(caption) > * > * { padding: 0.75rem 1rem; }
+.jc-table-wrap .table.table-sm > :not(caption) > * > * { padding: 0.5rem 0.75rem; }
+.jc-table-wrap thead th {
+    background-color: var(--jc-navy); color: var(--jc-yellow); border-bottom: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    white-space: nowrap;
+}
+.jc-table-wrap tbody tr:last-child > * { border-bottom: 0; }
+.jc-table-wrap td.text-end { white-space: nowrap; }
+.jc-table-wrap td form { margin: 0; }
+
+/* Formulario "Asignar tag" dentro de la tabla del representante. */
+.jc-tag-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.jc-tag-form .form-control { flex: 1 1 140px; min-width: 140px; }
+
+/* ── Formularios ────────────────────────────────────────────────────────── */
+.jc-app-main .form-label, .jc-app-main legend.form-label { font-weight: 800; color: var(--jc-navy); }
+.jc-app-main .form-control, .jc-app-main .form-select {
+    font-weight: 600; border: 3px solid var(--jc-navy); border-radius: 10px;
+    background-color: var(--jc-bg); color: var(--jc-navy); padding: 0.6rem 0.9rem;
+}
+.jc-app-main .form-select { padding-right: 2.25rem; }
+.jc-app-main .form-control:focus, .jc-app-main .form-select:focus { border-color: var(--jc-navy); background-color: #fff; box-shadow: 4px 4px 0 var(--jc-blue); }
+.jc-app-main .form-control-sm { border-width: 2px; padding: 0.3rem 0.6rem; font-size: 14px; }
+.jc-app-main .form-text { color: var(--jc-teal); font-weight: 700; }
+.jc-app-main .form-check-input { width: 1.2em; height: 1.2em; border: 2px solid var(--jc-navy); }
+.jc-app-main .form-check-input:checked { background-color: var(--jc-blue); border-color: var(--jc-navy); }
+.jc-app-main .form-check-label { font-weight: 700; }
+.jc-app-main .text-danger { font-weight: 700; }
+
+/* ── Alertas y badges ───────────────────────────────────────────────────── */
+.jc-app-main .alert {
+    border: 3px solid var(--jc-navy); border-radius: 14px; font-weight: 700; color: var(--jc-navy);
+    box-shadow: 4px 4px 0 var(--jc-navy);
+}
+.jc-app-main .alert-success { background: var(--jc-mint); }
+.jc-app-main .alert-danger { background: #F7C6C0; }
+.jc-app-main .alert-warning { background: var(--jc-yellow); }
+.jc-app-main .alert-info, .jc-app-main .alert-secondary { background: #fff; }
+
+.jc-app-main .badge { border: 2px solid var(--jc-navy); border-radius: 999px; font-weight: 900; padding: 0.35em 0.75em; white-space: normal; }
+.jc-app-main .badge.text-bg-success { background: var(--jc-mint) !important; color: var(--jc-navy) !important; }
+.jc-app-main .badge.text-bg-warning { background: var(--jc-yellow) !important; color: var(--jc-navy) !important; }
+.jc-app-main .badge.text-bg-danger { background: #F7C6C0 !important; color: var(--jc-navy) !important; }
+.jc-app-main .badge.text-bg-info, .jc-app-main .badge.text-bg-secondary { background: #fff !important; color: var(--jc-navy) !important; }
+.jc-app-main .badge.text-bg-primary { background: var(--jc-navy) !important; color: var(--jc-yellow) !important; }
+
+/* ── Tarjetas (pantalla de salida) y listas (inicio de Admin) ───────────── */
+.jc-app-main .card { border: 3px solid var(--jc-navy); border-radius: 16px; box-shadow: 5px 5px 0 var(--jc-navy); color: var(--jc-navy); }
+.jc-app-main .card .card-footer { border-top: 2px dashed rgba(22,61,90,0.25); padding: 12px 16px 16px; }
+.jc-app-main .card.recogida { background: #fff; border-top-width: 10px; border-top-color: var(--jc-blue); }
+
+.jc-app-main .list-group { gap: 10px; }
+.jc-app-main .list-group-item {
+    border: 3px solid var(--jc-navy) !important; border-radius: 12px !important;
+    font-weight: 900; color: var(--jc-navy); background: #fff; box-shadow: 4px 4px 0 var(--jc-navy);
+    transition: transform .15s, box-shadow .15s;
+}
+.jc-app-main .list-group-item-action:hover { background: var(--jc-yellow); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--jc-navy); }
+
+/* ── Móvil ──────────────────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+    .jc-app-header { padding: 10px 10px; }
+    .jc-app-main { padding: 16px 12px 40px; }
+    .jc-page-head > .btn, .jc-page-head > .jc-actions { width: 100%; }
+    .jc-page-head > .btn, .jc-actions > .btn, .jc-actions > form, .jc-actions > form > .btn { flex: 1 1 100%; width: 100%; text-align: center; }
+    .jc-table-wrap .table { font-size: 14px; }
+    .jc-table-wrap .table > :not(caption) > * > * { padding: 0.6rem 0.75rem; }
+}

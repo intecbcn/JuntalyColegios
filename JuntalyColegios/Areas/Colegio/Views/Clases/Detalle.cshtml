@@ -5,12 +5,12 @@
 }
 
 <a asp-controller="Inicio" asp-action="Index" class="btn btn-link px-0">&larr; Clases</a>
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="jc-page-head mb-3">
     <div>
         <h1 class="mb-0">@clase.Nombre</h1>
         @if (clase.Nivel is not null) { <span class="text-muted">@clase.Nivel</span> }
     </div>
-    <div class="d-flex gap-2">
+    <div class="jc-actions">
         <a asp-action="Editar" asp-route-id="@clase.Id" class="btn btn-outline-primary">Editar</a>
         @if (clase.Alumnos.Count == 0)
         {
@@ -29,6 +29,7 @@
 }
 else
 {
+    <div class="table-responsive jc-table-wrap">
     <table class="table align-middle">
         <thead><tr><th>Apellidos</th><th>Nombres</th><th>Estado</th><th></th></tr></thead>
         <tbody>
@@ -45,6 +46,7 @@ else
             }
         </tbody>
     </table>
+    </div>
 }
 
 <h3 class="h5 mt-4">Añadir alumno</h3>

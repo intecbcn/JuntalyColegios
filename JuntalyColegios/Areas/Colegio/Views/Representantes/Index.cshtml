@@ -4,7 +4,7 @@
 }
 
 <a asp-controller="Inicio" asp-action="Index" class="btn btn-link px-0">&larr; Mi colegio</a>
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="jc-page-head mb-3">
     <h1 class="mb-0">Padres y representantes</h1>
     <a asp-action="Crear" class="btn btn-primary">Nuevo padre o representante</a>
 </div>
@@ -16,6 +16,7 @@
 }
 else
 {
+    <div class="table-responsive jc-table-wrap">
     <table class="table table-hover align-middle">
         <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Hijos</th><th>Vehículos</th><th></th></tr></thead>
         <tbody>
@@ -32,4 +33,5 @@ else
             }
         </tbody>
     </table>
+    </div>
 }

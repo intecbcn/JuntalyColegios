@@ -50,9 +50,11 @@ public sealed class PlaywrightFixture : IAsyncLifetime
     }
 
     /// <summary>Página nueva con contexto aislado (cookies propias) apuntando a la app levantada.</summary>
-    public async Task<IPage> NuevaPaginaAsync()
+    public async Task<IPage> NuevaPaginaAsync(ViewportSize? viewport = null)
     {
-        var contexto = await Browser.NewContextAsync(new BrowserNewContextOptions { BaseURL = BaseUrl, Locale = "es-VE" });
+        var opciones = new BrowserNewContextOptions { BaseURL = BaseUrl, Locale = "es-VE" };
+        if (viewport is not null) opciones.ViewportSize = viewport;
+        var contexto = await Browser.NewContextAsync(opciones);
         return await contexto.NewPageAsync();
     }
 
